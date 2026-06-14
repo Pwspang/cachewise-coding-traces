@@ -1,0 +1,17 @@
+[
+  {
+    "event_type": "llm_call",
+    "timestamp": "2020-10-09T06:56:41.800000+00:00",
+    "session_id": "session_0089",
+    "request_id": null,
+    "message_id": "msg_00001",
+    "model": "<synthetic>",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "stop_reason": "stop_sequence",
+    "has_tool_use": false,
+    "num_tools_called": 0
+  }
+]

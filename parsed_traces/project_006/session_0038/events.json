@@ -1,0 +1,347 @@
+[
+  {
+    "event_type": "llm_call",
+    "timestamp": "2020-10-01T17:22:16.072000+00:00",
+    "session_id": "session_0038",
+    "request_id": "req_00001",
+    "message_id": "msg_00001",
+    "model": "claude-opus-4-1-20250805",
+    "input_tokens": 4,
+    "output_tokens": 4,
+    "cache_creation_input_tokens": 21866,
+    "cache_read_input_tokens": 0,
+    "stop_reason": null,
+    "has_tool_use": false,
+    "num_tools_called": 0
+  },
+  {
+    "event_type": "llm_call",
+    "timestamp": "2020-10-01T17:22:19.353000+00:00",
+    "session_id": "session_0038",
+    "request_id": "req_00001",
+    "message_id": "msg_00001",
+    "model": "claude-opus-4-1-20250805",
+    "input_tokens": 4,
+    "output_tokens": 228,
+    "cache_creation_input_tokens": 21866,
+    "cache_read_input_tokens": 0,
+    "stop_reason": null,
+    "has_tool_use": true,
+    "num_tools_called": 1
+  },
+  {
+    "event_type": "tool_call",
+    "timestamp": "2020-10-01T17:22:19.353000+00:00",
+    "session_id": "session_0038",
+    "tool_use_id": "tool_00001",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "content": "<redacted>"
+    },
+    "associated_llm_call_id": "msg_00001",
+    "has_result": true,
+    "is_error": null,
+    "execution_time_ms": 34.0,
+    "result_timestamp": "2020-10-01T17:22:19.387000+00:00"
+  },
+  {
+    "event_type": "llm_call",
+    "timestamp": "2020-10-01T17:22:23.755000+00:00",
+    "session_id": "session_0038",
+    "request_id": "req_00002",
+    "message_id": "msg_00002",
+    "model": "claude-opus-4-1-20250805",
+    "input_tokens": 6,
+    "output_tokens": 69,
+    "cache_creation_input_tokens": 374,
+    "cache_read_input_tokens": 21866,
+    "stop_reason": null,
+    "has_tool_use": true,
+    "num_tools_called": 1
+  },
+  {
+    "event_type": "tool_call",
+    "timestamp": "2020-10-01T17:22:23.755000+00:00",
+    "session_id": "session_0038",
+    "tool_use_id": "tool_00002",
+    "tool_name": "Read",
+    "tool_input": {
+      "content": "<redacted>"
+    },
+    "associated_llm_call_id": "msg_00002",
+    "has_result": true,
+    "is_error": null,
+    "execution_time_ms": 36.0,
+    "result_timestamp": "2020-10-01T17:22:23.791000+00:00"
+  },
+  {
+    "event_type": "llm_call",
+    "timestamp": "2020-10-01T17:22:27.654000+00:00",
+    "session_id": "session_0038",
+    "request_id": "req_00003",
+    "message_id": "msg_00003",
+    "model": "claude-opus-4-1-20250805",
+    "input_tokens": 6,
+    "output_tokens": 26,
+    "cache_creation_input_tokens": 1123,
+    "cache_read_input_tokens": 22240,
+    "stop_reason": null,
+    "has_tool_use": true,
+    "num_tools_called": 1
+  },
+  {
+    "event_type": "tool_call",
+    "timestamp": "2020-10-01T17:22:27.654000+00:00",
+    "session_id": "session_0038",
+    "tool_use_id": "tool_00003",
+    "tool_name": "Glob",
+    "tool_input": {
+      "content": "<redacted>"
+    },
+    "associated_llm_call_id": "msg_00003",
+    "has_result": true,
+    "is_error": null,
+    "execution_time_ms": 156.0,
+    "result_timestamp": "2020-10-01T17:22:27.810000+00:00"
+  },
+  {
+    "event_type": "llm_call",
+    "timestamp": "2020-10-01T17:22:33.586000+00:00",
+    "session_id": "session_0038",
+    "request_id": "req_00004",
+    "message_id": "msg_00004",
+    "model": "claude-opus-4-1-20250805",
+    "input_tokens": 6,
+    "output_tokens": 161,
+    "cache_creation_input_tokens": 137,
+    "cache_read_input_tokens": 23363,
+    "stop_reason": null,
+    "has_tool_use": true,
+    "num_tools_called": 1
+  },
+  {
+    "event_type": "tool_call",
+    "timestamp": "2020-10-01T17:22:33.586000+00:00",
+    "session_id": "session_0038",
+    "tool_use_id": "tool_00004",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "content": "<redacted>"
+    },
+    "associated_llm_call_id": "msg_00004",
+    "has_result": true,
+    "is_error": null,
+    "execution_time_ms": 29.0,
+    "result_timestamp": "2020-10-01T17:22:33.615000+00:00"
+  },
+  {
+    "event_type": "llm_call",
+    "timestamp": "2020-10-01T17:22:41.064000+00:00",
+    "session_id": "session_0038",
+    "request_id": "req_00005",
+    "message_id": "msg_00005",
+    "model": "claude-opus-4-1-20250805",
+    "input_tokens": 5,
+    "output_tokens": 245,
+    "cache_creation_input_tokens": 345,
+    "cache_read_input_tokens": 23500,
+    "stop_reason": null,
+    "has_tool_use": true,
+    "num_tools_called": 1
+  },
+  {
+    "event_type": "tool_call",
+    "timestamp": "2020-10-01T17:22:41.064000+00:00",
+    "session_id": "session_0038",
+    "tool_use_id": "tool_00005",
+    "tool_name": "Edit",
+    "tool_input": {
+      "content": "<redacted>"
+    },
+    "associated_llm_call_id": "msg_00005",
+    "has_result": true,
+    "is_error": null,
+    "execution_time_ms": 52737.0,
+    "result_timestamp": "2020-10-01T17:23:33.801000+00:00"
+  },
+  {
+    "event_type": "llm_call",
+    "timestamp": "2020-10-01T17:23:38.644000+00:00",
+    "session_id": "session_0038",
+    "request_id": "req_00006",
+    "message_id": "msg_00006",
+    "model": "claude-opus-4-1-20250805",
+    "input_tokens": 4,
+    "output_tokens": 26,
+    "cache_creation_input_tokens": 452,
+    "cache_read_input_tokens": 23845,
+    "stop_reason": null,
+    "has_tool_use": true,
+    "num_tools_called": 1
+  },
+  {
+    "event_type": "tool_call",
+    "timestamp": "2020-10-01T17:23:38.644000+00:00",
+    "session_id": "session_0038",
+    "tool_use_id": "tool_00006",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "content": "<redacted>"
+    },
+    "associated_llm_call_id": "msg_00006",
+    "has_result": true,
+    "is_error": null,
+    "execution_time_ms": 52.0,
+    "result_timestamp": "2020-10-01T17:23:38.696000+00:00"
+  },
+  {
+    "event_type": "llm_call",
+    "timestamp": "2020-10-01T17:23:43.039000+00:00",
+    "session_id": "session_0038",
+    "request_id": "req_00007",
+    "message_id": "msg_00007",
+    "model": "claude-opus-4-1-20250805",
+    "input_tokens": 3,
+    "output_tokens": 21,
+    "cache_creation_input_tokens": 345,
+    "cache_read_input_tokens": 24297,
+    "stop_reason": null,
+    "has_tool_use": true,
+    "num_tools_called": 1
+  },
+  {
+    "event_type": "tool_call",
+    "timestamp": "2020-10-01T17:23:43.039000+00:00",
+    "session_id": "session_0038",
+    "tool_use_id": "tool_00007",
+    "tool_name": "Bash",
+    "tool_input": {
+      "content": "<redacted>"
+    },
+    "associated_llm_call_id": "msg_00007",
+    "has_result": true,
+    "is_error": false,
+    "execution_time_ms": 112.0,
+    "result_timestamp": "2020-10-01T17:23:43.151000+00:00"
+  },
+  {
+    "event_type": "llm_call",
+    "timestamp": "2020-10-01T17:23:46.641000+00:00",
+    "session_id": "session_0038",
+    "request_id": "req_00008",
+    "message_id": "msg_00008",
+    "model": "claude-opus-4-1-20250805",
+    "input_tokens": 4,
+    "output_tokens": 28,
+    "cache_creation_input_tokens": 108,
+    "cache_read_input_tokens": 24642,
+    "stop_reason": null,
+    "has_tool_use": true,
+    "num_tools_called": 1
+  },
+  {
+    "event_type": "tool_call",
+    "timestamp": "2020-10-01T17:23:46.641000+00:00",
+    "session_id": "session_0038",
+    "tool_use_id": "tool_00008",
+    "tool_name": "Bash",
+    "tool_input": {
+      "content": "<redacted>"
+    },
+    "associated_llm_call_id": "msg_00008",
+    "has_result": true,
+    "is_error": false,
+    "execution_time_ms": 118.0,
+    "result_timestamp": "2020-10-01T17:23:46.759000+00:00"
+  },
+  {
+    "event_type": "llm_call",
+    "timestamp": "2020-10-01T17:23:51.454000+00:00",
+    "session_id": "session_0038",
+    "request_id": "req_00009",
+    "message_id": "msg_00009",
+    "model": "claude-opus-4-1-20250805",
+    "input_tokens": 2,
+    "output_tokens": 22,
+    "cache_creation_input_tokens": 195,
+    "cache_read_input_tokens": 24750,
+    "stop_reason": null,
+    "has_tool_use": true,
+    "num_tools_called": 1
+  },
+  {
+    "event_type": "tool_call",
+    "timestamp": "2020-10-01T17:23:51.454000+00:00",
+    "session_id": "session_0038",
+    "tool_use_id": "tool_00009",
+    "tool_name": "TodoWrite",
+    "tool_input": {
+      "content": "<redacted>"
+    },
+    "associated_llm_call_id": "msg_00009",
+    "has_result": true,
+    "is_error": null,
+    "execution_time_ms": 41.0,
+    "result_timestamp": "2020-10-01T17:23:51.495000+00:00"
+  },
+  {
+    "event_type": "llm_call",
+    "timestamp": "2020-10-01T17:23:55.621000+00:00",
+    "session_id": "session_0038",
+    "request_id": "req_00010",
+    "message_id": "msg_00010",
+    "model": "claude-opus-4-1-20250805",
+    "input_tokens": 1,
+    "output_tokens": 1,
+    "cache_creation_input_tokens": 282,
+    "cache_read_input_tokens": 24945,
+    "stop_reason": null,
+    "has_tool_use": false,
+    "num_tools_called": 0
+  },
+  {
+    "event_type": "llm_call",
+    "timestamp": "2020-10-01T17:24:22.187000+00:00",
+    "session_id": "session_0038",
+    "request_id": "req_00011",
+    "message_id": "msg_00011",
+    "model": "claude-opus-4-1-20250805",
+    "input_tokens": 0,
+    "output_tokens": 233,
+    "cache_creation_input_tokens": 113,
+    "cache_read_input_tokens": 25227,
+    "stop_reason": null,
+    "has_tool_use": true,
+    "num_tools_called": 1
+  },
+  {
+    "event_type": "tool_call",
+    "timestamp": "2020-10-01T17:24:22.187000+00:00",
+    "session_id": "session_0038",
+    "tool_use_id": "tool_00010",
+    "tool_name": "Edit",
+    "tool_input": {
+      "content": "<redacted>"
+    },
+    "associated_llm_call_id": "msg_00011",
+    "has_result": true,
+    "is_error": null,
+    "execution_time_ms": 9387.0,
+    "result_timestamp": "2020-10-01T17:24:31.574000+00:00"
+  },
+  {
+    "event_type": "llm_call",
+    "timestamp": "2020-10-01T17:24:34.577000+00:00",
+    "session_id": "session_0038",
+    "request_id": "req_00012",
+    "message_id": "msg_00012",
+    "model": "claude-opus-4-1-20250805",
+    "input_tokens": 2,
+    "output_tokens": 1,
+    "cache_creation_input_tokens": 434,
+    "cache_read_input_tokens": 25340,
+    "stop_reason": null,
+    "has_tool_use": false,
+    "num_tools_called": 0
+  }
+]

@@ -1,0 +1,664 @@
+{
+  "version": "1.0",
+  "num_sessions": 94,
+  "sessions": [
+    {
+      "project_id": "project_001",
+      "session_id": "session_0001",
+      "output_path": "release/raw_traces/project_001/session_0001.jsonl",
+      "lines_in": 344,
+      "lines_out": 338
+    },
+    {
+      "project_id": "project_002",
+      "session_id": "session_0002",
+      "output_path": "release/raw_traces/project_002/session_0002.jsonl",
+      "lines_in": 343,
+      "lines_out": 337
+    },
+    {
+      "project_id": "project_002",
+      "session_id": "session_0003",
+      "output_path": "release/raw_traces/project_002/session_0003.jsonl",
+      "lines_in": 354,
+      "lines_out": 349
+    },
+    {
+      "project_id": "project_003",
+      "session_id": "session_0004",
+      "output_path": "release/raw_traces/project_003/session_0004.jsonl",
+      "lines_in": 94,
+      "lines_out": 94
+    },
+    {
+      "project_id": "project_003",
+      "session_id": "session_0005",
+      "output_path": "release/raw_traces/project_003/session_0005.jsonl",
+      "lines_in": 196,
+      "lines_out": 189
+    },
+    {
+      "project_id": "project_004",
+      "session_id": "session_0006",
+      "output_path": "release/raw_traces/project_004/session_0006.jsonl",
+      "lines_in": 266,
+      "lines_out": 265
+    },
+    {
+      "project_id": "project_004",
+      "session_id": "session_0007",
+      "output_path": "release/raw_traces/project_004/session_0007.jsonl",
+      "lines_in": 243,
+      "lines_out": 243
+    },
+    {
+      "project_id": "project_004",
+      "session_id": "session_0008",
+      "output_path": "release/raw_traces/project_004/session_0008.jsonl",
+      "lines_in": 433,
+      "lines_out": 427
+    },
+    {
+      "project_id": "project_004",
+      "session_id": "session_0009",
+      "output_path": "release/raw_traces/project_004/session_0009.jsonl",
+      "lines_in": 505,
+      "lines_out": 473
+    },
+    {
+      "project_id": "project_004",
+      "session_id": "session_0010",
+      "output_path": "release/raw_traces/project_004/session_0010.jsonl",
+      "lines_in": 187,
+      "lines_out": 180
+    },
+    {
+      "project_id": "project_004",
+      "session_id": "session_0011",
+      "output_path": "release/raw_traces/project_004/session_0011.jsonl",
+      "lines_in": 210,
+      "lines_out": 209
+    },
+    {
+      "project_id": "project_005",
+      "session_id": "session_0012",
+      "output_path": "release/raw_traces/project_005/session_0012.jsonl",
+      "lines_in": 67,
+      "lines_out": 64
+    },
+    {
+      "project_id": "project_005",
+      "session_id": "session_0013",
+      "output_path": "release/raw_traces/project_005/session_0013.jsonl",
+      "lines_in": 208,
+      "lines_out": 198
+    },
+    {
+      "project_id": "project_005",
+      "session_id": "session_0014",
+      "output_path": "release/raw_traces/project_005/session_0014.jsonl",
+      "lines_in": 163,
+      "lines_out": 149
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0015",
+      "output_path": "release/raw_traces/project_006/session_0015.jsonl",
+      "lines_in": 291,
+      "lines_out": 288
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0016",
+      "output_path": "release/raw_traces/project_006/session_0016.jsonl",
+      "lines_in": 2,
+      "lines_out": 0
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0017",
+      "output_path": "release/raw_traces/project_006/session_0017.jsonl",
+      "lines_in": 22,
+      "lines_out": 22
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0018",
+      "output_path": "release/raw_traces/project_006/session_0018.jsonl",
+      "lines_in": 500,
+      "lines_out": 499
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0019",
+      "output_path": "release/raw_traces/project_006/session_0019.jsonl",
+      "lines_in": 262,
+      "lines_out": 262
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0020",
+      "output_path": "release/raw_traces/project_006/session_0020.jsonl",
+      "lines_in": 867,
+      "lines_out": 863
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0021",
+      "output_path": "release/raw_traces/project_006/session_0021.jsonl",
+      "lines_in": 488,
+      "lines_out": 466
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0022",
+      "output_path": "release/raw_traces/project_006/session_0022.jsonl",
+      "lines_in": 254,
+      "lines_out": 248
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0023",
+      "output_path": "release/raw_traces/project_006/session_0023.jsonl",
+      "lines_in": 276,
+      "lines_out": 274
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0024",
+      "output_path": "release/raw_traces/project_006/session_0024.jsonl",
+      "lines_in": 101,
+      "lines_out": 100
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0025",
+      "output_path": "release/raw_traces/project_006/session_0025.jsonl",
+      "lines_in": 718,
+      "lines_out": 717
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0026",
+      "output_path": "release/raw_traces/project_006/session_0026.jsonl",
+      "lines_in": 285,
+      "lines_out": 278
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0027",
+      "output_path": "release/raw_traces/project_006/session_0027.jsonl",
+      "lines_in": 3037,
+      "lines_out": 2987
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0028",
+      "output_path": "release/raw_traces/project_006/session_0028.jsonl",
+      "lines_in": 214,
+      "lines_out": 212
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0029",
+      "output_path": "release/raw_traces/project_006/session_0029.jsonl",
+      "lines_in": 990,
+      "lines_out": 980
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0030",
+      "output_path": "release/raw_traces/project_006/session_0030.jsonl",
+      "lines_in": 205,
+      "lines_out": 200
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0031",
+      "output_path": "release/raw_traces/project_006/session_0031.jsonl",
+      "lines_in": 955,
+      "lines_out": 943
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0032",
+      "output_path": "release/raw_traces/project_006/session_0032.jsonl",
+      "lines_in": 1312,
+      "lines_out": 1244
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0033",
+      "output_path": "release/raw_traces/project_006/session_0033.jsonl",
+      "lines_in": 118,
+      "lines_out": 111
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0034",
+      "output_path": "release/raw_traces/project_006/session_0034.jsonl",
+      "lines_in": 701,
+      "lines_out": 698
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0035",
+      "output_path": "release/raw_traces/project_006/session_0035.jsonl",
+      "lines_in": 89,
+      "lines_out": 76
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0036",
+      "output_path": "release/raw_traces/project_006/session_0036.jsonl",
+      "lines_in": 124,
+      "lines_out": 123
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0037",
+      "output_path": "release/raw_traces/project_006/session_0037.jsonl",
+      "lines_in": 211,
+      "lines_out": 158
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0038",
+      "output_path": "release/raw_traces/project_006/session_0038.jsonl",
+      "lines_in": 25,
+      "lines_out": 25
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0039",
+      "output_path": "release/raw_traces/project_006/session_0039.jsonl",
+      "lines_in": 431,
+      "lines_out": 425
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0040",
+      "output_path": "release/raw_traces/project_006/session_0040.jsonl",
+      "lines_in": 592,
+      "lines_out": 534
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0041",
+      "output_path": "release/raw_traces/project_006/session_0041.jsonl",
+      "lines_in": 652,
+      "lines_out": 583
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0042",
+      "output_path": "release/raw_traces/project_006/session_0042.jsonl",
+      "lines_in": 82,
+      "lines_out": 75
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0043",
+      "output_path": "release/raw_traces/project_006/session_0043.jsonl",
+      "lines_in": 306,
+      "lines_out": 303
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0044",
+      "output_path": "release/raw_traces/project_006/session_0044.jsonl",
+      "lines_in": 940,
+      "lines_out": 933
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0045",
+      "output_path": "release/raw_traces/project_006/session_0045.jsonl",
+      "lines_in": 405,
+      "lines_out": 405
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0046",
+      "output_path": "release/raw_traces/project_006/session_0046.jsonl",
+      "lines_in": 886,
+      "lines_out": 886
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0047",
+      "output_path": "release/raw_traces/project_006/session_0047.jsonl",
+      "lines_in": 66,
+      "lines_out": 65
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0048",
+      "output_path": "release/raw_traces/project_006/session_0048.jsonl",
+      "lines_in": 918,
+      "lines_out": 918
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0049",
+      "output_path": "release/raw_traces/project_006/session_0049.jsonl",
+      "lines_in": 20,
+      "lines_out": 0
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0050",
+      "output_path": "release/raw_traces/project_006/session_0050.jsonl",
+      "lines_in": 270,
+      "lines_out": 257
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0051",
+      "output_path": "release/raw_traces/project_006/session_0051.jsonl",
+      "lines_in": 633,
+      "lines_out": 632
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0052",
+      "output_path": "release/raw_traces/project_006/session_0052.jsonl",
+      "lines_in": 1,
+      "lines_out": 0
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0053",
+      "output_path": "release/raw_traces/project_006/session_0053.jsonl",
+      "lines_in": 2,
+      "lines_out": 0
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0054",
+      "output_path": "release/raw_traces/project_006/session_0054.jsonl",
+      "lines_in": 108,
+      "lines_out": 108
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0055",
+      "output_path": "release/raw_traces/project_006/session_0055.jsonl",
+      "lines_in": 180,
+      "lines_out": 179
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0056",
+      "output_path": "release/raw_traces/project_006/session_0056.jsonl",
+      "lines_in": 2043,
+      "lines_out": 2020
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0057",
+      "output_path": "release/raw_traces/project_006/session_0057.jsonl",
+      "lines_in": 154,
+      "lines_out": 154
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0058",
+      "output_path": "release/raw_traces/project_006/session_0058.jsonl",
+      "lines_in": 621,
+      "lines_out": 563
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0059",
+      "output_path": "release/raw_traces/project_006/session_0059.jsonl",
+      "lines_in": 69,
+      "lines_out": 66
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0060",
+      "output_path": "release/raw_traces/project_006/session_0060.jsonl",
+      "lines_in": 360,
+      "lines_out": 341
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0061",
+      "output_path": "release/raw_traces/project_006/session_0061.jsonl",
+      "lines_in": 2,
+      "lines_out": 2
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0062",
+      "output_path": "release/raw_traces/project_006/session_0062.jsonl",
+      "lines_in": 648,
+      "lines_out": 605
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0063",
+      "output_path": "release/raw_traces/project_006/session_0063.jsonl",
+      "lines_in": 533,
+      "lines_out": 525
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0064",
+      "output_path": "release/raw_traces/project_006/session_0064.jsonl",
+      "lines_in": 600,
+      "lines_out": 534
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0065",
+      "output_path": "release/raw_traces/project_006/session_0065.jsonl",
+      "lines_in": 576,
+      "lines_out": 514
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0066",
+      "output_path": "release/raw_traces/project_006/session_0066.jsonl",
+      "lines_in": 562,
+      "lines_out": 546
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0067",
+      "output_path": "release/raw_traces/project_006/session_0067.jsonl",
+      "lines_in": 1857,
+      "lines_out": 1797
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0068",
+      "output_path": "release/raw_traces/project_006/session_0068.jsonl",
+      "lines_in": 241,
+      "lines_out": 221
+    },
+    {
+      "project_id": "project_006",
+      "session_id": "session_0069",
+      "output_path": "release/raw_traces/project_006/session_0069.jsonl",
+      "lines_in": 302,
+      "lines_out": 299
+    },
+    {
+      "project_id": "project_007",
+      "session_id": "session_0070",
+      "output_path": "release/raw_traces/project_007/session_0070.jsonl",
+      "lines_in": 4,
+      "lines_out": 0
+    },
+    {
+      "project_id": "project_007",
+      "session_id": "session_0071",
+      "output_path": "release/raw_traces/project_007/session_0071.jsonl",
+      "lines_in": 42,
+      "lines_out": 35
+    },
+    {
+      "project_id": "project_007",
+      "session_id": "session_0072",
+      "output_path": "release/raw_traces/project_007/session_0072.jsonl",
+      "lines_in": 285,
+      "lines_out": 272
+    },
+    {
+      "project_id": "project_007",
+      "session_id": "session_0073",
+      "output_path": "release/raw_traces/project_007/session_0073.jsonl",
+      "lines_in": 3,
+      "lines_out": 0
+    },
+    {
+      "project_id": "project_007",
+      "session_id": "session_0074",
+      "output_path": "release/raw_traces/project_007/session_0074.jsonl",
+      "lines_in": 562,
+      "lines_out": 531
+    },
+    {
+      "project_id": "project_007",
+      "session_id": "session_0075",
+      "output_path": "release/raw_traces/project_007/session_0075.jsonl",
+      "lines_in": 4,
+      "lines_out": 0
+    },
+    {
+      "project_id": "project_007",
+      "session_id": "session_0076",
+      "output_path": "release/raw_traces/project_007/session_0076.jsonl",
+      "lines_in": 203,
+      "lines_out": 190
+    },
+    {
+      "project_id": "project_007",
+      "session_id": "session_0077",
+      "output_path": "release/raw_traces/project_007/session_0077.jsonl",
+      "lines_in": 9,
+      "lines_out": 0
+    },
+    {
+      "project_id": "project_007",
+      "session_id": "session_0078",
+      "output_path": "release/raw_traces/project_007/session_0078.jsonl",
+      "lines_in": 5,
+      "lines_out": 0
+    },
+    {
+      "project_id": "project_007",
+      "session_id": "session_0079",
+      "output_path": "release/raw_traces/project_007/session_0079.jsonl",
+      "lines_in": 582,
+      "lines_out": 565
+    },
+    {
+      "project_id": "project_008",
+      "session_id": "session_0080",
+      "output_path": "release/raw_traces/project_008/session_0080.jsonl",
+      "lines_in": 3,
+      "lines_out": 0
+    },
+    {
+      "project_id": "project_008",
+      "session_id": "session_0081",
+      "output_path": "release/raw_traces/project_008/session_0081.jsonl",
+      "lines_in": 433,
+      "lines_out": 433
+    },
+    {
+      "project_id": "project_008",
+      "session_id": "session_0082",
+      "output_path": "release/raw_traces/project_008/session_0082.jsonl",
+      "lines_in": 405,
+      "lines_out": 391
+    },
+    {
+      "project_id": "project_008",
+      "session_id": "session_0083",
+      "output_path": "release/raw_traces/project_008/session_0083.jsonl",
+      "lines_in": 921,
+      "lines_out": 918
+    },
+    {
+      "project_id": "project_008",
+      "session_id": "session_0084",
+      "output_path": "release/raw_traces/project_008/session_0084.jsonl",
+      "lines_in": 219,
+      "lines_out": 219
+    },
+    {
+      "project_id": "project_008",
+      "session_id": "session_0085",
+      "output_path": "release/raw_traces/project_008/session_0085.jsonl",
+      "lines_in": 2,
+      "lines_out": 0
+    },
+    {
+      "project_id": "project_008",
+      "session_id": "session_0086",
+      "output_path": "release/raw_traces/project_008/session_0086.jsonl",
+      "lines_in": 1019,
+      "lines_out": 1016
+    },
+    {
+      "project_id": "project_008",
+      "session_id": "session_0087",
+      "output_path": "release/raw_traces/project_008/session_0087.jsonl",
+      "lines_in": 185,
+      "lines_out": 185
+    },
+    {
+      "project_id": "project_008",
+      "session_id": "session_0088",
+      "output_path": "release/raw_traces/project_008/session_0088.jsonl",
+      "lines_in": 5,
+      "lines_out": 0
+    },
+    {
+      "project_id": "project_009",
+      "session_id": "session_0089",
+      "output_path": "release/raw_traces/project_009/session_0089.jsonl",
+      "lines_in": 12,
+      "lines_out": 2
+    },
+    {
+      "project_id": "project_009",
+      "session_id": "session_0090",
+      "output_path": "release/raw_traces/project_009/session_0090.jsonl",
+      "lines_in": 10,
+      "lines_out": 10
+    },
+    {
+      "project_id": "project_010",
+      "session_id": "session_0091",
+      "output_path": "release/raw_traces/project_010/session_0091.jsonl",
+      "lines_in": 94,
+      "lines_out": 94
+    },
+    {
+      "project_id": "project_010",
+      "session_id": "session_0092",
+      "output_path": "release/raw_traces/project_010/session_0092.jsonl",
+      "lines_in": 116,
+      "lines_out": 106
+    },
+    {
+      "project_id": "project_011",
+      "session_id": "session_0093",
+      "output_path": "release/raw_traces/project_011/session_0093.jsonl",
+      "lines_in": 118,
+      "lines_out": 111
+    },
+    {
+      "project_id": "project_011",
+      "session_id": "session_0094",
+      "output_path": "release/raw_traces/project_011/session_0094.jsonl",
+      "lines_in": 292,
+      "lines_out": 270
+    }
+  ]
+}

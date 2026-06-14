@@ -1,0 +1,855 @@
+{
+  "version": "1.0",
+  "num_sessions": 94,
+  "total_llm_calls": 20634,
+  "total_tool_calls": 11617,
+  "sessions": [
+    {
+      "input_path": "release/raw_traces/project_001/session_0001.jsonl",
+      "output_path": "release/parsed_traces/project_001/session_0001/events.json",
+      "num_events": 315,
+      "num_llm_calls": 192,
+      "num_tool_calls": 123,
+      "project_id": "project_001",
+      "session_id": "session_0001"
+    },
+    {
+      "input_path": "release/raw_traces/project_002/session_0002.jsonl",
+      "output_path": "release/parsed_traces/project_002/session_0002/events.json",
+      "num_events": 319,
+      "num_llm_calls": 203,
+      "num_tool_calls": 116,
+      "project_id": "project_002",
+      "session_id": "session_0002"
+    },
+    {
+      "input_path": "release/raw_traces/project_002/session_0003.jsonl",
+      "output_path": "release/parsed_traces/project_002/session_0003/events.json",
+      "num_events": 320,
+      "num_llm_calls": 205,
+      "num_tool_calls": 115,
+      "project_id": "project_002",
+      "session_id": "session_0003"
+    },
+    {
+      "input_path": "release/raw_traces/project_003/session_0004.jsonl",
+      "output_path": "release/parsed_traces/project_003/session_0004/events.json",
+      "num_events": 84,
+      "num_llm_calls": 56,
+      "num_tool_calls": 28,
+      "project_id": "project_003",
+      "session_id": "session_0004"
+    },
+    {
+      "input_path": "release/raw_traces/project_003/session_0005.jsonl",
+      "output_path": "release/parsed_traces/project_003/session_0005/events.json",
+      "num_events": 173,
+      "num_llm_calls": 115,
+      "num_tool_calls": 58,
+      "project_id": "project_003",
+      "session_id": "session_0005"
+    },
+    {
+      "input_path": "release/raw_traces/project_004/session_0006.jsonl",
+      "output_path": "release/parsed_traces/project_004/session_0006/events.json",
+      "num_events": 257,
+      "num_llm_calls": 158,
+      "num_tool_calls": 99,
+      "project_id": "project_004",
+      "session_id": "session_0006"
+    },
+    {
+      "input_path": "release/raw_traces/project_004/session_0007.jsonl",
+      "output_path": "release/parsed_traces/project_004/session_0007/events.json",
+      "num_events": 236,
+      "num_llm_calls": 147,
+      "num_tool_calls": 89,
+      "project_id": "project_004",
+      "session_id": "session_0007"
+    },
+    {
+      "input_path": "release/raw_traces/project_004/session_0008.jsonl",
+      "output_path": "release/parsed_traces/project_004/session_0008/events.json",
+      "num_events": 420,
+      "num_llm_calls": 274,
+      "num_tool_calls": 146,
+      "project_id": "project_004",
+      "session_id": "session_0008"
+    },
+    {
+      "input_path": "release/raw_traces/project_004/session_0009.jsonl",
+      "output_path": "release/parsed_traces/project_004/session_0009/events.json",
+      "num_events": 449,
+      "num_llm_calls": 261,
+      "num_tool_calls": 188,
+      "project_id": "project_004",
+      "session_id": "session_0009"
+    },
+    {
+      "input_path": "release/raw_traces/project_004/session_0010.jsonl",
+      "output_path": "release/parsed_traces/project_004/session_0010/events.json",
+      "num_events": 171,
+      "num_llm_calls": 112,
+      "num_tool_calls": 59,
+      "project_id": "project_004",
+      "session_id": "session_0010"
+    },
+    {
+      "input_path": "release/raw_traces/project_004/session_0011.jsonl",
+      "output_path": "release/parsed_traces/project_004/session_0011/events.json",
+      "num_events": 203,
+      "num_llm_calls": 130,
+      "num_tool_calls": 73,
+      "project_id": "project_004",
+      "session_id": "session_0011"
+    },
+    {
+      "input_path": "release/raw_traces/project_005/session_0012.jsonl",
+      "output_path": "release/parsed_traces/project_005/session_0012/events.json",
+      "num_events": 63,
+      "num_llm_calls": 36,
+      "num_tool_calls": 27,
+      "project_id": "project_005",
+      "session_id": "session_0012"
+    },
+    {
+      "input_path": "release/raw_traces/project_005/session_0013.jsonl",
+      "output_path": "release/parsed_traces/project_005/session_0013/events.json",
+      "num_events": 189,
+      "num_llm_calls": 127,
+      "num_tool_calls": 62,
+      "project_id": "project_005",
+      "session_id": "session_0013"
+    },
+    {
+      "input_path": "release/raw_traces/project_005/session_0014.jsonl",
+      "output_path": "release/parsed_traces/project_005/session_0014/events.json",
+      "num_events": 137,
+      "num_llm_calls": 93,
+      "num_tool_calls": 44,
+      "project_id": "project_005",
+      "session_id": "session_0014"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0015.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0015/events.json",
+      "num_events": 256,
+      "num_llm_calls": 150,
+      "num_tool_calls": 106,
+      "project_id": "project_006",
+      "session_id": "session_0015"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0016.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0016/events.json",
+      "num_events": 0,
+      "num_llm_calls": 0,
+      "num_tool_calls": 0,
+      "project_id": "project_006",
+      "session_id": "session_0016"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0017.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0017/events.json",
+      "num_events": 19,
+      "num_llm_calls": 12,
+      "num_tool_calls": 7,
+      "project_id": "project_006",
+      "session_id": "session_0017"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0018.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0018/events.json",
+      "num_events": 458,
+      "num_llm_calls": 282,
+      "num_tool_calls": 176,
+      "project_id": "project_006",
+      "session_id": "session_0018"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0019.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0019/events.json",
+      "num_events": 237,
+      "num_llm_calls": 145,
+      "num_tool_calls": 92,
+      "project_id": "project_006",
+      "session_id": "session_0019"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0020.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0020/events.json",
+      "num_events": 763,
+      "num_llm_calls": 465,
+      "num_tool_calls": 298,
+      "project_id": "project_006",
+      "session_id": "session_0020"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0021.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0021/events.json",
+      "num_events": 440,
+      "num_llm_calls": 270,
+      "num_tool_calls": 170,
+      "project_id": "project_006",
+      "session_id": "session_0021"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0022.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0022/events.json",
+      "num_events": 224,
+      "num_llm_calls": 143,
+      "num_tool_calls": 81,
+      "project_id": "project_006",
+      "session_id": "session_0022"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0023.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0023/events.json",
+      "num_events": 253,
+      "num_llm_calls": 151,
+      "num_tool_calls": 102,
+      "project_id": "project_006",
+      "session_id": "session_0023"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0024.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0024/events.json",
+      "num_events": 96,
+      "num_llm_calls": 63,
+      "num_tool_calls": 33,
+      "project_id": "project_006",
+      "session_id": "session_0024"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0025.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0025/events.json",
+      "num_events": 649,
+      "num_llm_calls": 411,
+      "num_tool_calls": 238,
+      "project_id": "project_006",
+      "session_id": "session_0025"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0026.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0026/events.json",
+      "num_events": 239,
+      "num_llm_calls": 159,
+      "num_tool_calls": 80,
+      "project_id": "project_006",
+      "session_id": "session_0026"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0027.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0027/events.json",
+      "num_events": 2760,
+      "num_llm_calls": 1799,
+      "num_tool_calls": 961,
+      "project_id": "project_006",
+      "session_id": "session_0027"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0028.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0028/events.json",
+      "num_events": 198,
+      "num_llm_calls": 129,
+      "num_tool_calls": 69,
+      "project_id": "project_006",
+      "session_id": "session_0028"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0029.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0029/events.json",
+      "num_events": 882,
+      "num_llm_calls": 552,
+      "num_tool_calls": 330,
+      "project_id": "project_006",
+      "session_id": "session_0029"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0030.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0030/events.json",
+      "num_events": 194,
+      "num_llm_calls": 130,
+      "num_tool_calls": 64,
+      "project_id": "project_006",
+      "session_id": "session_0030"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0031.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0031/events.json",
+      "num_events": 853,
+      "num_llm_calls": 561,
+      "num_tool_calls": 292,
+      "project_id": "project_006",
+      "session_id": "session_0031"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0032.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0032/events.json",
+      "num_events": 1172,
+      "num_llm_calls": 794,
+      "num_tool_calls": 378,
+      "project_id": "project_006",
+      "session_id": "session_0032"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0033.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0033/events.json",
+      "num_events": 98,
+      "num_llm_calls": 62,
+      "num_tool_calls": 36,
+      "project_id": "project_006",
+      "session_id": "session_0033"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0034.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0034/events.json",
+      "num_events": 623,
+      "num_llm_calls": 398,
+      "num_tool_calls": 225,
+      "project_id": "project_006",
+      "session_id": "session_0034"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0035.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0035/events.json",
+      "num_events": 69,
+      "num_llm_calls": 46,
+      "num_tool_calls": 23,
+      "project_id": "project_006",
+      "session_id": "session_0035"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0036.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0036/events.json",
+      "num_events": 109,
+      "num_llm_calls": 73,
+      "num_tool_calls": 36,
+      "project_id": "project_006",
+      "session_id": "session_0036"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0037.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0037/events.json",
+      "num_events": 141,
+      "num_llm_calls": 92,
+      "num_tool_calls": 49,
+      "project_id": "project_006",
+      "session_id": "session_0037"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0038.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0038/events.json",
+      "num_events": 23,
+      "num_llm_calls": 13,
+      "num_tool_calls": 10,
+      "project_id": "project_006",
+      "session_id": "session_0038"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0039.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0039/events.json",
+      "num_events": 390,
+      "num_llm_calls": 249,
+      "num_tool_calls": 141,
+      "project_id": "project_006",
+      "session_id": "session_0039"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0040.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0040/events.json",
+      "num_events": 465,
+      "num_llm_calls": 307,
+      "num_tool_calls": 158,
+      "project_id": "project_006",
+      "session_id": "session_0040"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0041.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0041/events.json",
+      "num_events": 519,
+      "num_llm_calls": 314,
+      "num_tool_calls": 205,
+      "project_id": "project_006",
+      "session_id": "session_0041"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0042.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0042/events.json",
+      "num_events": 74,
+      "num_llm_calls": 46,
+      "num_tool_calls": 28,
+      "project_id": "project_006",
+      "session_id": "session_0042"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0043.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0043/events.json",
+      "num_events": 265,
+      "num_llm_calls": 155,
+      "num_tool_calls": 110,
+      "project_id": "project_006",
+      "session_id": "session_0043"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0044.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0044/events.json",
+      "num_events": 829,
+      "num_llm_calls": 505,
+      "num_tool_calls": 324,
+      "project_id": "project_006",
+      "session_id": "session_0044"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0045.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0045/events.json",
+      "num_events": 356,
+      "num_llm_calls": 225,
+      "num_tool_calls": 131,
+      "project_id": "project_006",
+      "session_id": "session_0045"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0046.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0046/events.json",
+      "num_events": 833,
+      "num_llm_calls": 521,
+      "num_tool_calls": 312,
+      "project_id": "project_006",
+      "session_id": "session_0046"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0047.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0047/events.json",
+      "num_events": 57,
+      "num_llm_calls": 35,
+      "num_tool_calls": 22,
+      "project_id": "project_006",
+      "session_id": "session_0047"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0048.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0048/events.json",
+      "num_events": 892,
+      "num_llm_calls": 540,
+      "num_tool_calls": 352,
+      "project_id": "project_006",
+      "session_id": "session_0048"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0049.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0049/events.json",
+      "num_events": 0,
+      "num_llm_calls": 0,
+      "num_tool_calls": 0,
+      "project_id": "project_006",
+      "session_id": "session_0049"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0050.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0050/events.json",
+      "num_events": 240,
+      "num_llm_calls": 160,
+      "num_tool_calls": 80,
+      "project_id": "project_006",
+      "session_id": "session_0050"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0051.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0051/events.json",
+      "num_events": 592,
+      "num_llm_calls": 359,
+      "num_tool_calls": 233,
+      "project_id": "project_006",
+      "session_id": "session_0051"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0052.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0052/events.json",
+      "num_events": 0,
+      "num_llm_calls": 0,
+      "num_tool_calls": 0,
+      "project_id": "project_006",
+      "session_id": "session_0052"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0053.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0053/events.json",
+      "num_events": 0,
+      "num_llm_calls": 0,
+      "num_tool_calls": 0,
+      "project_id": "project_006",
+      "session_id": "session_0053"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0054.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0054/events.json",
+      "num_events": 92,
+      "num_llm_calls": 62,
+      "num_tool_calls": 30,
+      "project_id": "project_006",
+      "session_id": "session_0054"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0055.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0055/events.json",
+      "num_events": 165,
+      "num_llm_calls": 100,
+      "num_tool_calls": 65,
+      "project_id": "project_006",
+      "session_id": "session_0055"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0056.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0056/events.json",
+      "num_events": 1840,
+      "num_llm_calls": 1199,
+      "num_tool_calls": 641,
+      "project_id": "project_006",
+      "session_id": "session_0056"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0057.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0057/events.json",
+      "num_events": 150,
+      "num_llm_calls": 87,
+      "num_tool_calls": 63,
+      "project_id": "project_006",
+      "session_id": "session_0057"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0058.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0058/events.json",
+      "num_events": 498,
+      "num_llm_calls": 326,
+      "num_tool_calls": 172,
+      "project_id": "project_006",
+      "session_id": "session_0058"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0059.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0059/events.json",
+      "num_events": 66,
+      "num_llm_calls": 36,
+      "num_tool_calls": 30,
+      "project_id": "project_006",
+      "session_id": "session_0059"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0060.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0060/events.json",
+      "num_events": 322,
+      "num_llm_calls": 187,
+      "num_tool_calls": 135,
+      "project_id": "project_006",
+      "session_id": "session_0060"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0061.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0061/events.json",
+      "num_events": 0,
+      "num_llm_calls": 0,
+      "num_tool_calls": 0,
+      "project_id": "project_006",
+      "session_id": "session_0061"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0062.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0062/events.json",
+      "num_events": 553,
+      "num_llm_calls": 367,
+      "num_tool_calls": 186,
+      "project_id": "project_006",
+      "session_id": "session_0062"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0063.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0063/events.json",
+      "num_events": 478,
+      "num_llm_calls": 285,
+      "num_tool_calls": 193,
+      "project_id": "project_006",
+      "session_id": "session_0063"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0064.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0064/events.json",
+      "num_events": 463,
+      "num_llm_calls": 329,
+      "num_tool_calls": 134,
+      "project_id": "project_006",
+      "session_id": "session_0064"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0065.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0065/events.json",
+      "num_events": 483,
+      "num_llm_calls": 344,
+      "num_tool_calls": 139,
+      "project_id": "project_006",
+      "session_id": "session_0065"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0066.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0066/events.json",
+      "num_events": 516,
+      "num_llm_calls": 343,
+      "num_tool_calls": 173,
+      "project_id": "project_006",
+      "session_id": "session_0066"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0067.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0067/events.json",
+      "num_events": 1714,
+      "num_llm_calls": 1100,
+      "num_tool_calls": 614,
+      "project_id": "project_006",
+      "session_id": "session_0067"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0068.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0068/events.json",
+      "num_events": 208,
+      "num_llm_calls": 139,
+      "num_tool_calls": 69,
+      "project_id": "project_006",
+      "session_id": "session_0068"
+    },
+    {
+      "input_path": "release/raw_traces/project_006/session_0069.jsonl",
+      "output_path": "release/parsed_traces/project_006/session_0069/events.json",
+      "num_events": 275,
+      "num_llm_calls": 178,
+      "num_tool_calls": 97,
+      "project_id": "project_006",
+      "session_id": "session_0069"
+    },
+    {
+      "input_path": "release/raw_traces/project_007/session_0070.jsonl",
+      "output_path": "release/parsed_traces/project_007/session_0070/events.json",
+      "num_events": 0,
+      "num_llm_calls": 0,
+      "num_tool_calls": 0,
+      "project_id": "project_007",
+      "session_id": "session_0070"
+    },
+    {
+      "input_path": "release/raw_traces/project_007/session_0071.jsonl",
+      "output_path": "release/parsed_traces/project_007/session_0071/events.json",
+      "num_events": 10,
+      "num_llm_calls": 8,
+      "num_tool_calls": 2,
+      "project_id": "project_007",
+      "session_id": "session_0071"
+    },
+    {
+      "input_path": "release/raw_traces/project_007/session_0072.jsonl",
+      "output_path": "release/parsed_traces/project_007/session_0072/events.json",
+      "num_events": 221,
+      "num_llm_calls": 127,
+      "num_tool_calls": 94,
+      "project_id": "project_007",
+      "session_id": "session_0072"
+    },
+    {
+      "input_path": "release/raw_traces/project_007/session_0073.jsonl",
+      "output_path": "release/parsed_traces/project_007/session_0073/events.json",
+      "num_events": 0,
+      "num_llm_calls": 0,
+      "num_tool_calls": 0,
+      "project_id": "project_007",
+      "session_id": "session_0073"
+    },
+    {
+      "input_path": "release/raw_traces/project_007/session_0074.jsonl",
+      "output_path": "release/parsed_traces/project_007/session_0074/events.json",
+      "num_events": 459,
+      "num_llm_calls": 263,
+      "num_tool_calls": 196,
+      "project_id": "project_007",
+      "session_id": "session_0074"
+    },
+    {
+      "input_path": "release/raw_traces/project_007/session_0075.jsonl",
+      "output_path": "release/parsed_traces/project_007/session_0075/events.json",
+      "num_events": 0,
+      "num_llm_calls": 0,
+      "num_tool_calls": 0,
+      "project_id": "project_007",
+      "session_id": "session_0075"
+    },
+    {
+      "input_path": "release/raw_traces/project_007/session_0076.jsonl",
+      "output_path": "release/parsed_traces/project_007/session_0076/events.json",
+      "num_events": 180,
+      "num_llm_calls": 126,
+      "num_tool_calls": 54,
+      "project_id": "project_007",
+      "session_id": "session_0076"
+    },
+    {
+      "input_path": "release/raw_traces/project_007/session_0077.jsonl",
+      "output_path": "release/parsed_traces/project_007/session_0077/events.json",
+      "num_events": 0,
+      "num_llm_calls": 0,
+      "num_tool_calls": 0,
+      "project_id": "project_007",
+      "session_id": "session_0077"
+    },
+    {
+      "input_path": "release/raw_traces/project_007/session_0078.jsonl",
+      "output_path": "release/parsed_traces/project_007/session_0078/events.json",
+      "num_events": 0,
+      "num_llm_calls": 0,
+      "num_tool_calls": 0,
+      "project_id": "project_007",
+      "session_id": "session_0078"
+    },
+    {
+      "input_path": "release/raw_traces/project_007/session_0079.jsonl",
+      "output_path": "release/parsed_traces/project_007/session_0079/events.json",
+      "num_events": 541,
+      "num_llm_calls": 362,
+      "num_tool_calls": 179,
+      "project_id": "project_007",
+      "session_id": "session_0079"
+    },
+    {
+      "input_path": "release/raw_traces/project_008/session_0080.jsonl",
+      "output_path": "release/parsed_traces/project_008/session_0080/events.json",
+      "num_events": 0,
+      "num_llm_calls": 0,
+      "num_tool_calls": 0,
+      "project_id": "project_008",
+      "session_id": "session_0080"
+    },
+    {
+      "input_path": "release/raw_traces/project_008/session_0081.jsonl",
+      "output_path": "release/parsed_traces/project_008/session_0081/events.json",
+      "num_events": 400,
+      "num_llm_calls": 267,
+      "num_tool_calls": 133,
+      "project_id": "project_008",
+      "session_id": "session_0081"
+    },
+    {
+      "input_path": "release/raw_traces/project_008/session_0082.jsonl",
+      "output_path": "release/parsed_traces/project_008/session_0082/events.json",
+      "num_events": 365,
+      "num_llm_calls": 237,
+      "num_tool_calls": 128,
+      "project_id": "project_008",
+      "session_id": "session_0082"
+    },
+    {
+      "input_path": "release/raw_traces/project_008/session_0083.jsonl",
+      "output_path": "release/parsed_traces/project_008/session_0083/events.json",
+      "num_events": 816,
+      "num_llm_calls": 528,
+      "num_tool_calls": 288,
+      "project_id": "project_008",
+      "session_id": "session_0083"
+    },
+    {
+      "input_path": "release/raw_traces/project_008/session_0084.jsonl",
+      "output_path": "release/parsed_traces/project_008/session_0084/events.json",
+      "num_events": 202,
+      "num_llm_calls": 128,
+      "num_tool_calls": 74,
+      "project_id": "project_008",
+      "session_id": "session_0084"
+    },
+    {
+      "input_path": "release/raw_traces/project_008/session_0085.jsonl",
+      "output_path": "release/parsed_traces/project_008/session_0085/events.json",
+      "num_events": 0,
+      "num_llm_calls": 0,
+      "num_tool_calls": 0,
+      "project_id": "project_008",
+      "session_id": "session_0085"
+    },
+    {
+      "input_path": "release/raw_traces/project_008/session_0086.jsonl",
+      "output_path": "release/parsed_traces/project_008/session_0086/events.json",
+      "num_events": 928,
+      "num_llm_calls": 625,
+      "num_tool_calls": 303,
+      "project_id": "project_008",
+      "session_id": "session_0086"
+    },
+    {
+      "input_path": "release/raw_traces/project_008/session_0087.jsonl",
+      "output_path": "release/parsed_traces/project_008/session_0087/events.json",
+      "num_events": 159,
+      "num_llm_calls": 107,
+      "num_tool_calls": 52,
+      "project_id": "project_008",
+      "session_id": "session_0087"
+    },
+    {
+      "input_path": "release/raw_traces/project_008/session_0088.jsonl",
+      "output_path": "release/parsed_traces/project_008/session_0088/events.json",
+      "num_events": 0,
+      "num_llm_calls": 0,
+      "num_tool_calls": 0,
+      "project_id": "project_008",
+      "session_id": "session_0088"
+    },
+    {
+      "input_path": "release/raw_traces/project_009/session_0089.jsonl",
+      "output_path": "release/parsed_traces/project_009/session_0089/events.json",
+      "num_events": 1,
+      "num_llm_calls": 1,
+      "num_tool_calls": 0,
+      "project_id": "project_009",
+      "session_id": "session_0089"
+    },
+    {
+      "input_path": "release/raw_traces/project_009/session_0090.jsonl",
+      "output_path": "release/parsed_traces/project_009/session_0090/events.json",
+      "num_events": 9,
+      "num_llm_calls": 6,
+      "num_tool_calls": 3,
+      "project_id": "project_009",
+      "session_id": "session_0090"
+    },
+    {
+      "input_path": "release/raw_traces/project_010/session_0091.jsonl",
+      "output_path": "release/parsed_traces/project_010/session_0091/events.json",
+      "num_events": 84,
+      "num_llm_calls": 47,
+      "num_tool_calls": 37,
+      "project_id": "project_010",
+      "session_id": "session_0091"
+    },
+    {
+      "input_path": "release/raw_traces/project_010/session_0092.jsonl",
+      "output_path": "release/parsed_traces/project_010/session_0092/events.json",
+      "num_events": 93,
+      "num_llm_calls": 58,
+      "num_tool_calls": 35,
+      "project_id": "project_010",
+      "session_id": "session_0092"
+    },
+    {
+      "input_path": "release/raw_traces/project_011/session_0093.jsonl",
+      "output_path": "release/parsed_traces/project_011/session_0093/events.json",
+      "num_events": 105,
+      "num_llm_calls": 66,
+      "num_tool_calls": 39,
+      "project_id": "project_011",
+      "session_id": "session_0093"
+    },
+    {
+      "input_path": "release/raw_traces/project_011/session_0094.jsonl",
+      "output_path": "release/parsed_traces/project_011/session_0094/events.json",
+      "num_events": 251,
+      "num_llm_calls": 171,
+      "num_tool_calls": 80,
+      "project_id": "project_011",
+      "session_id": "session_0094"
+    }
+  ],
+  "errors": []
+}
