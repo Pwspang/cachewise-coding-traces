@@ -3,6 +3,13 @@
 Sanitized Claude Code trace dataset collected from real world claude code users. 
 Raw, sanitized traces are located in `release/raw_traces/`. 
 
+## CacheWise/vLLM serving experiment
+
+See [serving_experiment/README.md](serving_experiment/README.md) for the
+single-RTX-Pro-6000 replay using Qwen2.5-Coder-14B-Instruct, the CCDS Slurm
+runner, and request/response, cache-metric, and timeline trace recordings.
+The replay uses synthetic tokens because the released prompt text is redacted.
+
 ## Install Requirements
 
 ```bash
