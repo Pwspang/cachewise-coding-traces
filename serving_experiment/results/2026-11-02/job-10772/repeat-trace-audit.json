@@ -1,0 +1,29 @@
+{
+  "identical_request_hashes_and_lengths_all_runs": true,
+  "runs": {
+    "cachewise-r0": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 406,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "cachewise_no_aging-r0": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 327,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    }
+  }
+}

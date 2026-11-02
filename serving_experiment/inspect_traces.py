@@ -72,14 +72,17 @@ def audit_repeats(root):
     return result
 
 
-def inspect(root):
+def inspect(root, policies=("baseline", "cachewise")):
     audit_repeats(root)
-    comparison = json.loads((root / "comparison.json").read_text())
+    comparison_path = root / "comparison.json"
+    if not comparison_path.exists():
+        comparison_path = root / "aging-comparison.json"
+    comparison = json.loads(comparison_path.read_text())
     fig, axes = plt.subplots(
         3, 2, figsize=(14, 10), layout="constrained", sharex=True, sharey="row"
     )
     evidence, signatures, combined_timeline = {}, [], []
-    for col, policy in enumerate(("baseline", "cachewise")):
+    for col, policy in enumerate(policies):
         path = root / f"{policy}-r0"
         manifest = json.loads((path / "manifest.json").read_text())
         assert manifest["status"] == "complete", f"Incomplete {policy}"
@@ -122,7 +125,13 @@ def inspect(root):
                 (event["tid"] - 0.32, 0.64),
                 facecolors=color,
             )
-        axes[0, col].set_title("Baseline" if policy == "baseline" else "CacheWise")
+        axes[0, col].set_title(
+            {
+                "baseline": "Baseline",
+                "cachewise": "CacheWise (30 s aging)",
+                "cachewise_no_aging": "CacheWise (aging disabled)",
+            }.get(policy, policy)
+        )
         axes[0, col].set_yticks(
             range(len(manifest["session_ids"])), manifest["session_ids"]
         )
@@ -183,4 +192,6 @@ def inspect(root):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("root", type=Path)
-    inspect(parser.parse_args().root)
+    parser.add_argument("--policies", nargs=2, default=("baseline", "cachewise"))
+    args = parser.parse_args()
+    inspect(args.root, args.policies)

@@ -1,0 +1,197 @@
+{
+  "workload_sha256": "362771933edf1d36bdc4e373c193b7fd5eadd537be058e0d86aa204e1854cd51",
+  "bootstrap_sha256": "00bc7912d76a7c2d5a9fa45cccd5153d63f597639f590496556ec4d4df0f96eb",
+  "parsed_source_sessions": 94,
+  "training_source_sessions": 34,
+  "training_fraction_of_parsed_sources": 0.3617021276595745,
+  "prepared_segments": 368,
+  "eligible_segments_at_least_two_turns": 311,
+  "preparation_audit": {
+    "llm_records": 20634,
+    "unique_messages": 11453,
+    "human_pause_boundaries": 314,
+    "context_reset_boundaries": 9,
+    "synthetic_messages_skipped": 28,
+    "invalid_or_overlength_messages_skipped": 428
+  },
+  "bootstrap_samples": 8215,
+  "unique_bootstrap_argument_strings": 1,
+  "all_bootstrap_arguments_are_redacted": true,
+  "bootstrap_durations_over_3600s": 11,
+  "ten_segment_transitions": 73,
+  "transitions_at_most_1s": 57,
+  "missing_initial_bootstrap_key_count": 16,
+  "missing_initial_bootstrap_keys": {
+    "Bash+Bash+TodoWrite": 1,
+    "Bash+Bash": 7,
+    "Edit+Edit+Edit": 1,
+    "Bash+Bash+Bash": 1,
+    "Bash+Glob+Grep": 1,
+    "Read+Read+Read": 2,
+    "Glob+Grep+Grep+TodoWrite": 1,
+    "Grep+Read": 1,
+    "Read+Read+TodoWrite": 1
+  },
+  "load_characteristics": {
+    "10": {
+      "segments": 10,
+      "source_sessions": 8,
+      "requests": 83,
+      "initial_prompt_tokens": 487696,
+      "output_tokens": 15235,
+      "external_delay_sum_s": 279.714998960495,
+      "max_external_delay_s": 114.21200013160706,
+      "delays_over_300s": []
+    },
+    "20": {
+      "segments": 20,
+      "source_sessions": 16,
+      "requests": 153,
+      "initial_prompt_tokens": 1126871,
+      "output_tokens": 33797,
+      "external_delay_sum_s": 185048.47599887848,
+      "max_external_delay_s": 178164.20599985123,
+      "delays_over_300s": [
+        {
+          "segment": "session_0092_002",
+          "message": "msg_00021",
+          "delay_s": 608.4570000171661
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00005",
+          "delay_s": 710.5130000114441
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00006",
+          "delay_s": 424.29699993133545
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00007",
+          "delay_s": 178164.20599985123
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00009",
+          "delay_s": 3688.7489998340607
+        }
+      ]
+    },
+    "30": {
+      "segments": 30,
+      "source_sessions": 23,
+      "requests": 223,
+      "initial_prompt_tokens": 1653674,
+      "output_tokens": 36944,
+      "external_delay_sum_s": 185462.5119996071,
+      "max_external_delay_s": 178164.20599985123,
+      "delays_over_300s": [
+        {
+          "segment": "session_0092_002",
+          "message": "msg_00021",
+          "delay_s": 608.4570000171661
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00005",
+          "delay_s": 710.5130000114441
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00006",
+          "delay_s": 424.29699993133545
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00007",
+          "delay_s": 178164.20599985123
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00009",
+          "delay_s": 3688.7489998340607
+        }
+      ]
+    },
+    "40": {
+      "segments": 40,
+      "source_sessions": 26,
+      "requests": 282,
+      "initial_prompt_tokens": 2215294,
+      "output_tokens": 49891,
+      "external_delay_sum_s": 186129.37100028992,
+      "max_external_delay_s": 178164.20599985123,
+      "delays_over_300s": [
+        {
+          "segment": "session_0092_002",
+          "message": "msg_00021",
+          "delay_s": 608.4570000171661
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00005",
+          "delay_s": 710.5130000114441
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00006",
+          "delay_s": 424.29699993133545
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00007",
+          "delay_s": 178164.20599985123
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00009",
+          "delay_s": 3688.7489998340607
+        }
+      ]
+    },
+    "50": {
+      "segments": 50,
+      "source_sessions": 29,
+      "requests": 421,
+      "initial_prompt_tokens": 2839363,
+      "output_tokens": 60213,
+      "external_delay_sum_s": 186446.9709994793,
+      "max_external_delay_s": 178164.20599985123,
+      "delays_over_300s": [
+        {
+          "segment": "session_0092_002",
+          "message": "msg_00021",
+          "delay_s": 608.4570000171661
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00005",
+          "delay_s": 710.5130000114441
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00006",
+          "delay_s": 424.29699993133545
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00007",
+          "delay_s": 178164.20599985123
+        },
+        {
+          "segment": "session_0076_001",
+          "message": "msg_00009",
+          "delay_s": 3688.7489998340607
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "The paper's exact serving split and selected sessions are unavailable here; the denominator is this repository's parsed source sessions.",
+    "Missing keys describe bootstrap coverage, before online learning; they do not measure prediction error or latency impact.",
+    "Redaction prevents reconstruction of argument-specific tool distributions. Raising the cluster count cannot restore missing information.",
+    "Long recorded tool intervals are preserved, not clipped or dropped. The 178164.206-second interval also exists in the raw tool-use/result timestamps."
+  ]
+}

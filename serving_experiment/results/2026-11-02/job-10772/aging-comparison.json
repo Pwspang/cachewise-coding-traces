@@ -1,0 +1,46 @@
+{
+  "runs": [
+    {
+      "run": "cachewise-r0",
+      "threshold_s": 30.0,
+      "requests": 83,
+      "mean_segment_llm_time_s": 544.8771912626223,
+      "max_segment_llm_time_s": 788.9817126535345,
+      "wall_time_s": 812.9399771259632,
+      "median_ttft_s": 3.816190295154229,
+      "max_request_latency_s": 330.9023968880065,
+      "prompt_cache_hit_fraction": 0.6840556805280976,
+      "uncached_prompt_tokens": 1546501,
+      "queue_pop_observations": 83,
+      "aging_selected_pops": 31,
+      "fresh_selection_calls": 187,
+      "aging_selection_calls": 135,
+      "observer_seconds_before_final_write": 0.12785704457201064,
+      "queue_time_sum_s": 3203.478668940719,
+      "preemptions": 0.0
+    },
+    {
+      "run": "cachewise_no_aging-r0",
+      "threshold_s": 0.0,
+      "requests": 83,
+      "mean_segment_llm_time_s": 366.06664671502074,
+      "max_segment_llm_time_s": 643.8955807709135,
+      "wall_time_s": 654.0357093180064,
+      "median_ttft_s": 6.523685014108196,
+      "max_request_latency_s": 475.0894865230657,
+      "prompt_cache_hit_fraction": 0.7898451700183846,
+      "uncached_prompt_tokens": 1028677,
+      "queue_pop_observations": 83,
+      "aging_selected_pops": 0,
+      "fresh_selection_calls": 626,
+      "aging_selection_calls": 0,
+      "observer_seconds_before_final_write": 0.16007630713284016,
+      "queue_time_sum_s": 1386.636255291989,
+      "preemptions": 0.0
+    }
+  ],
+  "mean_segment_llm_time_reduction_fraction": 0.32816669043028024,
+  "enabled_over_disabled_time_ratio": 1.4884644535419906,
+  "server_arguments_differ_only_in_aging_threshold": true,
+  "limitation": "One paired run on one GPU and selected workload, 30s first then disabled. Not a comparison to LRU, a load sweep, or a statistical replication. Observer counts aging-rule eligibility for selected choices without computing counterfactual prefix scores; a counted override need not change the winning request."
+}

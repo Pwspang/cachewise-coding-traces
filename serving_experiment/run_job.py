@@ -29,15 +29,20 @@ def main():
         choices=[
             "baseline",
             "cachewise",
+            "cachewise_no_aging",
             "prefix_only",
+            "prefix_only_no_aging",
             "eviction_only",
             "human_first",
             "queued_first",
         ],
     )
     p.add_argument("--diagnostics", action="store_true")
+    p.add_argument("--queue-diagnostics", action="store_true")
     p.add_argument("--num-gpu-blocks", type=int)
     a = p.parse_args()
+    if a.diagnostics and a.queue_diagnostics:
+        p.error("Choose either historical diagnostics or queue observation")
     if set(a.policies or ()) & {"human_first", "queued_first"} and not a.diagnostics:
         p.error("Policy interventions require --diagnostics")
     tracker_source = (
@@ -155,23 +160,37 @@ def main():
                 command[1:3] = [
                     str(a.root / "serving_experiment/server_diagnostics.py")
                 ]
+            elif a.queue_diagnostics:
+                command[1:3] = [
+                    str(a.root / "serving_experiment/server_queue_diagnostics.py")
+                ]
             if a.num_gpu_blocks:
                 command.extend(["--num-gpu-blocks-override", str(a.num_gpu_blocks)])
             predictive = policy in {
                 "cachewise",
+                "cachewise_no_aging",
                 "eviction_only",
                 "human_first",
                 "queued_first",
             }
             prefix_aware = policy in {
                 "cachewise",
+                "cachewise_no_aging",
                 "prefix_only",
+                "prefix_only_no_aging",
                 "human_first",
                 "queued_first",
             }
             command.extend(
                 ["--scheduling-policy", "prefix_aware" if prefix_aware else "fcfs"]
             )
+            if prefix_aware:
+                command.extend(
+                    [
+                        "--prefix-aware-max-wait-s",
+                        "0" if policy.endswith("_no_aging") else "30",
+                    ]
+                )
             if predictive:
                 command.extend(
                     [
@@ -204,6 +223,10 @@ def main():
                     stderr=subprocess.STDOUT,
                 )
                 server_env = os.environ.copy()
+                if a.queue_diagnostics:
+                    server_env["CACHEWISE_QUEUE_TRACE"] = str(
+                        a.output / f"{name}-queue"
+                    )
                 if a.diagnostics:
                     server_env["CACHEWISE_DIAGNOSTICS_PATH"] = str(
                         a.output / f"{name}-decisions"

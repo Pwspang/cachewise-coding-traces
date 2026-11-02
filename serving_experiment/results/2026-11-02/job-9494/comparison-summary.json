@@ -1,0 +1,22 @@
+{
+  "baseline": {
+    "runs": 2,
+    "mean_segment_llm_time_s": 577.5940929143165,
+    "range_segment_llm_time_s": [
+      575.6449511291343,
+      579.5432346994988
+    ],
+    "mean_prompt_cache_hit_fraction": 0.6469195295548201
+  },
+  "cachewise": {
+    "runs": 2,
+    "mean_segment_llm_time_s": 545.2740010446753,
+    "range_segment_llm_time_s": [
+      542.3254179760581,
+      548.2225841132924
+    ],
+    "mean_prompt_cache_hit_fraction": 0.6872181861232605
+  },
+  "baseline_over_cachewise_llm_time_ratio": 1.0592731210505546,
+  "limitation": "Paired repeats on one selected workload; ranges are observed run ranges, not confidence intervals."
+}

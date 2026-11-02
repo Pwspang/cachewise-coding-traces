@@ -1,0 +1,256 @@
+{
+  "status": "normal_capacity_complete; half_capacity_experiment_still_running_at_publication",
+  "slurm_job_id": 10779,
+  "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+  "gpu": "single RTX Pro 6000 Blackwell",
+  "kv_blocks": 17981,
+  "kv_token_capacity": 287696,
+  "aging_override_s": 0,
+  "baseline_uses_fcfs": true,
+  "vllm_revision": "a4b3affa7f746db57c2f19de839f72094c8f3ce1",
+  "engine_patch_sha256": "8ab7dae12954b37ac64e408f8ea3cb137685a8725811514ada69099be0015ad2",
+  "bootstrap_sha256": "00bc7912d76a7c2d5a9fa45cccd5153d63f597639f590496556ec4d4df0f96eb",
+  "runs": [
+    {
+      "policy": "baseline",
+      "status": "complete",
+      "selected_workload_sha256": "03eb84e94c662b990ad0c879aeb044f079e5abda0262f9de1bf0a663a2c7549c",
+      "source_workload_sha256": "362771933edf1d36bdc4e373c193b7fd5eadd537be058e0d86aa204e1854cd51",
+      "mean_segment_llm_time_s": 577.4490550414891,
+      "wall_time_s": 875.1652232939377,
+      "requests": 83,
+      "output_tokens": 15235,
+      "uncached_prompt_tokens": 1728277,
+      "cache_hit_fraction": 0.6469195295548201,
+      "mean_phase_residence_time_per_segment_s": {
+        "queue": 337.86188657812306,
+        "prefill": 73.11125340559519,
+        "decode": 165.27369171478784
+      },
+      "sessions": [
+        {
+          "id": "session_0054_014",
+          "requests": 2,
+          "llm_time_s": 225.42315105884336,
+          "output_tokens": 8
+        },
+        {
+          "id": "session_0047_001",
+          "requests": 2,
+          "llm_time_s": 265.2213998858351,
+          "output_tokens": 374
+        },
+        {
+          "id": "session_0084_002",
+          "requests": 2,
+          "llm_time_s": 394.1132849410642,
+          "output_tokens": 641
+        },
+        {
+          "id": "session_0072_004",
+          "requests": 2,
+          "llm_time_s": 458.109728903044,
+          "output_tokens": 1001
+        },
+        {
+          "id": "session_0047_000",
+          "requests": 5,
+          "llm_time_s": 602.8430253840052,
+          "output_tokens": 547
+        },
+        {
+          "id": "session_0065_003",
+          "requests": 5,
+          "llm_time_s": 684.4767851170618,
+          "output_tokens": 525
+        },
+        {
+          "id": "session_0092_000",
+          "requests": 15,
+          "llm_time_s": 726.4194805319421,
+          "output_tokens": 993
+        },
+        {
+          "id": "session_0084_006",
+          "requests": 23,
+          "llm_time_s": 797.4364133651834,
+          "output_tokens": 2769
+        },
+        {
+          "id": "session_0094_002",
+          "requests": 9,
+          "llm_time_s": 846.1996338751633,
+          "output_tokens": 4832
+        },
+        {
+          "id": "session_0010_003",
+          "requests": 18,
+          "llm_time_s": 774.2476473527495,
+          "output_tokens": 3545
+        }
+      ]
+    },
+    {
+      "policy": "prefix_only_no_aging",
+      "status": "complete",
+      "selected_workload_sha256": "03eb84e94c662b990ad0c879aeb044f079e5abda0262f9de1bf0a663a2c7549c",
+      "source_workload_sha256": "362771933edf1d36bdc4e373c193b7fd5eadd537be058e0d86aa204e1854cd51",
+      "mean_segment_llm_time_s": 324.5823881864082,
+      "wall_time_s": 622.6376324470621,
+      "requests": 83,
+      "output_tokens": 15235,
+      "uncached_prompt_tokens": 1026469,
+      "cache_hit_fraction": 0.7902962560877722,
+      "mean_phase_residence_time_per_segment_s": {
+        "queue": 128.17406198938843,
+        "prefill": 47.72291194314603,
+        "decode": 147.47331823362038
+      },
+      "sessions": [
+        {
+          "id": "session_0054_014",
+          "requests": 2,
+          "llm_time_s": 48.216973847011104,
+          "output_tokens": 8
+        },
+        {
+          "id": "session_0047_001",
+          "requests": 2,
+          "llm_time_s": 109.3906728818547,
+          "output_tokens": 374
+        },
+        {
+          "id": "session_0047_000",
+          "requests": 5,
+          "llm_time_s": 119.77328666322865,
+          "output_tokens": 547
+        },
+        {
+          "id": "session_0084_002",
+          "requests": 2,
+          "llm_time_s": 208.2874979460612,
+          "output_tokens": 641
+        },
+        {
+          "id": "session_0065_003",
+          "requests": 5,
+          "llm_time_s": 297.2683825364802,
+          "output_tokens": 525
+        },
+        {
+          "id": "session_0092_000",
+          "requests": 15,
+          "llm_time_s": 297.74828689405695,
+          "output_tokens": 993
+        },
+        {
+          "id": "session_0072_004",
+          "requests": 2,
+          "llm_time_s": 436.4193489700556,
+          "output_tokens": 1001
+        },
+        {
+          "id": "session_0084_006",
+          "requests": 23,
+          "llm_time_s": 588.9926848157775,
+          "output_tokens": 2769
+        },
+        {
+          "id": "session_0010_003",
+          "requests": 18,
+          "llm_time_s": 519.1265384156723,
+          "output_tokens": 3545
+        },
+        {
+          "id": "session_0094_002",
+          "requests": 9,
+          "llm_time_s": 620.600208893884,
+          "output_tokens": 4832
+        }
+      ]
+    },
+    {
+      "policy": "cachewise_no_aging",
+      "status": "complete",
+      "selected_workload_sha256": "03eb84e94c662b990ad0c879aeb044f079e5abda0262f9de1bf0a663a2c7549c",
+      "source_workload_sha256": "362771933edf1d36bdc4e373c193b7fd5eadd537be058e0d86aa204e1854cd51",
+      "mean_segment_llm_time_s": 337.28142668833027,
+      "wall_time_s": 625.0373845831491,
+      "requests": 83,
+      "output_tokens": 15235,
+      "uncached_prompt_tokens": 1028677,
+      "cache_hit_fraction": 0.7898451700183846,
+      "mean_phase_residence_time_per_segment_s": {
+        "queue": 129.7906140417559,
+        "prefill": 48.164280869346115,
+        "decode": 158.1787662955234
+      },
+      "sessions": [
+        {
+          "id": "session_0054_014",
+          "requests": 2,
+          "llm_time_s": 48.30898660165258,
+          "output_tokens": 8
+        },
+        {
+          "id": "session_0047_001",
+          "requests": 2,
+          "llm_time_s": 109.48041973588988,
+          "output_tokens": 374
+        },
+        {
+          "id": "session_0047_000",
+          "requests": 5,
+          "llm_time_s": 119.87240546592511,
+          "output_tokens": 547
+        },
+        {
+          "id": "session_0084_002",
+          "requests": 2,
+          "llm_time_s": 211.69163520308211,
+          "output_tokens": 641
+        },
+        {
+          "id": "session_0065_003",
+          "requests": 5,
+          "llm_time_s": 343.88483464019373,
+          "output_tokens": 525
+        },
+        {
+          "id": "session_0092_000",
+          "requests": 15,
+          "llm_time_s": 369.66364472033456,
+          "output_tokens": 993
+        },
+        {
+          "id": "session_0084_006",
+          "requests": 23,
+          "llm_time_s": 530.7391104814596,
+          "output_tokens": 2769
+        },
+        {
+          "id": "session_0072_004",
+          "requests": 2,
+          "llm_time_s": 500.3413386649918,
+          "output_tokens": 1001
+        },
+        {
+          "id": "session_0094_002",
+          "requests": 9,
+          "llm_time_s": 614.7132150651887,
+          "output_tokens": 4832
+        },
+        {
+          "id": "session_0010_003",
+          "requests": 18,
+          "llm_time_s": 524.1186763045844,
+          "output_tokens": 3545
+        }
+      ]
+    }
+  ],
+  "baseline_over_prefix_lru_mean_time_ratio": 1.7790523332703412,
+  "baseline_over_cachewise_mean_time_ratio": 1.7120689410955594,
+  "cachewise_over_prefix_lru_mean_time_ratio": 1.0391242376793068,
+  "limitations": "One run per policy in prespecified order; ten selected segments; all prefix-aware policies disable aging. Not a full paper replication. No half-capacity result is included yet. Raw recordings remain in the documented local/CCDS run directories."
+}

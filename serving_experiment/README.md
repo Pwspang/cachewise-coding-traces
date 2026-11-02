@@ -76,6 +76,264 @@ four runs' raw request/response/metrics/timeline traces. Remote artifacts are
 under `~/cachewise-rerun/runs/fixed-comparison-9494` on `ccds-ai`. The test log,
 smoke traces, and Slurm log are also saved locally under `runs/ccds-9494/`.
 
+## Aging-override ablation: CCDS job 10772, 2026-11-02
+
+This controlled follow-up compared fixed CacheWise with the default
+`--prefix-aware-max-wait-s 30` against the same engine with the override disabled
+(`--prefix-aware-max-wait-s 0`). The experiment used one full run per setting,
+30 seconds first, on the same physical RTX Pro 6000 as job 9494. Model,
+workload, 17,981-block cache capacity, predictor, and all other server arguments
+were identical. Both fresh servers used the same lightweight queue observer.
+
+| Metric | 30-second override | Override disabled |
+| --- | ---: | ---: |
+| Mean segment LLM time | 544.88 s | 366.07 s |
+| Maximum segment LLM time | 788.98 s | 643.90 s |
+| Total replay wall time | 812.94 s | 654.04 s |
+| Prompt-token cache-hit fraction | 68.41% | 78.98% |
+| Uncached prompt tokens | 1,546,501 | 1,028,677 |
+| Mean summed queue time per segment | 320.35 s | 138.66 s |
+| Median request TTFT | 3.816 s | 6.524 s |
+| Maximum request latency | 330.90 s | 475.09 s |
+| Aging-selected queue pops | 31 / 83 | 0 / 83 |
+
+Disabling the override reduced mean segment LLM time **32.8% (1.488x)**,
+replay wall time 19.5%, and uncached prompt tokens 33.5%. Nine of ten segments
+improved; `session_0072_004` worsened from 441.88 to 529.27 seconds. Median
+TTFT and maximum individual-request latency also worsened, demonstrating the
+fairness trade-off. The largest measured phase reduction was queue waiting;
+phase metrics remain overlapping residence times, not exclusive resource costs.
+
+The control reproduced the previous CacheWise mean (545.27 s) closely. This
+paired intervention supports the aging rule being a substantial performance
+limiter on this workload, rather than the difference being caused by a newer
+vLLM version. It is one ordered pair, not a repeated statistical evaluation.
+There was no fresh LRU or InferCept baseline in this job, so it does not establish
+a new matched speedup against either baseline or replicate the paper's results.
+The ordinary `cachewise` policy retains the 30-second default; the experiment
+adds the explicit `cachewise_no_aging` variant.
+
+The observer records eligibility for the actual selected queue choice without
+extra prefix scoring or modifying queue order. It observed 135 aging selections
+across 187 fresh selection calls in the control, of which 31 popped requests;
+the disabled run recorded zero across 626 fresh selection calls. A counted
+aging choice need not differ from the counterfactual prefix-aware winner.
+Accumulated observer work before the last trace write was 0.128 s and 0.160 s.
+Tests exercising the actual checkout's queue verified preserved order and
+correct accounting of cached choices under both settings. All nine replay and
+observer tests passed. The engine patch was unchanged from job 9494.
+
+Both runs completed all 83 requests with identical prompt hashes and token
+lengths; each processed 4,894,853 prompt tokens and generated 15,235 tokens.
+All 733 metric snapshots succeeded, all compressed recordings passed the audit,
+and neither run had preemptions. Slurm completed with exit 0 on node06 in
+28 minutes 25 seconds, including model startup.
+
+Run using `sbatch serving_experiment/aging.slurm` from the configured remote
+root. After retrieving the output locally:
+
+```bash
+.venv/bin/python serving_experiment/analyze_aging.py runs/ccds-10772/aging-10772
+.venv/bin/python serving_experiment/inspect_traces.py runs/ccds-10772/aging-10772 \
+  --policies cachewise cachewise_no_aging
+```
+
+Artifacts: `runs/ccds-10772/aging-10772/aging-comparison.json`,
+`repeat-trace-audit.json`, `trace_overview.png`, `timeline-comparison.json`,
+the `*-queue-*.jsonl` decision observations, and each run's full recordings.
+The remote copy is `~/cachewise-rerun/runs/aging-10772` on `ccds-ai`.
+
+## Scheduling, eviction, and capacity ablation: CCDS job 10779
+
+Publication checkpoint: the normal-capacity cases below are complete. The two
+half-capacity cases are still running and are not included in these results.
+Committed numerical summaries and trace audits are under
+[`results/2026-11-02/`](results/2026-11-02/). This bundle also includes the
+completed aging ablation, earlier baseline analysis, and paper-fidelity audit.
+Full request/response recordings remain in the documented `runs/` directories
+locally and on CCDS; they are excluded from Git by the repository's ignore rules.
+
+This follow-up prespecifies five fresh-server cases on the same GPU, model,
+engine patch, bootstrap, and complete ten-segment workload. At 17,981 KV blocks
+the order is FCFS/LRU, prefix-aware/LRU, then prefix-aware/predictive eviction.
+At 8,990 blocks the order is prefix-aware/predictive then FCFS/LRU. Every
+prefix-aware case disables the aging override. Reducing capacity changes cache
+pressure without filtering tool delays or choosing another session subset; it
+is not a reproduction of the paper's concurrency sweep.
+
+Completed normal-capacity comparison (287,696 KV tokens):
+
+| Metric | FCFS + LRU | Prefix-aware + LRU | CacheWise, no aging |
+| --- | ---: | ---: | ---: |
+| Mean segment LLM time | 577.45 s | 324.58 s | 337.28 s |
+| Replay wall time | 875.17 s | 622.64 s | 625.04 s |
+| Uncached prompt tokens | 1,728,277 | 1,026,469 | 1,028,677 |
+| Mean summed queue time per segment | 337.86 s | 128.17 s | 129.79 s |
+
+Prefix scheduling alone gives a 1.779x baseline/time ratio (43.8% reduction).
+CacheWise gives 1.712x (41.6% reduction). Adding predictive eviction to the same
+prefix scheduler is 3.9% slower in this pair, with 0.2% more computed prompt
+tokens. Thus this experiment reproduces a substantial scheduling benefit but
+does not reproduce the paper's additional predictive-eviction benefit.
+The 3.9% difference is a single-pair observation, not a statistically established
+regression. The previous no-aging CacheWise run was 366.07 seconds despite the
+same aggregate uncached-token count, showing timing variability.
+
+An illustrative retention difference is `session_0065_003:1`: its preceding
+Bash call has a recorded delay of 0.143 seconds. Prefix-aware/LRU retains
+89,152 cached tokens for the returning request; CacheWise retains zero. Its
+latency rises from 6.57 to 77.74 seconds. Other requests show the reverse
+trade-off, and aggregate uncached-token totals are close. Cache hit counts
+alone therefore do not capture when recomputation occurs or how it changes
+queue order. This observation does not independently isolate bootstrap key
+mismatch, argument redaction, or other predictive-policy details.
+
+All three normal-capacity runs completed 83 requests each, with identical input
+hashes and actual token counts, valid compressed recordings, 1,061 successful
+metric snapshots, and zero preemptions. The fresh baseline closely matches the
+earlier 577.59-second mean and exactly matches its uncached-token count.
+
+Run the experiment with `sbatch serving_experiment/pressure.slurm`. The analysis
+command requires both capacity groups to be complete and validates equal inputs
+across all five cases, allowed server-argument differences, source patches,
+server counters, queue observations, and recordings:
+
+```bash
+.venv/bin/python serving_experiment/analyze_pressure.py \
+  runs/ccds-10779/pressure-10779
+```
+
+## Paper-fidelity audit (2026-11-02)
+
+The paper's headline is conditional on its experimental setup, rather than a
+guaranteed speedup at every load. It reports similar performance at N <= 10 and
+2.7–3.5x lower session completion time at higher load
+([sections 6.1–6.2](https://arxiv.org/html/2606.16824v1#S6.SS1)). Our ten selected
+segments already exceed this GPU's KV capacity, so equal session counts do not
+imply equal memory pressure across the two testbeds.
+
+The local input audit identifies these additional reproducibility gaps:
+
+- Our serving bootstrap inherits 34 training source sessions out of the 94
+  parsed source sessions in this repository (36.2%). The paper describes an 80%
+  random training split. Its exact serving split and selected session IDs are
+  unavailable here; the published tool-duration split is not evidence that the
+  same split was used for the serving plots.
+- All 8,215 bootstrap argument strings are identical redacted placeholders.
+  Argument-sensitive prediction cannot be recovered from these data. The paper
+  clusters argument embeddings; this run explicitly uses the weaker tool-name
+  predictor. The fork also hardcodes eight clusters and 512 TF-IDF features,
+  versus the paper's evaluation of up to 100 clusters and 5,000 features. Those
+  clustering settings are inactive in the current tool-name runs.
+- Bootstrap samples represent individual tool calls, whereas runtime keys
+  represent complete parallel batches, including repeated names. Sixteen of
+  73 between-turn transitions have no matching initial bootstrap key (seven
+  are `Bash+Bash`); they fall back to the global distribution until online
+  observations create a matching distribution. This is a concrete preparation
+  mismatch. Its independent latency impact has not been measured. A correction
+  should train on complete batches using the same key and elapsed-duration
+  definition, with the evaluation sessions excluded from training.
+- The ten selected segments contain 83 requests from eight original sessions.
+  Fifty-seven of the 73 between-turn delays are at most one second. This leaves
+  short windows for predictive eviction to add value over prefix scheduling.
+  It does not prove the predictor has no value at other loads or tool mixes.
+- Increasing the deterministic selection to 20 segments introduces a
+  178,164.206-second (49.49-hour) tool interval. Raw tool-use/result timestamps
+  confirm that the interval is present in the source, not introduced by the
+  replay parser. A quick unmodified 20–50-segment replay cannot finish within
+  a normal short job. We have not clipped waits or selected replacement
+  sessions based on performance results.
+
+The hardware/model difference remains one RTX Pro 6000 with a 14B model versus
+two H200s with a 32B model and TP=2. Its quantitative contribution is unmeasured.
+Prefix caching and chunked prefill are enabled in both our policies; chunk size
+512 matches the paper. The paper does not specify the full-input admission
+check setting, so there is no basis to claim that it disabled that check.
+
+Reproduce the input audit without modifying training or replay data:
+
+```bash
+.venv/bin/python serving_experiment/audit_paper_fidelity.py \
+  --prepared runs/prepared-paper-boundaries \
+  --output runs/paper-fidelity/audit.json
+```
+
+## Bottleneck analysis of job 9494 (2026-11-02)
+
+This is an offline analysis of the existing four runs, not a new GPU experiment.
+Both policies used the same fork revision, `a4b3affa7` (commit date June 12,
+2026), the same patch, and the same compiled kernel environment. This was not
+a comparison of a newer upstream vLLM release against an older CacheWise engine.
+The baseline used FCFS/LRU with automatic prefix caching and chunked prefill;
+CacheWise used prefix-aware/predictive policies in that same engine.
+
+The final Prometheus histograms account for all 83 requests in each run.
+Mean summed server request residence time per segment, averaged over repeats:
+
+| Component | Baseline | Fixed CacheWise |
+| --- | ---: | ---: |
+| Waiting in the engine queue | 336.86 s | 309.88 s |
+| Prefill phase | 73.08 s | 66.53 s |
+| Decode phase | 164.84 s | 158.59 s |
+| Unattributed residual | 2.29 s | 9.78 s |
+
+Queueing is 58.4% of baseline server request time, decode 28.6%, and prefill
+12.7%. These are overlapping request residence times, not exclusive GPU or
+CPU execution measurements. The residual is retained rather than assigned
+to a particular resource. Client latency adds roughly 0.5 seconds per segment
+to the server totals. Prefill's fraction is not a bound on CacheWise's possible
+gain: reducing prefill work can also shorten other requests' queues.
+
+There is real cache pressure. The ten initial prompts total 487,696 tokens,
+1.70 times the 287,696-token KV capacity. The server samples show about 2.7
+running requests on average (maximum observed 5), despite `max_num_seqs=32`.
+The baseline computes 1,728,277 prompt KV tokens per run versus 1,531,021 on
+average for CacheWise. Fresh initial and appended prompt tokens total only
+605,956; the excess includes repeated computation and block alignment/last-token
+overhead. Zero request preemptions does not mean zero cached-prefix eviction.
+The full-input-length admission gate is enabled by default in both policies;
+its separate performance contribution was not measured. The selected workload
+also has 57 of 73 between-turn delays at most one second, leaving less opportunity
+for long-horizon tool-duration ranking than workloads with longer tool waits.
+
+An additional policy difference was uncovered: the fork defaults to
+`prefix_aware_max_wait_s=30`. When the oldest waiting request exceeds that age,
+the prefix-aware queue selects it in FCFS order regardless of cached overlap.
+Each CacheWise run had 31/83 requests with queue time above 30 seconds. This
+shows substantial exposure to the threshold, not a measured count of override
+decisions. `probe_scheduler.py` executes the checkout's actual queue code and
+confirms that a 40-second-old request needing 6,000 blocks wins over a newer
+request needing one block at the default threshold; setting the threshold to
+zero reverses the choice. The earlier lifecycle fixes did not change this rule.
+Its impact was unmeasured in this offline analysis; the subsequent ablation
+above measured it. The paper's described
+prefix-aware policy does not specify this 30-second override
+([section 5.1](https://arxiv.org/html/2606.16824v1#S5.SS1)).
+
+The targeted follow-up was the paired 30-versus-0-second aging ablation above,
+recording override selections and queue delays. A further experiment could vary the 512-token
+prefill budget identically for both policies with fixed KV capacity. The 512
+budget matches the paper, but vLLM documents the throughput/latency trade-off
+and recommends larger budgets for throughput in some settings
+([vLLM tuning guide](https://docs.vllm.ai/en/latest/configuration/optimization/#chunked-prefill)).
+Neither a prefill-budget tuning improvement nor a newer-version advantage is established here.
+A separate controlled version comparison would be required for the latter.
+
+Reproduce the analysis and queue-semantics check:
+
+```bash
+.venv/bin/python serving_experiment/analyze_bottlenecks.py \
+  runs/ccds-9494/fixed-comparison-9494 \
+  --workload runs/prepared-paper-boundaries/workload.json
+.venv/bin/python serving_experiment/probe_scheduler.py \
+  external/vllm-cachewise/vllm/v1/core/sched/request_queue.py \
+  --output runs/ccds-9494/fixed-comparison-9494/scheduler-aging-probe.json
+```
+
+Outputs: `bottleneck-analysis.json`, `bottleneck-breakdown.png`, and
+`scheduler-aging-probe.json` in the comparison directory. No serving policy,
+historical measurement, or GPU job was changed for this analysis.
+
 ## Recorded run: CCDS job 9465, 2026-10-28
 
 Slurm completed successfully on node06 using one RTX Pro 6000 Blackwell

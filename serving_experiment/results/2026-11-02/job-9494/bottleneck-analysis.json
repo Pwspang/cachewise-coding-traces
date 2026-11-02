@@ -1,0 +1,237 @@
+{
+  "interpretation": "Overlapping request residence times, not exclusive CPU/GPU execution times. Unattributed is the residual between e2e and phase sums. Cache usage measures active blocks, not all retained cached prefixes. Excess uncached tokens include repeated computation and block-alignment/last-token overhead; not an exact eviction count. Queue waits above 30s show exposure to the aging threshold, not measured counts of FCFS overrides.",
+  "runs": {
+    "baseline-r0": {
+      "policy": "baseline",
+      "requests": 83,
+      "segments": 10,
+      "server_request_time_sum_s": 5751.619825601578,
+      "client_request_time_sum_s": 5756.449511291343,
+      "phase_request_time_sum_s": {
+        "queue": 3368.3316925403196,
+        "prefill": 728.8403772169258,
+        "decode": 1647.9530257607112,
+        "unattributed": 6.494730083621107
+      },
+      "phase_fraction_of_server_request_time": {
+        "queue": 0.585631838451356,
+        "prefill": 0.12671915031183315,
+        "decode": 0.28651981106702357,
+        "unattributed": 0.001129200169787266
+      },
+      "requests_queued_over_30s": 32.0,
+      "preemptions": 0.0,
+      "sampled_eviction_events": 902.0,
+      "prompt_tokens": 4894853,
+      "uncached_prompt_tokens": 1728277,
+      "cold_initial_prompt_tokens": 487696,
+      "fresh_growth_prompt_tokens": 118260,
+      "uncached_above_fresh_token_floor": 1122321,
+      "kv_token_capacity": 287696,
+      "initial_context_to_capacity_ratio": 1.6951782437016851,
+      "prompt_length_range": [
+        15170,
+        103964
+      ],
+      "transitions": 73,
+      "transitions_delay_at_most_1s": 57,
+      "external_delay_sum_s": 279.714998960495,
+      "occupancy": {
+        "num_requests_running": {
+          "time_weighted_mean": 2.714362863325097,
+          "maximum": 5.0
+        },
+        "num_requests_waiting": {
+          "time_weighted_mean": 3.8595007534027386,
+          "maximum": 9.0
+        },
+        "kv_cache_usage_perc": {
+          "time_weighted_mean": 0.48762111722422025,
+          "maximum": 0.9849833147942157
+        }
+      }
+    },
+    "baseline-r1": {
+      "policy": "baseline",
+      "requests": 83,
+      "segments": 10,
+      "server_request_time_sum_s": 5790.064722299576,
+      "client_request_time_sum_s": 5795.432346994989,
+      "phase_request_time_sum_s": {
+        "queue": 3368.95666423114,
+        "prefill": 732.8585851168027,
+        "decode": 1648.915730844601,
+        "unattributed": 39.33374210703187
+      },
+      "phase_fraction_of_server_request_time": {
+        "queue": 0.5818512962827692,
+        "prefill": 0.1265717431955996,
+        "decode": 0.28478364404011697,
+        "unattributed": 0.006793316481514238
+      },
+      "requests_queued_over_30s": 32.0,
+      "preemptions": 0.0,
+      "sampled_eviction_events": 902.0,
+      "prompt_tokens": 4894853,
+      "uncached_prompt_tokens": 1728277,
+      "cold_initial_prompt_tokens": 487696,
+      "fresh_growth_prompt_tokens": 118260,
+      "uncached_above_fresh_token_floor": 1122321,
+      "kv_token_capacity": 287696,
+      "initial_context_to_capacity_ratio": 1.6951782437016851,
+      "prompt_length_range": [
+        15170,
+        103964
+      ],
+      "transitions": 73,
+      "transitions_delay_at_most_1s": 57,
+      "external_delay_sum_s": 279.714998960495,
+      "occupancy": {
+        "num_requests_running": {
+          "time_weighted_mean": 2.688538350415792,
+          "maximum": 5.0
+        },
+        "num_requests_waiting": {
+          "time_weighted_mean": 3.8446258953486017,
+          "maximum": 9.0
+        },
+        "kv_cache_usage_perc": {
+          "time_weighted_mean": 0.4829931100872055,
+          "maximum": 0.9850389321468298
+        }
+      }
+    },
+    "cachewise-r0": {
+      "policy": "cachewise",
+      "requests": 83,
+      "segments": 10,
+      "server_request_time_sum_s": 5418.440379858017,
+      "client_request_time_sum_s": 5423.254179760581,
+      "phase_request_time_sum_s": {
+        "queue": 3189.885458204546,
+        "prefill": 658.0162780750543,
+        "decode": 1564.5280895647593,
+        "unattributed": 6.010554013657384
+      },
+      "phase_fraction_of_server_request_time": {
+        "queue": 0.5887091551403455,
+        "prefill": 0.12144016210293648,
+        "decode": 0.28874140525391473,
+        "unattributed": 0.001109277502803285
+      },
+      "requests_queued_over_30s": 31.0,
+      "preemptions": 0.0,
+      "sampled_eviction_events": 806.0,
+      "prompt_tokens": 4894853,
+      "uncached_prompt_tokens": 1546501,
+      "cold_initial_prompt_tokens": 487696,
+      "fresh_growth_prompt_tokens": 118260,
+      "uncached_above_fresh_token_floor": 940545,
+      "kv_token_capacity": 287696,
+      "initial_context_to_capacity_ratio": 1.6951782437016851,
+      "prompt_length_range": [
+        15170,
+        103964
+      ],
+      "transitions": 73,
+      "transitions_delay_at_most_1s": 57,
+      "external_delay_sum_s": 279.714998960495,
+      "occupancy": {
+        "num_requests_running": {
+          "time_weighted_mean": 2.745380300504494,
+          "maximum": 5.0
+        },
+        "num_requests_waiting": {
+          "time_weighted_mean": 3.9320374899384603,
+          "maximum": 9.0
+        },
+        "kv_cache_usage_perc": {
+          "time_weighted_mean": 0.49741404474669887,
+          "maximum": 0.985706340378198
+        }
+      }
+    },
+    "cachewise-r1": {
+      "policy": "cachewise",
+      "requests": 83,
+      "segments": 10,
+      "server_request_time_sum_s": 5477.093171596527,
+      "client_request_time_sum_s": 5482.225841132924,
+      "phase_request_time_sum_s": {
+        "queue": 3007.748526021256,
+        "prefill": 672.5407650856068,
+        "decode": 1607.1753620334202,
+        "unattributed": 189.6285184562439
+      },
+      "phase_fraction_of_server_request_time": {
+        "queue": 0.549150513199052,
+        "prefill": 0.12279155092217772,
+        "decode": 0.293435826574581,
+        "unattributed": 0.03462210930418932
+      },
+      "requests_queued_over_30s": 31.0,
+      "preemptions": 0.0,
+      "sampled_eviction_events": 777.0,
+      "prompt_tokens": 4894853,
+      "uncached_prompt_tokens": 1515541,
+      "cold_initial_prompt_tokens": 487696,
+      "fresh_growth_prompt_tokens": 118260,
+      "uncached_above_fresh_token_floor": 909585,
+      "kv_token_capacity": 287696,
+      "initial_context_to_capacity_ratio": 1.6951782437016851,
+      "prompt_length_range": [
+        15170,
+        103964
+      ],
+      "transitions": 73,
+      "transitions_delay_at_most_1s": 57,
+      "external_delay_sum_s": 279.714998960495,
+      "occupancy": {
+        "num_requests_running": {
+          "time_weighted_mean": 2.741108380571752,
+          "maximum": 5.0
+        },
+        "num_requests_waiting": {
+          "time_weighted_mean": 3.607086513465063,
+          "maximum": 9.0
+        },
+        "kv_cache_usage_perc": {
+          "time_weighted_mean": 0.49200156981587606,
+          "maximum": 0.9865962180200223
+        }
+      }
+    }
+  },
+  "aggregate": {
+    "baseline": {
+      "runs": 2,
+      "phase_fraction": {
+        "queue": 0.5837352709485228,
+        "prefill": 0.12664520125006687,
+        "decode": 0.28564883600157354,
+        "unattributed": 0.003970691799836693
+      },
+      "mean_phase_time_per_segment_s": {
+        "queue": 336.864417838573,
+        "prefill": 73.08494811668643,
+        "decode": 164.8434378302656,
+        "unattributed": 2.291423609532649
+      }
+    },
+    "cachewise": {
+      "runs": 2,
+      "phase_fraction": {
+        "queue": 0.5688233582097889,
+        "prefill": 0.12211949390794478,
+        "decode": 0.2911012514090932,
+        "unattributed": 0.017955896473173052
+      },
+      "mean_phase_time_per_segment_s": {
+        "queue": 309.8816992112901,
+        "prefill": 66.52785215803306,
+        "decode": 158.585172579909,
+        "unattributed": 9.781953623495065
+      }
+    }
+  }
+}

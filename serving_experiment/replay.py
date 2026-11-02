@@ -341,7 +341,9 @@ if __name__ == "__main__":
         choices=[
             "baseline",
             "cachewise",
+            "cachewise_no_aging",
             "prefix_only",
+            "prefix_only_no_aging",
             "eviction_only",
             "human_first",
             "queued_first",
