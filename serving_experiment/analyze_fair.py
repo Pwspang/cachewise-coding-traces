@@ -1,6 +1,7 @@
 """Validate and compare the matched five-policy, three-repeat experiment."""
 
 import argparse
+import csv
 import hashlib
 import json
 import statistics
@@ -35,7 +36,13 @@ def analyze(root):
         in (root / "vllm-source.patch").read_text()
     )
     commands, manifests = [], []
+    gpu_uuids, profile_paths, bootstrap_paths = set(), set(), set()
+    request_groups = {}
     for name, row in rows.items():
+        assert row["sessions"] == 10 and row["requests"] == 83
+        assert audit["runs"][name]["prompt_tokens"] == 4_894_853
+        assert audit["runs"][name]["output_tokens"] == 15_235
+        assert audit["runs"][name]["archive_records"]["payloads.jsonl.gz"] == 83
         path = root / name
         manifest = json.loads((path / "manifest.json").read_text())
         manifests.append(
@@ -61,11 +68,13 @@ def analyze(root):
         assert option("--kv-cache-eviction-policy") == eviction
         assert option("--num-gpu-blocks-override") == "17981"
         if eviction == "infercept":
+            profile_paths.add(option("--infercept-recompute-profile"))
             assert (
                 Path(option("--infercept-recompute-profile")).name
                 == "recompute-profile.json"
             )
         if eviction == "predictive":
+            bootstrap_paths.add(option("--cachewise-bootstrap-path"))
             assert option("--cachewise-predictor") == "tool_name"
             assert Path(option("--cachewise-bootstrap-path")).name == "bootstrap.jsonl"
         if scheduling == "prefix_aware":
@@ -93,6 +102,10 @@ def analyze(root):
                 index = command.index(flag)
                 del command[index : index + 2]
         commands.append(command)
+        with (root / f"{name}-gpu.csv").open() as handle:
+            samples = list(csv.DictReader(handle, skipinitialspace=True))
+        assert samples, "Missing physical GPU samples"
+        gpu_uuids.update(r["uuid"].strip() for r in samples)
         snapshots = records(path / "metrics.jsonl")
         assert all(r.get("status") == 200 for r in snapshots)
         final = snapshots[-1]["text"]
@@ -100,6 +113,9 @@ def analyze(root):
         requests = [
             r for r in records(path / "requests.jsonl") if r["event"] == "request_end"
         ]
+        for request in requests:
+            key = (row["policy"], request["request_key"])
+            request_groups.setdefault(key, []).append(request)
         uncached = sum(
             r["usage"]["prompt_tokens"]
             - r["usage"]["prompt_tokens_details"]["cached_tokens"]
@@ -115,6 +131,35 @@ def analyze(root):
         }
     assert all(c == commands[0] for c in commands)
     assert all(m == manifests[0] for m in manifests)
+    assert len(gpu_uuids) == len(profile_paths) == len(bootstrap_paths) == 1
+    assert (
+        Path(next(iter(profile_paths))).parent
+        == Path(next(iter(bootstrap_paths))).parent
+    )
+    request_rows = []
+    for (policy, request_key), group in sorted(request_groups.items()):
+        assert len(group) == 3
+        request_rows.append(
+            {
+                "policy": policy,
+                "request_key": request_key,
+                "prompt_tokens": group[0]["usage"]["prompt_tokens"],
+                "completion_tokens": group[0]["usage"]["completion_tokens"],
+                "mean_cached_prompt_tokens": statistics.mean(
+                    r["usage"]["prompt_tokens_details"]["cached_tokens"] for r in group
+                ),
+                "mean_latency_s": statistics.mean(r["latency_s"] for r in group),
+                "min_latency_s": min(r["latency_s"] for r in group),
+                "max_latency_s": max(r["latency_s"] for r in group),
+                "mean_ttft_s": statistics.mean(r["ttft_s"] for r in group),
+            }
+        )
+    with (root / "request-comparison.csv").open("w", newline="") as handle:
+        writer = csv.DictWriter(
+            handle, fieldnames=list(request_rows[0]), lineterminator="\n"
+        )
+        writer.writeheader()
+        writer.writerows(request_rows)
     aggregate = {}
     for policy in POLICIES:
         group = [r for r in rows.values() if r["policy"] == policy]
@@ -166,10 +211,41 @@ def analyze(root):
             (root / "vllm-source.patch").read_bytes()
         ).hexdigest(),
         "common_server_arguments_verified": True,
+        "physical_gpu_uuids": sorted(gpu_uuids),
         "limitation": "Three rotated repeats on one physical GPU and selected workload. Ranges are observed repeats, not confidence intervals. Prefix-aware cases disable aging. InferCept is the preserve/discard adaptation without swap. Phase times overlap and are not exclusive GPU/CPU costs.",
     }
     (root / "fair-comparison.json").write_text(json.dumps(result, indent=2) + "\n")
     plot(root, aggregate)
+    timeline = []
+    for pid, policy in enumerate(POLICIES, start=1):
+        path = root / f"{policy}-r0"
+        manifest = json.loads((path / "manifest.json").read_text())
+        timeline.append(
+            {
+                "name": "process_name",
+                "ph": "M",
+                "pid": pid,
+                "tid": 0,
+                "args": {"name": f"{policy} (elapsed time aligned)"},
+            }
+        )
+        for tid, session in enumerate(manifest["session_ids"]):
+            timeline.append(
+                {
+                    "name": "thread_name",
+                    "ph": "M",
+                    "pid": pid,
+                    "tid": tid,
+                    "args": {"name": session},
+                }
+            )
+        timeline.extend(
+            {**event, "pid": pid}
+            for event in json.loads((path / "timeline.json").read_text())["traceEvents"]
+        )
+    (root / "timeline-comparison-r0.json").write_text(
+        json.dumps({"traceEvents": timeline}) + "\n"
+    )
     print(json.dumps({"policies": aggregate, "contrasts": contrasts}, indent=2))
 
 

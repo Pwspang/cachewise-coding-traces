@@ -1,0 +1,10 @@
+{
+  "vllm_revision": "a4b3affa7f746db57c2f19de839f72094c8f3ce1",
+  "host": "node06",
+  "gpu": "uuid, name, driver_version, memory.total [MiB]\nGPU-e42940a5-77eb-66f0-bd40-27886ff66c04, NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition, 615.71.09, 97887 MiB\n",
+  "slurm_job_id": "10807",
+  "cuda_visible_devices": "0",
+  "python": "3.12.3 (main, Nov  6 2024, 18:32:19) [GCC 13.2.0]",
+  "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+  "smoke": false
+}

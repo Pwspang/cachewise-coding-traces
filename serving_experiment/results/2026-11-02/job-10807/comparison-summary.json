@@ -1,0 +1,52 @@
+{
+  "baseline": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 576.2217136691247,
+    "range_segment_llm_time_s": [
+      575.9147448022617,
+      576.5843546024058
+    ],
+    "mean_prompt_cache_hit_fraction": 0.6469195295548201
+  },
+  "cachewise_no_aging": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 337.35658511373526,
+    "range_segment_llm_time_s": [
+      337.1814632427413,
+      337.4658982251538
+    ],
+    "mean_prompt_cache_hit_fraction": 0.7898440804385068
+  },
+  "infercept": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 521.7184700346008,
+    "range_segment_llm_time_s": [
+      521.534461272275,
+      521.9734282328048
+    ],
+    "mean_prompt_cache_hit_fraction": 0.6903512730617242
+  },
+  "infercept_prefix_no_aging": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 357.9007660667567,
+    "range_segment_llm_time_s": [
+      357.0639726665337,
+      359.2723874109797
+    ],
+    "mean_prompt_cache_hit_fraction": 0.7683858943261421
+  },
+  "prefix_only_no_aging": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 324.62521842201244,
+    "range_segment_llm_time_s": [
+      324.49318439869677,
+      324.87000343264083
+    ],
+    "mean_prompt_cache_hit_fraction": 0.7902962560877722
+  },
+  "baseline_over_cachewise_no_aging_llm_time_ratio": 1.7080494026072124,
+  "baseline_over_infercept_llm_time_ratio": 1.1044686871655305,
+  "baseline_over_infercept_prefix_no_aging_llm_time_ratio": 1.6100041360672754,
+  "baseline_over_prefix_only_no_aging_llm_time_ratio": 1.7750368146692692,
+  "limitation": "Paired repeats on one selected workload; ranges are observed run ranges, not confidence intervals."
+}

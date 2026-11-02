@@ -1,0 +1,40 @@
+{
+  "slurm_job_id": 10807,
+  "state": "COMPLETED",
+  "exit_code": "0:0",
+  "elapsed": "03:24:30",
+  "node": "node06",
+  "scheduler_start": "2026-11-02T18:29:17",
+  "scheduler_end": "2026-11-02T21:53:47",
+  "scheduler_timezone": "Asia/Singapore",
+  "allocated_resources": "billing=16,cpu=16,gres/gpu=1,node=1",
+  "physical_gpu_uuids": [
+    "GPU-e42940a5-77eb-66f0-bd40-27886ff66c04"
+  ],
+  "runs": 15,
+  "requests_per_run": 83,
+  "total_request_executions": 1245,
+  "metric_snapshots": 5365,
+  "failed_metric_snapshots": 0,
+  "preemptions": 0.0,
+  "identical_request_hashes_and_lengths_all_runs": true,
+  "common_server_arguments_verified": true,
+  "prepared_inputs_sha256": {
+    "workload.json": "362771933edf1d36bdc4e373c193b7fd5eadd537be058e0d86aa204e1854cd51",
+    "bootstrap.jsonl": "00bc7912d76a7c2d5a9fa45cccd5153d63f597639f590496556ec4d4df0f96eb"
+  },
+  "recorded_files_sha256": {
+    "environment.json": "29bb41a49f535b59ccabce0d539654b8a72267f9cea0ef0ddb50f2d4433d9815",
+    "packages.txt": "3bcd42966bc47e95e73dda5a9a2153ba8c0a6428b1bea632241cf654e1005ff3",
+    "model_snapshot.txt": "cb7cae4cc3c61789b9d840902d55220c189223ae6c2e2aacc3b1ef50fea0ecab",
+    "vllm-source.patch": "6a9ade70338d8c543cbcdf85ae8d1c6069f651ae6fdb001d5991459e8db8256c",
+    "recompute-profile.json": "685302a7ffed9f2a175e93a44bd05ea075f5b859abae654ec8698b2033920fb1"
+  },
+  "recompute_profile_probes": 24,
+  "recompute_profile_all_probes_uncached": true,
+  "recompute_profile_max_relative_fit_error_at_least_8192_tokens": 0.009666537613530096,
+  "raw_artifacts_local": "/home/ws/cachewise-coding-traces/runs/ccds-10807/fair-10807/comparison",
+  "raw_artifacts_remote": "ccds-ai:~/cachewise-rerun/runs/fair-10807/",
+  "trace_type": "Client request/tool timeline, SSE response archives, and server metrics; not CUDA kernel profiling.",
+  "limitation": "Three rotated repeats on one physical GPU and selected workload. Ranges are observed repeats, not confidence intervals. Prefix-aware cases disable aging. InferCept is the preserve/discard adaptation without swap. Phase times overlap and are not exclusive GPU/CPU costs."
+}

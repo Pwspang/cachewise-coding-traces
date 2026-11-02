@@ -1,0 +1,19 @@
+{
+  "paper": "https://arxiv.org/html/2606.16824v1",
+  "figures": [
+    "13",
+    "15(b)"
+  ],
+  "measured_loads": [
+    10
+  ],
+  "input_reports": [
+    "/home/ws/cachewise-coding-traces/serving_experiment/results/2026-11-02/job-10807/fair-comparison.json"
+  ],
+  "input_report_sha256": [
+    "f215d6a43752fcc1b51882c0b434a34d4f14a638872247a5f7fe47b024ab213f"
+  ],
+  "unmeasured_oracle_omitted": true,
+  "interpolation_or_extrapolation": false,
+  "metric": "Mean over repeats of mean per-segment summed request latency, excluding external tool delays."
+}

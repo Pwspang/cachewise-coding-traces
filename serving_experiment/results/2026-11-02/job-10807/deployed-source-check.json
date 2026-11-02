@@ -1,0 +1,15 @@
+{
+  "checked_utc": "2026-11-02T13:54:50.544313+00:00",
+  "engine_source_matches_recorded_snapshot": true,
+  "engine_patch_sha256": "6a9ade70338d8c543cbcdf85ae8d1c6069f651ae6fdb001d5991459e8db8256c",
+  "runner_source_sha256": {
+    "run_job.py": "00fb0bc476abe37e0c70663643e97ebb03b9553d87679c93299d78873afdeb71",
+    "replay.py": "4861d68f213eecd5f49790d16fe6912165a1851ea1ef3fda49646332dd5fe8d8",
+    "profile_recompute.py": "1d566e7fca5bedc58bce5b38ae62ba5adfbdd79d53c0b0605afc988eeb000986",
+    "queue_observer.py": "b4a6bb0ce465edb4942b1c32e044da4d9f94f8e8f0a7f7f0e806fb76ea0fc44d",
+    "server_queue_diagnostics.py": "24d992893c4f091d1d64f17f1df0ad131dc98aa6784b09e9097ba1517f73a1fd",
+    "fair_comparison.slurm": "7d47b6cefe22ea0db3d2944fff1060675cfa807b758d1b4fe83caa99a9599030"
+  },
+  "runner_files_match_local_and_committed_source": true,
+  "runner_source_revision": "08d090e5305f38b6e5f9089cfe7f9d365eaeefe4"
+}

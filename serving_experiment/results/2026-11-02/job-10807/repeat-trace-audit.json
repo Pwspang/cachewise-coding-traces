@@ -1,0 +1,185 @@
+{
+  "identical_request_hashes_and_lengths_all_runs": true,
+  "runs": {
+    "baseline-r0": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 437,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "baseline-r1": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 437,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "baseline-r2": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 436,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "cachewise_no_aging-r0": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 313,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "cachewise_no_aging-r1": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 313,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "cachewise_no_aging-r2": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 312,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "infercept-r0": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 397,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "infercept-r1": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 397,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "infercept-r2": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 397,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "infercept_prefix_no_aging-r0": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 332,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "infercept_prefix_no_aging-r1": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 331,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "infercept_prefix_no_aging-r2": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 330,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "prefix_only_no_aging-r0": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 311,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "prefix_only_no_aging-r1": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 311,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "prefix_only_no_aging-r2": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 311,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    }
+  }
+}

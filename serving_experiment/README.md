@@ -25,65 +25,113 @@ Its SHA-256 is `8ab7dae12954b37ac64e408f8ea3cb137685a8725811514ada69099be0015ad2
   `--legacy-human-pauses` retains the historical 300-second heuristic only for
   reproducing older runs.
 
-Validation: 58 CacheWise engine tests and seven replay/summary tests passed.
+Initial lifecycle-fix validation: 58 CacheWise engine tests and seven replay/summary tests passed.
 Applicable source pre-commit checks passed. These validate behavior, not a
-performance claim. The integrated comparison is CCDS job 9494: ten complete
+performance claim. The initial integrated comparison is CCDS job 9494: ten complete
 held-out segments, 83 requests and 15,235 output tokens per policy run, two
 repeats in baseline/CacheWise then CacheWise/baseline order. Every run uses
 17,981 KV blocks, a fresh server, and the same selected workload and seed.
 
-## Matched InferCept rerun: job 10807 (in progress)
+## Matched InferCept rerun: job 10807, completed 2026-11-02
 
-This experiment addresses the cross-job limitation of the comparison with
-`infercept-comparison`. All policies use the same physical RTX Pro 6000 in one
-Slurm allocation, Qwen2.5-Coder-14B-Instruct, 17,981 KV blocks, 512-token
-chunked prefill, identical complete ten-segment inputs, and unchanged tool
-delays. Every policy starts a fresh server. The prespecified policies are:
+Slurm completed all fifteen full runs successfully on node06 (exit `0:0`,
+3 h 24 min 30 s). This replaces the cross-job comparison with a matched test
+on one physical RTX Pro 6000 Blackwell Max-Q GPU, using
+Qwen2.5-Coder-14B-Instruct and three repeats of each policy.
 
-| Policy | Scheduling | Eviction | Aging override |
-| --- | --- | --- | --- |
-| `baseline` | FCFS | LRU | Not applicable |
-| `infercept` | FCFS | InferCept preserve/discard | Not applicable |
-| `prefix_only_no_aging` | Prefix-aware | LRU | Disabled |
-| `cachewise_no_aging` | Prefix-aware | CacheWise predictive | Disabled |
-| `infercept_prefix_no_aging` | Prefix-aware | InferCept preserve/discard | Disabled |
+Mean session time is the mean of per-segment summed LLM request latencies;
+external tool durations are excluded. Each repeat uses the same ten complete
+held-out segments, 83 requests, 4,894,853 prompt tokens, and 15,235 output tokens.
+The cache-hit metric is actual cached prompt tokens divided by actual prompt
+tokens from completed request usage, rather than server cache-lookup counters.
 
-Three repeats rotate this policy order by one position per repeat. This is
-partial order balancing, not a complete five-position Latin square. The FCFS
-pair isolates InferCept's eviction benefit; the three prefix-aware policies
-compare eviction with the same scheduler; each InferCept scheduling variant
-uses the exact same eviction implementation and recompute profile.
+| Scheduling + eviction | Mean session time | Observed repeat range | Prompt-token hit rate |
+| --- | ---: | ---: | ---: |
+| FCFS + LRU baseline | 576.22 s | 575.91–576.58 s | 64.69% |
+| FCFS + InferCept | 521.72 s | 521.53–521.97 s | 69.04% |
+| Prefix-aware + LRU | 324.63 s | 324.49–324.87 s | 79.03% |
+| Prefix-aware + CacheWise predictive | 337.36 s | 337.18–337.47 s | 78.98% |
+| Prefix-aware + InferCept | 357.90 s | 357.06–359.27 s | 76.84% |
 
-The InferCept patch is imported from branch revision
+CacheWise has **35.3% lower mean session time than FCFS InferCept**, and
+**5.7% lower time than InferCept with the same prefix-aware scheduler**.
+However, CacheWise is **3.9% slower than prefix-aware LRU**. That ordering
+holds in all three repeats. FCFS InferCept improves on FCFS LRU by 9.5%,
+while CacheWise improves on FCFS LRU by 41.5% (1.708× time ratio).
+The LRU control therefore shows that prefix-aware scheduling supplies the
+main benefit in this cohort; these results do not demonstrate a predictive
+CacheWise eviction advantage over LRU.
+
+Tail behavior also differs: the longest request across the three repeats was
+334.69 s for FCFS LRU, 318.05 s for FCFS InferCept, 308.70 s for prefix-aware
+LRU, 446.52 s for CacheWise, and 469.99 s for prefix-aware InferCept. For a
+concrete retention difference, `session_0065_003:1` reused 89,152 prompt tokens
+with prefix-aware LRU and averaged 6.58 s, while CacheWise reused zero and
+averaged 77.79 s. This is an observed request-level difference; scheduling and
+eviction interact, so it does not isolate prediction error as its sole cause.
+
+All cases use 17,981 KV blocks (287,696 tokens), BF16, TP=1, prefix caching,
+512-token chunked prefill, the same model snapshot, and unchanged tool delays.
+Every case starts a fresh server from the same integrated engine. All three
+prefix-aware policies disable the aging override. The five-policy order rotates
+by one position per repeat: partial order balancing, not a complete five-position
+Latin square. Repeat ranges describe these runs and are not confidence intervals.
+
+`patches/infercept-policy.patch` imports branch revision
 `06521ca86baa8c1f67df98e7d8c933268938a48e`, with only a formatter change in the
-chat-serving hook. It retains that branch's preserve/discard adaptation and
-does not implement CPU swapping. Recompute latency is profiled once on an
-identically configured LRU server in this allocation, followed by five smoke
-runs. All repeats reuse that measured profile. Frozen workload and bootstrap
-copies and their hashes are recorded with each run group. The engine snapshot
-also includes new untracked Python policy/test files, which plain `git diff`
-alone would omit.
+chat-serving hook. It is the preserve/discard adaptation without CPU swapping,
+and differs from the moving-average InferCept baseline described in the
+[CacheWise paper](https://arxiv.org/html/2606.16824v1). Both InferCept variants
+share one recomputation profile measured in this allocation. All 24 probes had
+zero cached tokens; the maximum relative fit error for lengths of at least
+8,192 tokens was 0.97%. CacheWise uses the tool-name predictor because the
+released tool arguments are redacted.
 
-Before inference, 65 focused engine tests passed on the GPU node; ten local
-runner/observer tests and all applicable engine pre-commit hooks passed. The
-initial job 10805 stopped during test setup before inference because the root
-test configuration required `tblib`. The test dependency was installed, and
-the rerun scopes test configuration to the self-contained CacheWise tests.
-No performance result is taken from that failed attempt.
+The final audit passed for **1,245 request executions and 5,365 successful
+metric snapshots**, with no request errors or preemptions. It verified input
+hashes, actual output lengths, compressed trace integrity, memory budgets,
+policy flags, disabled aging, and a common physical GPU UUID. Server recomputed
+token counters matched completed-request usage. The final deployed engine
+matched its recorded snapshot, and all six runner files matched commit
+`08d090e5305f38b6e5f9089cfe7f9d365eaeefe4`. Before inference, 65 focused engine
+tests passed; ten local runner/observer tests and applicable engine pre-commit
+hooks also passed. Initial job 10805 stopped before inference on a missing test
+dependency; no performance result is taken from that attempt.
 
-Run with `sbatch serving_experiment/fair_comparison.slurm`. After all fifteen
-full runs complete, retrieve the artifacts and run:
+Artifacts are under [`results/2026-11-02/job-10807`](results/2026-11-02/job-10807):
+
+- [Full comparison and same-repeat ratios](results/2026-11-02/job-10807/fair-comparison.json),
+  [trace audit](results/2026-11-02/job-10807/repeat-trace-audit.json), and
+  [provenance](results/2026-11-02/job-10807/provenance.json).
+- [Request-level CSV](results/2026-11-02/job-10807/request-comparison.csv), with
+  three-repeat latency and cache-use summaries for each policy/request pair.
+- [Combined first-repeat timeline](results/2026-11-02/job-10807/timeline-comparison-r0.json),
+  a Chrome/Perfetto-compatible client timeline, not CUDA kernel profiling.
+- [Figure 13-style session comparison](results/2026-11-02/job-10807/figures/figure13-session-completion.png)
+  and [Figure 15(b)-style eviction comparison](results/2026-11-02/job-10807/figures/figure15b-eviction-comparison.png).
+  The same directory contains PDF/SVG exports and the underlying CSV values.
+
+These paper-style plots cover **N=10 only**, using measured results. They do
+not reproduce the paper's full N=10–50 sweep or its unmeasured CacheWise* oracle.
+The unrestricted first 20 eligible segments include one segment with 51.09 hours
+of total external waiting. A practical larger sweep needs a declared cohort
+selection rule; no such filtering or delay clipping was applied to this job.
+Hardware, model, workload preparation, and predictor limitations still prevent
+an exact replication of the paper's numbers.
+
+Raw request payloads, responses, metrics, logs, and frozen inputs are retained
+locally in `runs/ccds-10807/fair-10807/` and remotely under
+`ccds-ai:~/cachewise-rerun/runs/fair-10807/`. The compact artifacts above are
+tracked in Git. Reproduce the job with `sbatch serving_experiment/fair_comparison.slurm`;
+after retrieving a completed run, regenerate the analysis and plots with:
 
 ```bash
 .venv/bin/python serving_experiment/analyze_fair.py \
   runs/ccds-10807/fair-10807/comparison
+.venv/bin/python serving_experiment/plot_paper_figures.py \
+  serving_experiment/results/2026-11-02/job-10807/fair-comparison.json \
+  --output serving_experiment/results/2026-11-02/job-10807/figures
 ```
-
-The audit requires all five policies and all three repeats, verifies request
-hashes and actual token counts, checks policy flags and disabled aging, and
-reports observed repeat ranges and same-repeat ratios. Ranges are not confidence
-intervals. Until that audit completes, this job has no reported performance
-conclusion.
 
 ## Fixed comparison: CCDS job 9494, 2026-10-28
 
