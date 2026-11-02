@@ -110,6 +110,34 @@ Artifacts are under [`results/2026-11-02/job-10807`](results/2026-11-02/job-1080
 - [Figure 13-style session comparison](results/2026-11-02/job-10807/figures/figure13-session-completion.png)
   and [Figure 15(b)-style eviction comparison](results/2026-11-02/job-10807/figures/figure15b-eviction-comparison.png).
   The same directory contains PDF/SVG exports and the underlying CSV values.
+- [Figure 14-style serving efficiency](results/2026-11-02/job-10807/figures/figure14-serving-efficiency.png):
+  useful-token goodput, P50/P90/P99 request latency, and request throughput.
+  Panel (b) explicitly marks the unavailable full eviction count.
+- [Figure 15-style two-panel eviction ablation](results/2026-11-02/job-10807/figures/figure15-eviction-ablation.png):
+  goodput and mean session completion time with the same prefix-aware scheduler.
+- [Figure 16-style scheduling ablation](results/2026-11-02/job-10807/figures/figure16-scheduling-ablation.png):
+  matched FCFS/prefix-aware pairs for LRU and InferCept. The unmeasured
+  CacheWise/FCFS pair is omitted.
+
+The additional panels use
+[`performance-figure-data.csv`](results/2026-11-02/job-10807/figures/performance-figure-data.csv),
+with one row per policy/repeat, and retain input hashes and metric definitions in
+[`performance-figure-provenance.json`](results/2026-11-02/job-10807/figures/performance-figure-provenance.json).
+Useful-token goodput counts new prompt tokens and generated output tokens once
+per segment (621,191 tokens per run), divided by whole-run elapsed time including
+tool waits. It excludes repeated computation of an existing prefix. The CSV
+also reports output-only goodput separately. Percentiles use linear interpolation
+within each run; plotted bars average the three per-run percentiles, rather than
+taking percentiles of per-request averages.
+
+The following paper panels cannot be reconstructed from this experiment:
+
+| Panel | Missing measurement |
+| --- | --- |
+| 14(b), 17: full evictions / KV movement | Only 1% block-lifetime sampling was enabled; sampled events are not total evictions or actual transferred bytes. |
+| 18: CPU offloading | No CPU offload run was performed. |
+| 19: predictor-granularity sweep | No matched cluster-count or oracle sweep was performed. |
+| 20: CPU scheduling vs GPU execution | Exclusive CPU/GPU profiling was not recorded; overlapping request residence times cannot substitute for it. |
 
 These paper-style plots cover **N=10 only**, using measured results. They do
 not reproduce the paper's full N=10–50 sweep or its unmeasured CacheWise* oracle.
@@ -131,7 +159,14 @@ after retrieving a completed run, regenerate the analysis and plots with:
 .venv/bin/python serving_experiment/plot_paper_figures.py \
   serving_experiment/results/2026-11-02/job-10807/fair-comparison.json \
   --output serving_experiment/results/2026-11-02/job-10807/figures
+.venv/bin/python serving_experiment/plot_remaining_figures.py \
+  --data serving_experiment/results/2026-11-02/job-10807/figures/performance-figure-data.csv \
+  --report serving_experiment/results/2026-11-02/job-10807/fair-comparison.json \
+  --output serving_experiment/results/2026-11-02/job-10807/figures
 ```
+
+To extract these additional statistics again from the raw traces, replace
+`--data ...` with `--root runs/ccds-10807/fair-10807/comparison`.
 
 ## Fixed comparison: CCDS job 9494, 2026-10-28
 

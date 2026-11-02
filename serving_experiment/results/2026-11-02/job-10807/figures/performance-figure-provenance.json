@@ -1,0 +1,38 @@
+{
+  "paper": "https://arxiv.org/html/2606.16824v1",
+  "figures": [
+    "14 (partial)",
+    "15",
+    "16 (partial)"
+  ],
+  "report_sha256": "f215d6a43752fcc1b51882c0b434a34d4f14a638872247a5f7fe47b024ab213f",
+  "request_trace_sha256": {
+    "baseline-r0": "e1fd525a5af0aececffce78fe2f6c2eab02c01696f0ed6249680394fc243fe53",
+    "baseline-r1": "34419ab62ec25e9a7acf5ab60b22c3d817b5882b6919f6175072bb60e8bac696",
+    "baseline-r2": "3dc736fc0d25716503f92d055a22e25e20317c3d561f55494394e38950a388cf",
+    "cachewise_no_aging-r0": "aa1bf501a1b7b1cdfd19bd67b19d5cdfbce7b445f36606395220977b7512a973",
+    "cachewise_no_aging-r1": "52d77795067751b42f0d94872b11234228c92cce58bff40de1580a339f49fa4d",
+    "cachewise_no_aging-r2": "111966722046513a42074c56216d992c9212d16d9331c198f67701fe824fa6b3",
+    "infercept-r0": "5301bcb54d5a89222673f6b33b408113cf7f492f422ed3ece70fe8b683056b0a",
+    "infercept-r1": "0343ecccb9ea2b99ef4a99c42c77891d202f688f01a60b4d7856bb83b144fab0",
+    "infercept-r2": "c21a89a8e35716015d478674a610726bbd7b37c6d15727d3ef0372332a76bc67",
+    "infercept_prefix_no_aging-r0": "6813229a7d4459b8db2cd06f07cecdc240b5be3f34c1362d3d1ba7ebc4ca962e",
+    "infercept_prefix_no_aging-r1": "583632d5581f1f3eabd50ac6d9c62416523bdd7e44c5447877c3cd1e50a29913",
+    "infercept_prefix_no_aging-r2": "90e3c23e292ba6850b5f9225ed9c5d958faddf63c67c8c9950eb184ef60efe3b",
+    "prefix_only_no_aging-r0": "047b2cb45c1f034e1d7dcbe714d6726820f986fb3e36b93b8e5433e9fdf0d6d6",
+    "prefix_only_no_aging-r1": "02268d8bb2ff18dfbd0cbbbc370acc04517a14ad2bf4bcb0e49114975ff7dd5f",
+    "prefix_only_no_aging-r2": "662a317f9a72c90d75417c6b1b83eea05d263b3fb4fe766dfedb0109a9e1589c"
+  },
+  "measured_loads": [
+    10
+  ],
+  "goodput_definition": "New prompt tokens and generated output tokens counted once per segment, divided by whole-run elapsed time, including external waits. Output-only goodput is also provided separately in the CSV.",
+  "percentile_definition": "NumPy linear interpolation within each run; plot mean and observed range of the three per-run percentiles, not a percentile of per-request averages.",
+  "missing": {
+    "14(b),17": "Full eviction counts were not recorded; block-lifetime sampling was 1%.",
+    "18": "No CPU offload experiment was run.",
+    "19": "No matched predictor-granularity sweep or oracle was run.",
+    "20": "No exclusive CPU scheduler/GPU execution profiling; request residence times cannot substitute for these.",
+    "16 CacheWise FCFS pair": "Not run in the matched experiment."
+  }
+}
