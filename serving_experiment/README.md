@@ -203,6 +203,59 @@ server counters, queue observations, and recordings:
   runs/ccds-10779/pressure-10779
 ```
 
+## Comparison with the `infercept-comparison` branch
+
+The committed results at
+[`06521ca`](https://github.com/Pwspang/cachewise-coding-traces/tree/06521ca86baa8c1f67df98e7d8c933268938a48e/serving_experiment/results/ccds-9763)
+report three rotating-order repeats of each policy in job 9763:
+
+| Policy | Mean segment LLM time | Prompt-token hit rate |
+| --- | ---: | ---: |
+| FCFS + LRU | 584.89 s | 64.69% |
+| CacheWise, default aging | 575.81 s | 66.12% |
+| InferCept adaptation | 518.69 s | 70.17% |
+
+InferCept wins that matched comparison: 11.3% lower mean time than its baseline
+and 9.9% lower than its CacheWise configuration. Its three run means range from
+518.40 to 519.04 seconds, with the same 70.17% hit rate in every repeat. It
+computes 1,460,085 uncached prompt tokens versus the baseline's 1,728,277, a
+15.5% reduction. For example, in repeat 0 `session_0084_006:2` retains 81,232
+more cached tokens with InferCept and takes 82.10 seconds versus 143.95 seconds
+with the baseline. The absolute 70% hit rate is therefore consistent with real
+retention gains on this workload, not evidence of a reporting anomaly.
+
+That branch's runner does not override the pinned fork's default 30-second
+aging threshold. Our newer no-aging cases in job 10779 report 337.28 seconds /
+78.98% hits for CacheWise and 324.58 seconds / 79.03% for prefix-aware LRU.
+The new CacheWise time is numerically 35.0% below job 9763's InferCept mean,
+but this is a **cross-job comparison**, not a fresh matched three-way result.
+The GPU model, model weights, cache capacity, and reported workload match;
+the physical GPU UUID, engine policy patch, repeat count, and scheduling
+configuration differ. Request identities and per-request prompt/output lengths
+match across the committed repeat-0 timelines and our replay. The committed
+9763 audit verifies hashes within its job, but does not expose per-request
+hashes for independent cross-job verification.
+
+This branch's InferCept policy uses elapsed pause time and a profiled
+recomputation-cost curve to choose preservation versus discard. It does not
+use tool-name/argument predictions, does not swap to CPU, and represents
+preservation through eviction priority rather than hard pinning. Consequently
+it avoids our predictor's redacted-argument and bootstrap-key issues. It is
+also different from the moving-average-based InferCept eviction baseline
+described in the CacheWise paper's sections 6.1 and 6.3. These adaptations
+prevent an exact numerical comparison to that paper.
+
+All hit rates in these tables use completed-request cached prompt tokens over
+total prompt tokens. Server cache-lookup counters can count repeated lookups
+during admission and are not interchangeable with this metric, even below
+the console's 1,000-request rolling-window limit. The committed InferCept
+trace audit's lookup-hit ratio is about 25.45%, while its completed-request
+token hit rate is 70.17%; these measure different events.
+
+The numerical comparison and qualifications are saved in
+[`infercept-branch-comparison.json`](results/2026-11-02/infercept-branch-comparison.json).
+No InferCept raw-log search or rerun was needed for this branch comparison.
+
 ## Paper-fidelity audit (2026-11-02)
 
 The paper's headline is conditional on its experimental setup, rather than a

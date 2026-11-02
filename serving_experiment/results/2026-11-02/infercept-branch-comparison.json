@@ -1,0 +1,96 @@
+{
+  "infercept_branch_revision": "06521ca86baa8c1f67df98e7d8c933268938a48e",
+  "cachewise_checkpoint_revision": "cddb233",
+  "matched_within_job_9763": {
+    "baseline": {
+      "runs": 3,
+      "mean_segment_llm_time_s": 584.8905644033182,
+      "range_segment_llm_time_s": [
+        584.2076892038342,
+        585.9923382776557
+      ],
+      "mean_prompt_cache_hit_fraction": 0.6469195295548201
+    },
+    "cachewise": {
+      "runs": 3,
+      "mean_segment_llm_time_s": 575.8099440513256,
+      "range_segment_llm_time_s": [
+        551.0086243073689,
+        588.9238831611932
+      ],
+      "mean_prompt_cache_hit_fraction": 0.6611952051130715
+    },
+    "infercept": {
+      "runs": 3,
+      "mean_segment_llm_time_s": 518.6924740654184,
+      "range_segment_llm_time_s": [
+        518.3964205632685,
+        519.035690765467
+      ],
+      "mean_prompt_cache_hit_fraction": 0.7017101432872448
+    },
+    "baseline_over_cachewise_llm_time_ratio": 1.015770169386278,
+    "baseline_over_infercept_llm_time_ratio": 1.127624929313223,
+    "limitation": "Paired repeats on one selected workload; ranges are observed run ranges, not confidence intervals."
+  },
+  "newer_job_10779": [
+    {
+      "policy": "baseline",
+      "mean_segment_llm_time_s": 577.4490550414891,
+      "cache_hit_fraction": 0.6469195295548201,
+      "uncached_prompt_tokens": 1728277
+    },
+    {
+      "policy": "prefix_only_no_aging",
+      "mean_segment_llm_time_s": 324.5823881864082,
+      "cache_hit_fraction": 0.7902962560877722,
+      "uncached_prompt_tokens": 1026469
+    },
+    {
+      "policy": "cachewise_no_aging",
+      "mean_segment_llm_time_s": 337.28142668833027,
+      "cache_hit_fraction": 0.7898451700183846,
+      "uncached_prompt_tokens": 1028677
+    }
+  ],
+  "infercept_reduction_vs_older_cachewise_fraction": 0.09919500449060659,
+  "new_cachewise_reduction_vs_infercept_cross_job_fraction": 0.34974682774018473,
+  "matching_reported_configuration": [
+    "Qwen2.5-Coder-14B-Instruct; BF16; TP=1",
+    "One RTX Pro 6000 Blackwell Max-Q; different physical GPU UUIDs",
+    "17981 KV blocks; 512-token chunked prefill; prefix caching enabled",
+    "83 request identities and per-request prompt/output lengths match the committed repeat-0 timeline",
+    "4894853 prompt tokens; 15235 output tokens per run"
+  ],
+  "important_differences": [
+    "9763: three repeats, rotating order; 10779: one run per policy",
+    "9763 CacheWise runner retains fork default 30-second aging override; 10779 prefix-aware cases explicitly disable it",
+    "9763 includes an additional InferCept policy patch; 10779 does not",
+    "9763 InferCept uses elapsed pause duration and profiled recompute cost with preserve/discard, no swapping; it is not the moving-average eviction baseline described in the CacheWise paper",
+    "Committed 9763 audits verify hashes within that job but do not expose per-request hashes for independent cross-job hash validation"
+  ],
+  "metric_definition": "Cached prompt tokens divided by total prompt tokens from completed request usage; not cache-lookup hit counters",
+  "interpretation": "InferCept beats the older CacheWise configuration in its own matched experiment. New no-aging CacheWise and prefix-aware LRU have lower reported times, but their comparison to InferCept is cross-job and does not replace a fresh three-way controlled experiment.",
+  "infercept_repeat_0_largest_cache_gains": [
+    {
+      "request": "session_0084_006:2",
+      "additional_cached_prompt_tokens": 81232,
+      "baseline_latency_s": 143.95183723210357,
+      "infercept_latency_s": 82.09679992299061
+    },
+    {
+      "request": "session_0084_006:1",
+      "additional_cached_prompt_tokens": 72064,
+      "baseline_latency_s": 116.70302351692226,
+      "infercept_latency_s": 89.5081770879915
+    },
+    {
+      "request": "session_0084_006:3",
+      "additional_cached_prompt_tokens": 66096,
+      "baseline_latency_s": 115.55375969898887,
+      "infercept_latency_s": 88.06794980796985
+    }
+  ],
+  "net_cached_token_increase_over_baseline_repeat_0": 268192,
+  "largest_three_share_of_net_increase": 0.8180408065863262
+}
