@@ -32,6 +32,59 @@ held-out segments, 83 requests and 15,235 output tokens per policy run, two
 repeats in baseline/CacheWise then CacheWise/baseline order. Every run uses
 17,981 KV blocks, a fresh server, and the same selected workload and seed.
 
+## Matched InferCept rerun: job 10807 (in progress)
+
+This experiment addresses the cross-job limitation of the comparison with
+`infercept-comparison`. All policies use the same physical RTX Pro 6000 in one
+Slurm allocation, Qwen2.5-Coder-14B-Instruct, 17,981 KV blocks, 512-token
+chunked prefill, identical complete ten-segment inputs, and unchanged tool
+delays. Every policy starts a fresh server. The prespecified policies are:
+
+| Policy | Scheduling | Eviction | Aging override |
+| --- | --- | --- | --- |
+| `baseline` | FCFS | LRU | Not applicable |
+| `infercept` | FCFS | InferCept preserve/discard | Not applicable |
+| `prefix_only_no_aging` | Prefix-aware | LRU | Disabled |
+| `cachewise_no_aging` | Prefix-aware | CacheWise predictive | Disabled |
+| `infercept_prefix_no_aging` | Prefix-aware | InferCept preserve/discard | Disabled |
+
+Three repeats rotate this policy order by one position per repeat. This is
+partial order balancing, not a complete five-position Latin square. The FCFS
+pair isolates InferCept's eviction benefit; the three prefix-aware policies
+compare eviction with the same scheduler; each InferCept scheduling variant
+uses the exact same eviction implementation and recompute profile.
+
+The InferCept patch is imported from branch revision
+`06521ca86baa8c1f67df98e7d8c933268938a48e`, with only a formatter change in the
+chat-serving hook. It retains that branch's preserve/discard adaptation and
+does not implement CPU swapping. Recompute latency is profiled once on an
+identically configured LRU server in this allocation, followed by five smoke
+runs. All repeats reuse that measured profile. Frozen workload and bootstrap
+copies and their hashes are recorded with each run group. The engine snapshot
+also includes new untracked Python policy/test files, which plain `git diff`
+alone would omit.
+
+Before inference, 65 focused engine tests passed on the GPU node; ten local
+runner/observer tests and all applicable engine pre-commit hooks passed. The
+initial job 10805 stopped during test setup before inference because the root
+test configuration required `tblib`. The test dependency was installed, and
+the rerun scopes test configuration to the self-contained CacheWise tests.
+No performance result is taken from that failed attempt.
+
+Run with `sbatch serving_experiment/fair_comparison.slurm`. After all fifteen
+full runs complete, retrieve the artifacts and run:
+
+```bash
+.venv/bin/python serving_experiment/analyze_fair.py \
+  runs/ccds-10807/fair-10807/comparison
+```
+
+The audit requires all five policies and all three repeats, verifies request
+hashes and actual token counts, checks policy flags and disabled aging, and
+reports observed repeat ranges and same-repeat ratios. Ranges are not confidence
+intervals. Until that audit completes, this job has no reported performance
+conclusion.
+
 ## Fixed comparison: CCDS job 9494, 2026-10-28
 
 Slurm completed successfully on node06 (exit 0), using one RTX Pro 6000 and

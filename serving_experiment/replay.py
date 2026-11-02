@@ -342,6 +342,8 @@ if __name__ == "__main__":
             "baseline",
             "cachewise",
             "cachewise_no_aging",
+            "infercept",
+            "infercept_prefix_no_aging",
             "prefix_only",
             "prefix_only_no_aging",
             "eviction_only",

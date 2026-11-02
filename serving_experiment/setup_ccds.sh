@@ -2,7 +2,7 @@
 # Run on the CCDS login host; GPU inference belongs in the Slurm job.
 set -euo pipefail
 TASK_ROOT="$HOME/cachewise-rerun"
-TASK_CACHE="/local/cachewise-$USER"
+TASK_CACHE="${TASK_CACHE:-/local/cachewise-$USER}"
 UV="$HOME/.local/bin/uv"
 TASK_SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 mkdir -p "$TASK_ROOT/src" "$TASK_ROOT/runs" "$TASK_CACHE/uv" "$TASK_CACHE/tmp"
@@ -14,13 +14,17 @@ if [ ! -d "$TASK_ROOT/src/vllm-cachewise/.git" ]; then
 fi
 test "$(git -C "$TASK_ROOT/src/vllm-cachewise" rev-parse HEAD)" = \
     a4b3affa7f746db57c2f19de839f72094c8f3ce1
-TASK_PATCH="$TASK_SCRIPT_DIR/patches/cachewise-session-lifecycle.patch"
-if git -C "$TASK_ROOT/src/vllm-cachewise" apply --reverse --check "$TASK_PATCH" 2>/dev/null; then
-    : # The exact patch is already installed.
-else
-    git -C "$TASK_ROOT/src/vllm-cachewise" apply --check "$TASK_PATCH"
-    git -C "$TASK_ROOT/src/vllm-cachewise" apply "$TASK_PATCH"
-fi
+# Order matters: the InferCept policy patch builds on the lifecycle fixes.
+for TASK_PATCH in \
+    "$TASK_SCRIPT_DIR/patches/cachewise-session-lifecycle.patch" \
+    "$TASK_SCRIPT_DIR/patches/infercept-policy.patch"; do
+    if git -C "$TASK_ROOT/src/vllm-cachewise" apply --reverse --check "$TASK_PATCH" 2>/dev/null; then
+        : # The exact patch is already installed.
+    else
+        git -C "$TASK_ROOT/src/vllm-cachewise" apply --check "$TASK_PATCH"
+        git -C "$TASK_ROOT/src/vllm-cachewise" apply "$TASK_PATCH"
+    fi
+done
 if [ ! -x "$TASK_ROOT/.venv/bin/python" ]; then
     "$UV" venv --python 3.12 "$TASK_ROOT/.venv"
 fi

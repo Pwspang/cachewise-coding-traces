@@ -48,14 +48,14 @@ def summarize(root):
                 else None,
             }
         )
-    if not rows or {r["policy"] for r in rows} != {"baseline", "cachewise"}:
-        raise ValueError("Need successful baseline and CacheWise runs")
+    policies = sorted({r["policy"] for r in rows}, key=lambda p: (p != "baseline", p))
+    if "baseline" not in policies or len(policies) < 2:
+        raise ValueError("Need successful baseline and comparison-policy runs")
     (root / "comparison.json").write_text(json.dumps(rows, indent=2) + "\n")
     by_policy = {
-        policy: [r for r in rows if r["policy"] == policy]
-        for policy in ("baseline", "cachewise")
+        policy: [r for r in rows if r["policy"] == policy] for policy in policies
     }
-    if len(by_policy["baseline"]) != len(by_policy["cachewise"]):
+    if len({len(group) for group in by_policy.values()}) != 1:
         raise ValueError("Unbalanced policy repeat counts")
     aggregate = {
         policy: {
@@ -75,10 +75,11 @@ def summarize(root):
         }
         for policy, group in by_policy.items()
     }
-    aggregate["baseline_over_cachewise_llm_time_ratio"] = (
-        aggregate["baseline"]["mean_segment_llm_time_s"]
-        / aggregate["cachewise"]["mean_segment_llm_time_s"]
-    )
+    for policy in policies[1:]:
+        aggregate[f"baseline_over_{policy}_llm_time_ratio"] = (
+            aggregate["baseline"]["mean_segment_llm_time_s"]
+            / aggregate[policy]["mean_segment_llm_time_s"]
+        )
     aggregate["limitation"] = (
         "Paired repeats on one selected workload; ranges are observed run ranges, not confidence intervals."
     )
