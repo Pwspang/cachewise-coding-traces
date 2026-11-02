@@ -32,6 +32,106 @@ held-out segments, 83 requests and 15,235 output tokens per policy run, two
 repeats in baseline/CacheWise then CacheWise/baseline order. Every run uses
 17,981 KV blocks, a fresh server, and the same selected workload and seed.
 
+## InferCept comparison policy
+
+`patches/infercept-policy.patch` (SHA-256
+`d09d856a2f7e463a32bb4424747fb38941da3fb3e40f0fd275035d9fd742ea3c`) applies
+after the lifecycle patch and adds `--kv-cache-eviction-policy infercept`, an
+adaptation of InferCept's min-waste Preserve/Discard rule
+([Abhyankar et al., ICML 2024](https://arxiv.org/abs/2402.01869)) to
+prefix-cached vLLM v1 blocks. `setup_ccds.sh` applies both patches in order.
+
+- A session whose last request carried a non-empty tool hint is a paused
+  (intercepted) request. Its cached context of C tokens is preserved, meaning
+  it is evicted only after all other free blocks, while
+  `T_INT * C < T_rec(C) * (C/2 + C_other)`. That is paper Eq. 2 versus Eq. 4,
+  with per-token memory cancelled. Otherwise, it is discarded into LRU order.
+- `T_INT` is the paper's dynamic estimate, the time since the pause
+  (section 4.4). The tool-duration predictor and bootstrap are not used;
+  the hint only says whether a turn paused for a tool. Decisions are
+  re-evaluated at every eviction-order rebuild (section 4.5).
+- `T_rec(C)` is an offline profile: `profile_recompute.py` times uncached
+  prompts from 512 to 126,976 tokens with one output token on an identically
+  configured LRU server, then fits `a*C^2 + b*C + c`. Under 512-token chunked
+  prefill, this measured time already sums the paper's per-chunk iteration
+  costs. `C_other` is the computed context of currently running requests.
+- Turns ending without a tool call are discarded: InferCept frees completed
+  requests. Discarded sessions are evicted oldest-first, before untracked
+  blocks.
+- Scheduling is FCFS, like the baseline. The CacheWise queued-request
+  protection remains active, because a returning request reuses a
+  preserved context.
+
+Differences from the paper: Swap (Eq. 3) is not implemented, because it needs
+a CPU KV tier the baseline and CacheWise runs do not get. Preservation is
+eviction-ordering, not hard pinning: a preserved block can still be evicted
+when nothing else is free. Resumed requests are not reordered by their
+session's original arrival time. Interceptions are inferred from session
+prefixes across separate HTTP requests, rather than paused inside one
+generation.
+
+`three_way.slurm` runs baseline, CacheWise, and InferCept for ten segments
+and three repeats with 17,981 KV blocks, rotating the policy order each
+repeat. The smoke run writes `recompute-profile.json`; the full comparison
+reuses it and records a copy. `summarize.py` and `inspect_traces.py` accept
+any policy set that includes the baseline, and report
+`baseline_over_<policy>_llm_time_ratio` for each other policy.
+
+Validation: all 65 fork CacheWise/InferCept tests pass on an RTX Pro 6000
+node (the scheduler tests need a GPU node: device detection fails on the
+login host), and the 8 runner tests pass.
+
+## Three-way comparison: CCDS job 9763, 2026-10-28
+
+Slurm completed successfully on node06 (exit 0, 2 h 27 min) using one RTX
+Pro 6000 and Qwen2.5-Coder-14B-Instruct. The setup is the same as job 9494:
+ten held-out segments, 83 requests and 15,235 output tokens per run, 17,981
+KV blocks, and a fresh server per run. Each of the three policies ran three
+times, with the policy order rotated each repeat.
+
+| Metric (mean of 3 runs) | Baseline | CacheWise | InferCept |
+| --- | ---: | ---: | ---: |
+| Mean segment LLM time | 584.89 s | 575.81 s | **518.69 s** |
+| Observed run range | 584.21–585.99 s | 551.01–588.92 s | 518.40–519.04 s |
+| Prompt-token cache-hit fraction | 64.69% | 66.12% | **70.17%** |
+| Uncached prompt tokens per run | 1,728,277 | 1,658,400 | **1,460,085** |
+| Replay wall time, including external waits | 886.6 s | 866.9 s | **784.0 s** |
+| Median request TTFT | 4.884 s | 4.926 s | **3.866 s** |
+
+Compared with the baseline, InferCept reduced mean segment LLM time by
+**11.3%** (1.128x baseline/InferCept ratio), wall time by 11.6%, and uncached
+prompt tokens by 15.5%. All three InferCept runs were nearly identical. The
+slowest InferCept run was still 65 s faster than the fastest baseline run.
+
+CacheWise was bimodal. Repeat 1 (551.01 s, 1,546,997 uncached tokens) is
+close to job 9494's results. Repeats 0 and 2 (588.92 s and 587.50 s, both
+1,714,101 uncached tokens) were slightly slower than the baseline. Its
+overall reduction is 1.6%. Job 9494 improved in both of its repeats; the
+cause of this run-to-run divergence was not investigated. The baseline
+reproduced job 9494 exactly: 1,728,277 uncached prompt tokens and a 64.69%
+hit rate.
+
+All 747 requests completed. Every run had identical prompt hashes and
+lengths, zero preemptions, no failed metric snapshots, and complete
+archives. The recompute profile's fit is within about 1% of the measured
+medians from 8k to 127k tokens; 127k tokens took 58.2 s to recompute.
+
+Limitations: this is one synthetic workload with three repeats; ranges are
+observed run ranges, not confidence intervals. Baseline and InferCept both
+use FCFS, so that difference isolates eviction. CacheWise also uses
+prefix-aware scheduling. The InferCept adaptation's departures from the
+paper are listed above.
+
+Committed artifacts are in `serving_experiment/results/ccds-9763/`:
+`comparison-summary.json`, `comparison.json`, `repeat-trace-audit.json`,
+`trace_audit.json`, `trace_overview.png` (repeat 0),
+`timeline-comparison.json`, `recompute-profile.json`, and `environment.json`.
+The 474 MB of raw per-run traces are not committed. They are local, in the
+gitignored `runs/ccds-9763/three-way-9763/` directory, together with the
+smoke traces and the Slurm log. The remote copy is
+`~/cachewise-rerun/runs/three-way-9763` on the `ccdsXAAI` host (user
+`boxi`).
+
 ## Fixed comparison: CCDS job 9494, 2026-10-28
 
 Slurm completed successfully on node06 (exit 0), using one RTX Pro 6000 and
@@ -253,6 +353,8 @@ squeue -u "$USER"
 The batch script allocates exactly one RTX Pro 6000. It runs a two-session,
 two-turn smoke comparison before the ten-segment comparison with two repeats. A failed
 smoke test prevents the full run. Model weights must already be downloaded.
+Use `sbatch serving_experiment/three_way.slurm` for the baseline, CacheWise,
+and InferCept comparison.
 
 ## Artifacts
 

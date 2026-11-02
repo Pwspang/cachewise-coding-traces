@@ -1,0 +1,32 @@
+{
+  "baseline": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 584.8905644033182,
+    "range_segment_llm_time_s": [
+      584.2076892038342,
+      585.9923382776557
+    ],
+    "mean_prompt_cache_hit_fraction": 0.6469195295548201
+  },
+  "cachewise": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 575.8099440513256,
+    "range_segment_llm_time_s": [
+      551.0086243073689,
+      588.9238831611932
+    ],
+    "mean_prompt_cache_hit_fraction": 0.6611952051130715
+  },
+  "infercept": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 518.6924740654184,
+    "range_segment_llm_time_s": [
+      518.3964205632685,
+      519.035690765467
+    ],
+    "mean_prompt_cache_hit_fraction": 0.7017101432872448
+  },
+  "baseline_over_cachewise_llm_time_ratio": 1.015770169386278,
+  "baseline_over_infercept_llm_time_ratio": 1.127624929313223,
+  "limitation": "Paired repeats on one selected workload; ranges are observed run ranges, not confidence intervals."
+}

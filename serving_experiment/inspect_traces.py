@@ -72,14 +72,27 @@ def audit_repeats(root):
     return result
 
 
+TITLES = {"baseline": "Baseline", "cachewise": "CacheWise", "infercept": "InferCept"}
+
+
 def inspect(root):
     audit_repeats(root)
     comparison = json.loads((root / "comparison.json").read_text())
+    policies = [p for p in TITLES if (root / f"{p}-r0").is_dir()]
+    assert "baseline" in policies and len(policies) >= 2, (
+        "Need baseline and another policy"
+    )
     fig, axes = plt.subplots(
-        3, 2, figsize=(14, 10), layout="constrained", sharex=True, sharey="row"
+        3,
+        len(policies),
+        figsize=(7 * len(policies), 10),
+        layout="constrained",
+        sharex=True,
+        sharey="row",
+        squeeze=False,
     )
     evidence, signatures, combined_timeline = {}, [], []
-    for col, policy in enumerate(("baseline", "cachewise")):
+    for col, policy in enumerate(policies):
         path = root / f"{policy}-r0"
         manifest = json.loads((path / "manifest.json").read_text())
         assert manifest["status"] == "complete", f"Incomplete {policy}"
@@ -122,7 +135,7 @@ def inspect(root):
                 (event["tid"] - 0.32, 0.64),
                 facecolors=color,
             )
-        axes[0, col].set_title("Baseline" if policy == "baseline" else "CacheWise")
+        axes[0, col].set_title(TITLES[policy])
         axes[0, col].set_yticks(
             range(len(manifest["session_ids"])), manifest["session_ids"]
         )
@@ -166,7 +179,9 @@ def inspect(root):
         }
         for ax in axes[:, col]:
             ax.grid(alpha=0.2)
-    assert signatures[0] == signatures[1], "Policies received different request tokens"
+    assert all(s == signatures[0] for s in signatures), (
+        "Policies received different request tokens"
+    )
     evidence["identical_request_hashes_and_lengths"] = True
     fig.suptitle(
         "Qwen2.5-Coder-14B-Instruct · one RTX Pro 6000 · synthetic trace replay · repeat 0"

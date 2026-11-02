@@ -1,0 +1,172 @@
+{
+  "recompute_s_coeffs": [
+    2.5696762026325633e-09,
+    0.0001318238869107555,
+    -0.03153251295586352
+  ],
+  "median_points": [
+    {
+      "tokens": 512,
+      "latency_s": 0.061386861954815686,
+      "fit_s": 0.0366349423409062
+    },
+    {
+      "tokens": 2048,
+      "latency_s": 0.27062025491613895,
+      "fit_s": 0.2492208106127703
+    },
+    {
+      "tokens": 8192,
+      "latency_s": 1.2099430629750714,
+      "fit_s": 1.2208168194235507
+    },
+    {
+      "tokens": 16384,
+      "latency_s": 2.7708964970661327,
+      "fit_s": 2.818062253415975
+    },
+    {
+      "tokens": 32768,
+      "latency_s": 6.974368899012916,
+      "fit_s": 7.047241426239855
+    },
+    {
+      "tokens": 65536,
+      "latency_s": 19.858022640109994,
+      "fit_s": 19.644352991243736
+    },
+    {
+      "tokens": 98304,
+      "latency_s": 37.56593635096215,
+      "fit_s": 37.759802182055786
+    },
+    {
+      "tokens": 126976,
+      "latency_s": 58.202538416022435,
+      "fit_s": 58.137581557687085
+    }
+  ],
+  "samples": [
+    {
+      "tokens": 512,
+      "latency_s": 0.060284840990789235,
+      "cached": 0
+    },
+    {
+      "tokens": 512,
+      "latency_s": 0.061386861954815686,
+      "cached": 0
+    },
+    {
+      "tokens": 512,
+      "latency_s": 0.06411535304505378,
+      "cached": 0
+    },
+    {
+      "tokens": 2048,
+      "latency_s": 0.2677874119253829,
+      "cached": 0
+    },
+    {
+      "tokens": 2048,
+      "latency_s": 0.27062025491613895,
+      "cached": 0
+    },
+    {
+      "tokens": 2048,
+      "latency_s": 0.27106793294660747,
+      "cached": 0
+    },
+    {
+      "tokens": 8192,
+      "latency_s": 1.2099430629750714,
+      "cached": 0
+    },
+    {
+      "tokens": 8192,
+      "latency_s": 1.2090989470016211,
+      "cached": 0
+    },
+    {
+      "tokens": 8192,
+      "latency_s": 1.2118438079487532,
+      "cached": 0
+    },
+    {
+      "tokens": 16384,
+      "latency_s": 2.7676135250367224,
+      "cached": 0
+    },
+    {
+      "tokens": 16384,
+      "latency_s": 2.7708964970661327,
+      "cached": 0
+    },
+    {
+      "tokens": 16384,
+      "latency_s": 2.775955782039091,
+      "cached": 0
+    },
+    {
+      "tokens": 32768,
+      "latency_s": 6.949173014960252,
+      "cached": 0
+    },
+    {
+      "tokens": 32768,
+      "latency_s": 6.974368899012916,
+      "cached": 0
+    },
+    {
+      "tokens": 32768,
+      "latency_s": 7.002422025077976,
+      "cached": 0
+    },
+    {
+      "tokens": 65536,
+      "latency_s": 19.680781706003472,
+      "cached": 0
+    },
+    {
+      "tokens": 65536,
+      "latency_s": 19.858022640109994,
+      "cached": 0
+    },
+    {
+      "tokens": 65536,
+      "latency_s": 19.869243504013866,
+      "cached": 0
+    },
+    {
+      "tokens": 98304,
+      "latency_s": 37.40490622899961,
+      "cached": 0
+    },
+    {
+      "tokens": 98304,
+      "latency_s": 37.56593635096215,
+      "cached": 0
+    },
+    {
+      "tokens": 98304,
+      "latency_s": 37.63073585298844,
+      "cached": 0
+    },
+    {
+      "tokens": 126976,
+      "latency_s": 58.202538416022435,
+      "cached": 0
+    },
+    {
+      "tokens": 126976,
+      "latency_s": 58.2083314449992,
+      "cached": 0
+    },
+    {
+      "tokens": 126976,
+      "latency_s": 58.185643590055406,
+      "cached": 0
+    }
+  ],
+  "method": "Uncached random-token prompts, max_tokens=1, client wall time; one warm-up probe discarded."
+}

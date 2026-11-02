@@ -1,0 +1,36 @@
+{
+  "baseline": {
+    "requests": 83,
+    "metric_snapshots": 443,
+    "failed_metric_snapshots": 0,
+    "max_active_kv_cache_fraction": 0.9849833147942157,
+    "preemptions": 0.0,
+    "sampled_evicted_blocks": 902.0,
+    "prefix_cache_queries": 9544902.0,
+    "prefix_cache_hits": 6468048.0,
+    "output_tokens": 15235
+  },
+  "cachewise": {
+    "requests": 83,
+    "metric_snapshots": 445,
+    "failed_metric_snapshots": 0,
+    "max_active_kv_cache_fraction": 0.985817575083426,
+    "preemptions": 0.0,
+    "sampled_evicted_blocks": 904.0,
+    "prefix_cache_queries": 7508480.0,
+    "prefix_cache_hits": 3180752.0,
+    "output_tokens": 15235
+  },
+  "infercept": {
+    "requests": 83,
+    "metric_snapshots": 392,
+    "failed_metric_snapshots": 0,
+    "max_active_kv_cache_fraction": 0.9866518353726362,
+    "preemptions": 0.0,
+    "sampled_evicted_blocks": 750.0,
+    "prefix_cache_queries": 16015134.0,
+    "prefix_cache_hits": 4075504.0,
+    "output_tokens": 15235
+  },
+  "identical_request_hashes_and_lengths": true
+}

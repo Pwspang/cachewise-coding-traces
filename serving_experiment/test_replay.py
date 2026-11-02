@@ -1,15 +1,21 @@
 import asyncio
 import json
+import shutil
 
 import pytest
 from aiohttp import web
 from prepare import human_boundary_messages, prepare
+from profile_recompute import fit_quadratic
 from replay import run, select_sessions, stream_completion
 from summarize import summarize
 
 
 def test_paired_repeat_summary_and_mismatched_workload_rejection(tmp_path):
-    for policy, times in {"baseline": [10, 12], "cachewise": [8, 9]}.items():
+    for policy, times in {
+        "baseline": [10, 12],
+        "cachewise": [8, 9],
+        "infercept": [9, 11],
+    }.items():
         for repeat, duration in enumerate(times):
             path = tmp_path / f"{policy}-r{repeat}"
             path.mkdir()
@@ -44,12 +50,29 @@ def test_paired_repeat_summary_and_mismatched_workload_rejection(tmp_path):
     assert aggregate["baseline_over_cachewise_llm_time_ratio"] == pytest.approx(
         11 / 8.5
     )
+    assert aggregate["baseline_over_infercept_llm_time_ratio"] == pytest.approx(
+        11 / 10
+    )
+    (tmp_path / "infercept-r1/manifest.json").unlink()
+    with pytest.raises(ValueError, match="Unbalanced"):
+        summarize(tmp_path)
+    for repeat in (0, 1):
+        shutil.rmtree(tmp_path / f"infercept-r{repeat}")
     path = tmp_path / "cachewise-r1/manifest.json"
     bad = json.loads(path.read_text())
     bad["selected_workload_sha256"] = "different"
     path.write_text(json.dumps(bad))
     with pytest.raises(ValueError, match="workloads differ"):
         summarize(tmp_path)
+
+
+def test_recompute_profile_fit_recovers_quadratic_and_stays_non_negative():
+    points = [(x, 2e-10 * x * x + 3e-5 * x + 0.04) for x in (512, 8192, 65536)]
+    a, b, c = fit_quadratic(points)
+    assert (a, b, c) == pytest.approx((2e-10, 3e-5, 0.04), rel=1e-6)
+    # Concave measurements must not produce a negative quadratic term.
+    a, b, _ = fit_quadratic([(1000, 1.0), (2000, 1.9), (4000, 3.0), (8000, 4.0)])
+    assert a == 0 and b > 0
 
 
 def test_human_boundary_uses_user_input_not_tool_results(tmp_path):

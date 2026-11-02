@@ -1,0 +1,110 @@
+[
+  {
+    "run": "baseline-r0",
+    "policy": "baseline",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 885.756707253051,
+    "mean_session_llm_time_s": 584.4716657284647,
+    "median_request_latency_s": 27.412190055008978,
+    "median_ttft_s": 4.863452401012182,
+    "output_tokens_per_s": 17.19998265352963,
+    "prompt_cache_hit_fraction": 0.6469195295548201
+  },
+  {
+    "run": "baseline-r1",
+    "policy": "baseline",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 885.8097226350801,
+    "mean_session_llm_time_s": 584.2076892038342,
+    "median_request_latency_s": 27.444689159980044,
+    "median_ttft_s": 4.875939127989113,
+    "output_tokens_per_s": 17.198953240972994,
+    "prompt_cache_hit_fraction": 0.6469195295548201
+  },
+  {
+    "run": "baseline-r2",
+    "policy": "baseline",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 888.2775441160193,
+    "mean_session_llm_time_s": 585.9923382776557,
+    "median_request_latency_s": 27.516027377918363,
+    "median_ttft_s": 4.913458792027086,
+    "output_tokens_per_s": 17.151170938539604,
+    "prompt_cache_hit_fraction": 0.6469195295548201
+  },
+  {
+    "run": "cachewise-r0",
+    "policy": "cachewise",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 890.3572463579476,
+    "mean_session_llm_time_s": 588.9238831611932,
+    "median_request_latency_s": 34.14641027804464,
+    "median_ttft_s": 5.47346108709462,
+    "output_tokens_per_s": 17.111109122006425,
+    "prompt_cache_hit_fraction": 0.6498156328698738
+  },
+  {
+    "run": "cachewise-r1",
+    "policy": "cachewise",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 822.3122463399777,
+    "mean_session_llm_time_s": 551.0086243073689,
+    "median_request_latency_s": 25.018407416995615,
+    "median_ttft_s": 3.86996680800803,
+    "output_tokens_per_s": 18.527025552409473,
+    "prompt_cache_hit_fraction": 0.683954349599467
+  },
+  {
+    "run": "cachewise-r2",
+    "policy": "cachewise",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 888.1313143400475,
+    "mean_session_llm_time_s": 587.4973246854148,
+    "median_request_latency_s": 33.16028377402108,
+    "median_ttft_s": 5.433126081945375,
+    "output_tokens_per_s": 17.153994858655356,
+    "prompt_cache_hit_fraction": 0.6498156328698738
+  },
+  {
+    "run": "infercept-r0",
+    "policy": "infercept",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 784.4734698790126,
+    "mean_session_llm_time_s": 519.035690765467,
+    "median_request_latency_s": 24.985257531981915,
+    "median_ttft_s": 3.868768570944667,
+    "output_tokens_per_s": 19.420669512698318,
+    "prompt_cache_hit_fraction": 0.7017101432872448
+  },
+  {
+    "run": "infercept-r1",
+    "policy": "infercept",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 783.603825276019,
+    "mean_session_llm_time_s": 518.3964205632685,
+    "median_request_latency_s": 24.950548558030277,
+    "median_ttft_s": 3.8633043869631365,
+    "output_tokens_per_s": 19.442222598433048,
+    "prompt_cache_hit_fraction": 0.7017101432872448
+  },
+  {
+    "run": "infercept-r2",
+    "policy": "infercept",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 783.9683429710567,
+    "mean_session_llm_time_s": 518.6453108675196,
+    "median_request_latency_s": 25.009373825974762,
+    "median_ttft_s": 3.864851495018229,
+    "output_tokens_per_s": 19.43318264901222,
+    "prompt_cache_hit_fraction": 0.7017101432872448
+  }
+]

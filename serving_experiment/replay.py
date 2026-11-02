@@ -341,6 +341,7 @@ if __name__ == "__main__":
         choices=[
             "baseline",
             "cachewise",
+            "infercept",
             "prefix_only",
             "eviction_only",
             "human_first",
