@@ -145,8 +145,9 @@ The remote copy is `~/cachewise-rerun/runs/aging-10772` on `ccds-ai`.
 
 ## Scheduling, eviction, and capacity ablation: CCDS job 10779
 
-Publication checkpoint: the normal-capacity cases below are complete. The two
-half-capacity cases are still running and are not included in these results.
+All five cases completed successfully on node06 (exit 0, elapsed 1 h 26 min
+35 s). The initial publication checkpoint contained only normal-capacity
+results; the complete capacity comparison is now included below.
 Committed numerical summaries and trace audits are under
 [`results/2026-11-02/`](results/2026-11-02/). This bundle also includes the
 completed aging ablation, earlier baseline analysis, and paper-fidelity audit.
@@ -192,6 +193,42 @@ All three normal-capacity runs completed 83 requests each, with identical input
 hashes and actual token counts, valid compressed recordings, 1,061 successful
 metric snapshots, and zero preemptions. The fresh baseline closely matches the
 earlier 577.59-second mean and exactly matches its uncached-token count.
+
+Completed half-capacity comparison (143,840 KV tokens):
+
+| Metric | FCFS + LRU | CacheWise, no aging |
+| --- | ---: | ---: |
+| Mean segment LLM time | 734.01 s | 575.51 s |
+| Replay wall time | 1,454.58 s | 1,334.52 s |
+| Prompt-token cache-hit fraction | 28.11% | 39.16% |
+| Uncached prompt tokens | 3,518,869 | 2,978,165 |
+| Maximum individual-request latency | 220.72 s | 1,095.50 s |
+
+At half capacity, CacheWise gives **1.275x** lower mean time (21.6% reduction),
+8.3% lower replay wall time, and 15.4% fewer uncached tokens. The advantage
+shrinks from 1.712x at normal capacity: simply increasing cache pressure does
+not recover the paper's 2.7–3.5x result for this workload. Both policies lose
+substantial cache reuse when capacity is halved. The no-aging scheduler also
+has a much worse longest-request latency, reflecting its fairness trade-off.
+There is no prefix-aware/LRU half-capacity case, so the half-capacity result
+does not isolate predictive eviction's contribution at that capacity.
+
+Across all five cases, every request identity, prompt hash, requested length,
+and actual token count matches. All 415 requests completed, all 2,453 metric
+snapshots succeeded, compressed recordings passed integrity checks, and there
+were zero preemptions. The environment, packages, model snapshot, and engine
+patch are identical across capacity groups. Remote workload and bootstrap
+hashes remained unchanged. This is a one-run-per-case ablation with a
+prespecified order; reducing capacity is not equivalent to reproducing the
+paper's model, GPU setup, concurrency sweep, or argument-sensitive predictor.
+
+Complete numerical results, request-level retention differences, both audits,
+and the plot are committed under
+[`results/2026-11-02/job-10779/`](results/2026-11-02/job-10779/).
+Full raw recordings are in `runs/ccds-10779/pressure-10779/` locally and
+`~/cachewise-rerun/runs/pressure-10779/` on `ccds-ai`.
+
+![Scheduling and cache-capacity comparison](results/2026-11-02/job-10779/pressure-comparison.png)
 
 Run the experiment with `sbatch serving_experiment/pressure.slurm`. The analysis
 command requires both capacity groups to be complete and validates equal inputs

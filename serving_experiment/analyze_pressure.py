@@ -240,7 +240,7 @@ def plot(root, rows):
         ax.invert_yaxis()
         ax.set_title(title)
         ax.set_xlabel("Mean summed LLM time per segment (seconds)")
-        ax.set_xlim(0, max(values[i]["mean_segment_llm_time_s"] for i in indices) * 1.2)
+        ax.set_xlim(0, max(row["mean_segment_llm_time_s"] for row in values) * 1.2)
     fig.suptitle("Same ten segments; all prefix-aware cases disable the aging override")
     fig.savefig(root / "pressure-comparison.png", dpi=180)
     plt.close(fig)

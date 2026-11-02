@@ -1,0 +1,20 @@
+{
+  "slurm_job_id": 10779,
+  "state": "COMPLETED",
+  "exit_code": "0:0",
+  "elapsed": "01:26:35",
+  "node": "node06",
+  "all_415_requests_completed": true,
+  "all_2453_metric_snapshots_succeeded": true,
+  "preemptions": 0,
+  "all_five_request_hashes_and_lengths_match": true,
+  "environment_packages_model_and_patch_identical_across_capacities": true,
+  "recorded_files_sha256": {
+    "environment.json": "6ae31049a8cd4c4c3f1e141de4964b5bba036670b72f89580d0be16a6a6b914d",
+    "packages.txt": "c881c567eb2c51be20cf42faf38dfda6c6353ca43b8e9f6a71728aa917f01c86",
+    "model_snapshot.txt": "cb7cae4cc3c61789b9d840902d55220c189223ae6c2e2aacc3b1ef50fea0ecab",
+    "vllm-source.patch": "8ab7dae12954b37ac64e408f8ea3cb137685a8725811514ada69099be0015ad2"
+  },
+  "bootstrap_sha256": "00bc7912d76a7c2d5a9fa45cccd5153d63f597639f590496556ec4d4df0f96eb",
+  "source_workload_sha256": "362771933edf1d36bdc4e373c193b7fd5eadd537be058e0d86aa204e1854cd51"
+}

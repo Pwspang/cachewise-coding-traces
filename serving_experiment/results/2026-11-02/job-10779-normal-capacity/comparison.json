@@ -1,5 +1,5 @@
 {
-  "status": "normal_capacity_complete; half_capacity_experiment_still_running_at_publication",
+  "status": "normal_capacity_complete; entire_five_case_job_completed",
   "slurm_job_id": 10779,
   "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
   "gpu": "single RTX Pro 6000 Blackwell",
@@ -252,5 +252,5 @@
   "baseline_over_prefix_lru_mean_time_ratio": 1.7790523332703412,
   "baseline_over_cachewise_mean_time_ratio": 1.7120689410955594,
   "cachewise_over_prefix_lru_mean_time_ratio": 1.0391242376793068,
-  "limitations": "One run per policy in prespecified order; ten selected segments; all prefix-aware policies disable aging. Not a full paper replication. No half-capacity result is included yet. Raw recordings remain in the documented local/CCDS run directories."
+  "limitations": "One run per policy in prespecified order; ten selected segments; all prefix-aware policies disable aging. Not a full paper replication. Half-capacity results are reported separately in ../job-10779/pressure-comparison.json. Raw recordings remain in the documented local/CCDS run directories."
 }
