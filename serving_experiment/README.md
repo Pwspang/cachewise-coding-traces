@@ -177,7 +177,10 @@ Launched as **CCDS job 11945 on 2026-11-03 at 11:32 Singapore time**, on node06.
 The [launch record](results/2026-11-03/job-11945/launch.json) identifies source
 commit `101da83`, the engine hash, and the planned comparisons; it is not a
 completed performance result. All 74 engine tests and 11 local tests passed,
-as did the applicable engine pre-commit checks. The earlier attempt, job 11904,
+as did the applicable engine pre-commit checks. The
+[three-policy smoke audit](results/2026-11-03/job-11945/smoke-oracle-comparison.json)
+also passed for all 12 requests, and the full comparison started. Smoke timings
+are validation data, not evidence about prediction quality. The earlier attempt, job 11904,
 was cancelled during smoke testing to add explicit type guards before restarting.
 
 `oracle.slurm` compares prefix-aware LRU, the current tool-name CacheWise

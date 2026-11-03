@@ -1,0 +1,150 @@
+{
+  "scope": "Recorded tool-duration oracle, not an omniscient future-arrival/Belady policy. All policies mark terminal turns idle. One cohort; repeat ranges are not confidence intervals.",
+  "smoke": true,
+  "policies": {
+    "prefix_only_no_aging": {
+      "mean_session_llm_time_s": 13.241663947352208,
+      "elapsed_s": 16.515642320970073,
+      "prompt_cache_hit_fraction": 0.4970296511475753,
+      "uncached_prompt_tokens": 38438,
+      "observed_mean_time_range_s": [
+        13.241663947352208,
+        13.241663947352208
+      ]
+    },
+    "cachewise_no_aging": {
+      "mean_session_llm_time_s": 12.912748874980025,
+      "elapsed_s": 16.194097872124985,
+      "prompt_cache_hit_fraction": 0.4970296511475753,
+      "uncached_prompt_tokens": 38438,
+      "observed_mean_time_range_s": [
+        12.912748874980025,
+        12.912748874980025
+      ]
+    },
+    "cachewise_oracle_no_aging": {
+      "mean_session_llm_time_s": 12.900931472424418,
+      "elapsed_s": 16.177346401149407,
+      "prompt_cache_hit_fraction": 0.4970296511475753,
+      "uncached_prompt_tokens": 38438,
+      "observed_mean_time_range_s": [
+        12.900931472424418,
+        12.900931472424418
+      ]
+    }
+  },
+  "time_ratios": {
+    "prefix_only_no_aging_over_cachewise_no_aging": 1.0254721187221023,
+    "prefix_only_no_aging_over_cachewise_oracle_no_aging": 1.026411463052579,
+    "cachewise_no_aging_over_cachewise_oracle_no_aging": 1.0009160115748903
+  },
+  "runs": [
+    {
+      "run": "cachewise_no_aging-r0",
+      "policy": "cachewise_no_aging",
+      "requests": 4,
+      "sessions": 2,
+      "elapsed_s": 16.194097872124985,
+      "mean_session_llm_time_s": 12.912748874980025,
+      "median_request_latency_s": 4.8695701664546505,
+      "median_ttft_s": 3.447462985990569,
+      "output_tokens_per_s": 30.07268474264791,
+      "prompt_cache_hit_fraction": 0.4970296511475753,
+      "oracle_hints_consumed": 0,
+      "uncached_prompt_tokens": 38438,
+      "preemptions": 0.0,
+      "max_request_latency_s": 15.36715613398701,
+      "client_gap_minus_tool_delay_mean_s": 0.029216271126642823,
+      "client_gap_minus_tool_delay_max_s": 0.033862183103337884
+    },
+    {
+      "run": "cachewise_oracle_no_aging-r0",
+      "policy": "cachewise_oracle_no_aging",
+      "requests": 4,
+      "sessions": 2,
+      "elapsed_s": 16.177346401149407,
+      "mean_session_llm_time_s": 12.900931472424418,
+      "median_request_latency_s": 4.863392279949039,
+      "median_ttft_s": 3.441961371572688,
+      "output_tokens_per_s": 30.10382468940632,
+      "prompt_cache_hit_fraction": 0.4970296511475753,
+      "oracle_hints_consumed": 2,
+      "uncached_prompt_tokens": 38438,
+      "preemptions": 0.0,
+      "max_request_latency_s": 15.356020495994017,
+      "client_gap_minus_tool_delay_mean_s": 0.029112685471773148,
+      "client_gap_minus_tool_delay_max_s": 0.033941759960725904
+    },
+    {
+      "run": "prefix_only_no_aging-r0",
+      "policy": "prefix_only_no_aging",
+      "requests": 4,
+      "sessions": 2,
+      "elapsed_s": 16.515642320970073,
+      "mean_session_llm_time_s": 13.241663947352208,
+      "median_request_latency_s": 5.037371787941083,
+      "median_ttft_s": 3.527730984496884,
+      "output_tokens_per_s": 29.48719707871436,
+      "prompt_cache_hit_fraction": 0.4970296511475753,
+      "oracle_hints_consumed": 0,
+      "uncached_prompt_tokens": 38438,
+      "preemptions": 0.0,
+      "max_request_latency_s": 15.690962004009634,
+      "client_gap_minus_tool_delay_mean_s": 0.029290182632394135,
+      "client_gap_minus_tool_delay_max_s": 0.03428099094890058
+    }
+  ],
+  "audit": {
+    "identical_request_hashes_and_lengths_all_runs": true,
+    "runs": {
+      "cachewise_no_aging-r0": {
+        "requests": 4,
+        "output_tokens": 487,
+        "prompt_tokens": 76422,
+        "metric_snapshots": 9,
+        "failed_metric_snapshots": 0,
+        "preemptions": 0.0,
+        "archive_records": {
+          "payloads.jsonl.gz": 4,
+          "responses.jsonl.gz": 491
+        }
+      },
+      "cachewise_oracle_no_aging-r0": {
+        "requests": 4,
+        "output_tokens": 487,
+        "prompt_tokens": 76422,
+        "metric_snapshots": 9,
+        "failed_metric_snapshots": 0,
+        "preemptions": 0.0,
+        "archive_records": {
+          "payloads.jsonl.gz": 4,
+          "responses.jsonl.gz": 491
+        }
+      },
+      "prefix_only_no_aging-r0": {
+        "requests": 4,
+        "output_tokens": 487,
+        "prompt_tokens": 76422,
+        "metric_snapshots": 10,
+        "failed_metric_snapshots": 0,
+        "preemptions": 0.0,
+        "archive_records": {
+          "payloads.jsonl.gz": 4,
+          "responses.jsonl.gz": 491
+        }
+      }
+    }
+  },
+  "input_hashes": {
+    "workload.json": "362771933edf1d36bdc4e373c193b7fd5eadd537be058e0d86aa204e1854cd51",
+    "bootstrap.jsonl": "00bc7912d76a7c2d5a9fa45cccd5153d63f597639f590496556ec4d4df0f96eb"
+  },
+  "physical_gpu_uuids": [
+    "GPU-e42940a5-77eb-66f0-bd40-27886ff66c04"
+  ],
+  "request_trace_hashes": {
+    "cachewise_no_aging-r0": "3f7b5a8d21bd54e117de491e9f26454eb047f8e25d945d2b195b824b2fc4b6c6",
+    "cachewise_oracle_no_aging-r0": "b5f2b014f68aec1d195c6cd93466cec123f1c9fbd90fd819cd1b2f949e407c5d",
+    "prefix_only_no_aging-r0": "1de837443ca20db777ddfc55173fce5f13019cf0407366425d66d3860f1f1934"
+  }
+}
