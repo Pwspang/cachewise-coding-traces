@@ -6,6 +6,9 @@ This rerun uses `chughtapan/vllm` branch `cachewise`, pinned to
 The upstream kernel-wheel base is
 `fe042382925000e5adfe530a1cc2b91d7a125fd5`.
 
+For the consolidated comparison, see
+[Differences from the paper](#differences-from-the-paper).
+
 ## Applied fixes
 
 `patches/cachewise-session-lifecycle.patch` applies to the pinned fork above.
@@ -167,6 +170,138 @@ after retrieving a completed run, regenerate the analysis and plots with:
 
 To extract these additional statistics again from the raw traces, replace
 `--data ...` with `--root runs/ccds-10807/fair-10807/comparison`.
+
+## Differences from the paper
+
+**The current reproduction supports a scheduling benefit, but does not reproduce
+the full numerical results or demonstrate an added predictive-eviction benefit
+over prefix-aware LRU.** This record covers the known differences in the serving
+evaluation (Figures 13–20) and its setup. It does not audit the earlier workload
+characterization figures or claim to identify every undocumented paper setting.
+
+The reference is [CacheWise, arXiv:2606.16824v1, Sections 5–6](https://arxiv.org/html/2606.16824v1).
+All current measurements below come from **job 10807: N=10, three repeats per
+policy, one fixed cohort**, rather than a mixture of earlier jobs. A missing
+experiment is classified as untested, not as a failed claim. In particular,
+our N=10 results do not test the paper's higher-load headline ranges.
+
+### Numerical claims and observed differences
+
+In this table, a latency speedup is comparator time divided by CacheWise time;
+a goodput or throughput gain is CacheWise rate divided by comparator rate.
+Unless specified otherwise, comparator order is FCFS LRU, then FCFS InferCept.
+Ratios use the three-repeat means; plotted repeat ranges are not confidence
+intervals. The paper column summarizes [Sections 6.2–6.6](https://arxiv.org/html/2606.16824v1#S6.SS2).
+
+| Figure / claim | Paper reference | Our measured result or missing measurement | Assessment |
+| --- | --- | --- | --- |
+| 13: low-load behavior | N≤10: similar performance. | Mean session times: 576.22 s / 521.72 s versus CacheWise 337.36 s, already 1.708× / 1.546× speedups at N=10. | Different low-load behavior; equal N does not mean equal memory pressure. |
+| 13: higher-load session time | N>10: 2.7–3.5× speedup. | Only N=10 measured; 41.5% / 35.3% lower mean time. | Headline magnitude not reproduced; higher-load claim untested. |
+| 14(a): useful-token goodput | N>10: 1.64–2× gain. | 0.711 / 0.782 versus 0.994 K tokens/s; gains 1.398× / 1.270×. | Direction agrees at N=10; higher-load magnitude untested. |
+| 14(f): request throughput | N>10: 1.5–2× gain. | 0.0950 / 0.1045 versus 0.1328 requests/s; gains 1.398× / 1.270×. | Direction agrees at N=10; higher-load magnitude untested. |
+| 14(c): median request latency | P50: 13–14× speedup. | 27.44 / 27.55 versus 23.95 s; speedups only 1.146× / 1.150×. | Direction agrees; quoted magnitude absent in this cohort. |
+| 14(d): P90 request latency | P90 improves. | 194.12 / 181.11 versus 91.47 s; speedups 2.122× / 1.980×. | Qualitative agreement at N=10. |
+| 14(e): P99 request latency | P99 worsens, especially at higher load. | 268.93 / 255.46 versus 224.72 s: CacheWise P99 is lower. Its maximum request is nevertheless higher: 446.52 s versus 334.69 / 318.05 s. | P99 direction differs here. Maximum latency must not be substituted for P99; higher-load behavior untested. |
+| 15: eviction-only goodput benefit | Fixed scheduler: 1.2–1.6× gain. | Prefix-aware LRU / InferCept: 0.998 / 0.938 versus CacheWise 0.994 K tokens/s. CacheWise is 0.4% lower than LRU, 5.9% higher than InferCept. | No predictive-eviction goodput advantage over LRU in this cohort. |
+| 15: eviction-only session benefit | Fixed scheduler: 1.7–2× speedup. | Prefix-aware LRU / InferCept: 324.63 / 357.90 versus CacheWise 337.36 s. CacheWise is **3.9% slower than LRU**, 5.7% faster than InferCept. | LRU ordering reverses the claimed benefit in this cohort, consistently across all repeats. |
+| 13/15: oracle comparison | CacheWise approximately matches CacheWise*. | No ground-truth-duration oracle run. | Untested; oracle bars are omitted. |
+| 16: scheduling-only goodput | N=30: 1.38–1.64×; N=40: 1.6–1.7×. | Adding prefix scheduling gives 1.404× for LRU and 1.199× for InferCept at N=10. | Direction agrees; published loads and the CacheWise FCFS/prefix pair are untested. |
+| 16: scheduling-only session time | N=30: 1.8–2.35×; N=40: 1.85–2.66×. | Adding prefix scheduling gives 1.775× for LRU and 1.458× for InferCept at N=10. | Direction agrees; published magnitudes at N=30/40 untested. |
+| 14(b)/17: evictions / movement | 2–2.6× reduction. | Only 1% block-lifetime sampling; no complete eviction count or actual transferred-byte measurement. | Not measurable from these traces. The unavailable panel is explicitly marked. |
+| 18: CPU offloading | N=30: 1.19× session speedup. | No CPU swap experiment; this replay recomputes evicted prefixes. | Untested; no Figure 18 reproduction. |
+| 19: predictor granularity | C100: up to 19% improvement. | Tool-name predictor only; no matched point-estimate, C20/C50/C100, or oracle sweep at N=30/40/50. | Untested; no Figure 19 reproduction. |
+| 20: scheduling overhead | CPU 2.4–3×; N=40 GPU 16.6→11.2 s; net ≈4.7 s/request saved. | No exclusive CPU scheduler / GPU execution profiling. | Untested; overlapping request-stage residence times cannot produce Figure 20. |
+
+The measured cache-hit rates also locate the gap: CacheWise achieves 78.98%,
+above FCFS LRU's 64.69% and FCFS InferCept's 69.04%, but slightly below
+prefix-aware LRU's 79.03%. Its mean uncached prompt-token count is 1,028,682,
+versus 1,026,469 for prefix-aware LRU. A roughly 70% InferCept hit rate therefore
+does not establish either the paper's speedup or an advantage over the matched
+prefix-aware controls. These are completed-request token-weighted hits, not
+server lookup-hit counters or full block-eviction counts.
+
+Sources for the local numbers are the
+[audited comparison](results/2026-11-02/job-10807/fair-comparison.json),
+[per-run figure data](results/2026-11-02/job-10807/figures/performance-figure-data.csv),
+and [request-level comparison](results/2026-11-02/job-10807/request-comparison.csv).
+
+### Setup, implementation, and workload differences
+
+The reference setup is 2×H200, Qwen2.5-Coder-32B, TP=2; training uses an 80/20
+split, argument clustering, and up to 100 clusters with 5,000 TF-IDF features.
+Its InferCept uses session-local moving averages.
+([Setup](https://arxiv.org/html/2606.16824v1#S6.SS1),
+[predictor](https://arxiv.org/html/2606.16824v1#S5.SS2),
+[ablations](https://arxiv.org/html/2606.16824v1#S6.SS3).)
+
+| Area | Reproduction difference or unresolved fidelity gap | Implication / evidence limit |
+| --- | --- | --- |
+| GPU, model, parallelism | One RTX Pro 6000 Blackwell Max-Q, 96 GB class; Qwen2.5-Coder-14B-Instruct; TP=1. | Compute, model weights, KV capacity, and communication costs differ. Their separate contributions have not been quantified. |
+| Memory pressure | 17,981 blocks × 16 tokens = 287,696 KV tokens; the ten initial prompts total 487,696 tokens. | The aggregate initial working set already exceeds capacity at N=10; this is not a matched low-contention regime. |
+| Engine and runtime | Patched fork `a4b3affa`, kernel base `fe042382`; Python 3.12.3, Torch 2.11.0+cu130, Transformers 5.21.0. | Exact paper executable/dependencies have not been matched. There is no old-versus-new stock-vLLM experiment establishing that newer vLLM explains the gap. |
+| Other runtime settings | BF16, maximum length 131,072, YaRN factor 4, maximum 32 sequences, GPU memory utilization 0.85. | These are recorded local choices. Where the paper does not disclose a corresponding value, the difference remains unknown rather than confirmed. See the saved environment and server commands. |
+| CacheWise implementation | Local lifecycle fixes protect queued returns, refresh retention priorities, and observe tool durations at request arrival. Aging override is disabled for all prefix-aware cases. | The executed engine includes our patches; equivalence to the paper's experiment binary is unverified. The earlier 30-second aging default materially affected local results. Passing behavior tests does not establish performance fidelity. |
+| Predictor inputs | All 8,215 bootstrap argument strings are the same redacted placeholder; current runs use `tool_name`. | Argument-sensitive prediction cannot be reconstructed from these inputs. Raising cluster counts cannot recover missing arguments. |
+| Inactive clustering defaults | The fork contains eight clusters and 512 TF-IDF features. | These differ from the reference configuration, but are inactive in the current tool-name mode and cannot be cited as an active cause of its results. |
+| Training membership | 34 training source sessions out of 94 locally parsed sessions (36.2%). | This is a local source-session denominator. Exact paper serving train/test IDs are unavailable, so matching the split has not been demonstrated. |
+| Bootstrap versus runtime keys | Bootstrap observations are individual calls; runtime observations are parallel batches with repeated tool names. Sixteen of 73 transitions lack an initial matching key, including seven `Bash+Bash` transitions. | Those transitions initially use a global fallback until online observations become available. This is a concrete preparation mismatch; its isolated performance effect is unmeasured. |
+| InferCept implementation | Imported preserve/discard adaptation uses elapsed pauses and a measured recomputation profile. No CPU swapping, hard cache pinning, or original resume-order implementation. | Internally matched across this experiment's policies, but not an exact implementation of the reference comparator. It uses eviction priority rather than guaranteed retention. |
+| Serving cohort | Ten complete segments from eight source sessions, 83 requests per run; 57 of 73 between-turn waits ≤1 s. | Small, mostly short-wait cohort. Different tool mixes may leave different opportunities for predictive eviction; that possibility has not been isolated experimentally. |
+| Preparation and exclusions | 20,634 LLM records become 11,453 unique messages; 314 human boundaries and nine context resets; 28 synthetic messages and 428 invalid/overlength messages skipped. There are 368 prepared segments, 311 with at least two turns. | Selection and segmentation affect the replay distribution. Exact correspondence to the paper's sampled subsessions is unknown. |
+| Token content and generation | Synthetic prompt token IDs preserve within-segment prefix growth; generated token 42 is forced with deterministic recorded lengths. | This reproduces length/reuse structure, not original natural-language inputs, tool arguments, or generation quality. Exact equivalence to the paper's token construction is unknown. |
+| Higher-load coverage | No N=20–50 runs. The first 20 eligible segments introduce a verified 49.49-hour single tool interval; its containing segment has 51.09 hours of total external waiting. | The missing sweep is a coverage gap. Current runs did not clip delays or silently replace long-wait sessions. |
+| Repetition and statistical scope | Three repeats, one fixed cohort, five-policy order rotated by one position. | Partial order balancing, not a complete Latin square. Tight repeat ranges establish repeatability here, not population confidence or robustness across cohorts. |
+| Instrumentation | Request/usage traces and sampled cache metrics; no complete eviction trace, CPU swap trace, or exclusive CPU/GPU profiler. | Several published claims cannot be checked from these artifacts. Client timelines are not CUDA execution traces. |
+
+Preparation evidence is in the
+[input fidelity audit](results/2026-11-02/paper-fidelity-audit.json).
+The executed settings are in
+[environment.json](results/2026-11-02/job-10807/environment.json),
+[server-commands.json](results/2026-11-02/job-10807/server-commands.json), and
+[provenance.json](results/2026-11-02/job-10807/provenance.json).
+
+### Interpretation limits and evidence about causes
+
+Session-time bars exclude tool waits; whole-run elapsed time and the goodput /
+throughput denominators include them. These quantities must not be interchanged.
+The useful-token numerator is 621,191 per run, including new prompt and output
+tokens; output-only throughput is a separate metric. With identical work across
+policies, goodput and request-throughput ratios use the same elapsed-time
+denominator, so their agreement is not independent evidence of two improvements.
+The exact paper goodput counting code has not been recovered.
+
+P50/P90/P99 bars average percentiles computed separately within each 83-request
+run, with linear interpolation. This small sample is especially limiting for
+tail claims. The larger CacheWise maximum and smaller CacheWise P99 are both
+true; neither should be used to erase the other.
+
+Several controls already align: closed-loop replay, human-pause segmentation,
+FCFS/LRU baseline, 512-token chunked prefill, heap rebuild interval three, and
+session time excluding tool waits. Prefix caching is enabled; disabling it is
+not a justified route to matching the reference. The full-input admission
+setting in the paper is unspecified, so there is no evidence that it disabled
+that check. Missing values must remain unknown.
+
+The strongest local evidence about causes is bounded:
+
+- [Job 10772](#aging-override-ablation-ccds-job-10772-2026-11-02) removed the
+  30-second aging override and reduced CacheWise mean session time from 544.88
+  to 366.07 s. This diagnoses a local scheduling limitation; it is not a fresh
+  baseline comparison and does not explain the remaining eviction gap.
+- [Job 10779](#scheduling-eviction-and-capacity-ablation-ccds-job-10779) halved
+  KV capacity and reduced the CacheWise/FCFS-baseline speedup from about 1.71×
+  to 1.28×. More memory pressure alone did not recover the headline gain in
+  that test. Capacity reduction is not equivalent to the missing concurrency
+  sweep, and this was one run per case.
+- In job 10807, `session_0065_003:1` reused 89,152 prompt tokens under
+  prefix-aware LRU (6.58 s mean latency), but zero under CacheWise (77.79 s).
+  This confirms a consequential retention difference. Scheduling and eviction
+  interact, so it does not prove that prediction error alone caused it.
+
+The remaining causal question is unresolved: predictor inputs/training,
+cohort/load, engine behavior, and hardware/model changes have not been isolated
+in a complete set of matched ablations. The existing evidence supports neither
+“the paper is disproved” nor “updated vLLM alone explains the difference.”
 
 ## Fixed comparison: CCDS job 9494, 2026-10-28
 
