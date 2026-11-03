@@ -1,0 +1,110 @@
+[
+  {
+    "run": "cachewise_no_aging-r0",
+    "policy": "cachewise_no_aging",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 619.1892955750227,
+    "mean_session_llm_time_s": 335.9138538846513,
+    "median_request_latency_s": 24.03821115498431,
+    "median_ttft_s": 5.268465468194336,
+    "output_tokens_per_s": 24.604753520248938,
+    "prompt_cache_hit_fraction": 0.7930289224211636
+  },
+  {
+    "run": "cachewise_no_aging-r1",
+    "policy": "cachewise_no_aging",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 619.6246279249899,
+    "mean_session_llm_time_s": 336.068031891156,
+    "median_request_latency_s": 24.07936258194968,
+    "median_ttft_s": 5.2762196362018585,
+    "output_tokens_per_s": 24.587466852341297,
+    "prompt_cache_hit_fraction": 0.7930289224211636
+  },
+  {
+    "run": "cachewise_no_aging-r2",
+    "policy": "cachewise_no_aging",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 619.7161387959495,
+    "mean_session_llm_time_s": 336.16568163849877,
+    "median_request_latency_s": 24.11408818583004,
+    "median_ttft_s": 5.275787685997784,
+    "output_tokens_per_s": 24.583836124713777,
+    "prompt_cache_hit_fraction": 0.7930289224211636
+  },
+  {
+    "run": "cachewise_oracle_no_aging-r0",
+    "policy": "cachewise_oracle_no_aging",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 619.0014297750313,
+    "mean_session_llm_time_s": 335.73929001078943,
+    "median_request_latency_s": 24.028580565936863,
+    "median_ttft_s": 5.2728071990422904,
+    "output_tokens_per_s": 24.61222101786902,
+    "prompt_cache_hit_fraction": 0.7930550723382296
+  },
+  {
+    "run": "cachewise_oracle_no_aging-r1",
+    "policy": "cachewise_oracle_no_aging",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 619.2622576188296,
+    "mean_session_llm_time_s": 335.91908116745765,
+    "median_request_latency_s": 24.064358725911006,
+    "median_ttft_s": 5.271191023988649,
+    "output_tokens_per_s": 24.601854565755723,
+    "prompt_cache_hit_fraction": 0.7930550723382296
+  },
+  {
+    "run": "cachewise_oracle_no_aging-r2",
+    "policy": "cachewise_oracle_no_aging",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 619.2107351219747,
+    "mean_session_llm_time_s": 335.8883418983314,
+    "median_request_latency_s": 24.0308612708468,
+    "median_ttft_s": 5.269007675815374,
+    "output_tokens_per_s": 24.603901605483223,
+    "prompt_cache_hit_fraction": 0.7930550723382296
+  },
+  {
+    "run": "prefix_only_no_aging-r0",
+    "policy": "prefix_only_no_aging",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 624.7624327540398,
+    "mean_session_llm_time_s": 325.95421244285535,
+    "median_request_latency_s": 23.03016502596438,
+    "median_ttft_s": 10.209708882961422,
+    "output_tokens_per_s": 24.385269025927183,
+    "prompt_cache_hit_fraction": 0.7902929873481389
+  },
+  {
+    "run": "prefix_only_no_aging-r1",
+    "policy": "prefix_only_no_aging",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 624.1308050260413,
+    "mean_session_llm_time_s": 325.37114744100256,
+    "median_request_latency_s": 23.13969392492436,
+    "median_ttft_s": 10.245280059985816,
+    "output_tokens_per_s": 24.40994720548096,
+    "prompt_cache_hit_fraction": 0.7902962560877722
+  },
+  {
+    "run": "prefix_only_no_aging-r2",
+    "policy": "prefix_only_no_aging",
+    "requests": 83,
+    "sessions": 10,
+    "elapsed_s": 623.6310202127788,
+    "mean_session_llm_time_s": 325.27021020248065,
+    "median_request_latency_s": 23.314640298020095,
+    "median_ttft_s": 10.333317803917453,
+    "output_tokens_per_s": 24.42950960778365,
+    "prompt_cache_hit_fraction": 0.7902962560877722
+  }
+]

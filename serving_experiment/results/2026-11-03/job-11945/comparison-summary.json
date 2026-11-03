@@ -1,0 +1,32 @@
+{
+  "prefix_only_no_aging": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 325.5318566954462,
+    "range_segment_llm_time_s": [
+      325.27021020248065,
+      325.95421244285535
+    ],
+    "mean_prompt_cache_hit_fraction": 0.7902951665078944
+  },
+  "cachewise_no_aging": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 336.049189138102,
+    "range_segment_llm_time_s": [
+      335.9138538846513,
+      336.16568163849877
+    ],
+    "mean_prompt_cache_hit_fraction": 0.7930289224211636
+  },
+  "cachewise_oracle_no_aging": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 335.8489043588595,
+    "range_segment_llm_time_s": [
+      335.73929001078943,
+      335.91908116745765
+    ],
+    "mean_prompt_cache_hit_fraction": 0.7930550723382296
+  },
+  "prefix_only_no_aging_over_cachewise_no_aging_llm_time_ratio": 0.9687029971129208,
+  "prefix_only_no_aging_over_cachewise_oracle_no_aging_llm_time_ratio": 0.9692806868519976,
+  "limitation": "Paired repeats on one selected workload; ranges are observed run ranges, not confidence intervals."
+}

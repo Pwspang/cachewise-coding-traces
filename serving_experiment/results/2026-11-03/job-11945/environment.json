@@ -6,5 +6,5 @@
   "cuda_visible_devices": "0",
   "python": "3.12.3 (main, Nov  6 2024, 18:32:19) [GCC 13.2.0]",
   "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
-  "smoke": true
+  "smoke": false
 }

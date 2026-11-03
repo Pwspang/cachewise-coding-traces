@@ -173,15 +173,75 @@ To extract these additional statistics again from the raw traces, replace
 
 ## Oracle diagnostic experiment
 
-Launched as **CCDS job 11945 on 2026-11-03 at 11:32 Singapore time**, on node06.
-The [launch record](results/2026-11-03/job-11945/launch.json) identifies source
-commit `101da83`, the engine hash, and the planned comparisons; it is not a
-completed performance result. All 74 engine tests and 11 local tests passed,
+**CCDS job 11945 completed successfully on 2026-11-03 at 13:16:43 Singapore
+time**, after 1 h 44 min 05 s on node06 (exit `0:0`). All nine full runs and
+the final audit passed. The oracle produced almost no improvement over the
+learned predictor, and both remained slower than prefix-aware LRU on mean
+session time.
+
+| Policy (same prefix-aware scheduler) | Mean session LLM time | Observed repeat range | Prompt-token hit rate |
+| --- | ---: | ---: | ---: |
+| LRU | 325.53 s | 325.27–325.95 s | 79.0295% |
+| CacheWise, learned tool-name predictor | 336.05 s | 335.91–336.17 s | 79.3029% |
+| CacheWise, recorded-tool-duration oracle | 335.85 s | 335.74–335.92 s | 79.3055% |
+
+The oracle reduces mean session time by **0.20 s (0.060%)** relative to the
+learned predictor, but remains **3.17% slower than LRU**. The learned predictor
+is 3.23% slower than LRU. This ordering holds in all three repeats; the small
+oracle/learned repeat ranges overlap and are not confidence intervals. Oracle
+eviction avoids only 128 additional uncached prompt tokens per run compared
+with the learned predictor (1,012,965 versus 1,013,093).
+
+The previously identified request `session_0065_003:1` still reuses zero prompt
+tokens under both learned and oracle eviction, with mean latencies of 78.04 s
+and 78.00 s respectively. LRU reuses 89,152 tokens and takes 6.59 s. Thus, giving
+the policy known tool durations does not repair this concrete retention loss.
+
+These results **do not support tool-duration prediction error as the main
+explanation of the slowdown in this cohort**. They motivate examining the
+interaction between eviction and scheduling, rather than assuming predictor
+accuracy alone will recover the gap. They do not isolate CPU overhead, prove
+all predictions accurate, or rule out an effect at other workloads/loads.
+Although both CacheWise variants have slightly higher aggregate cache-hit rates
+than LRU, their mean session times are worse: aggregate hits alone do not
+describe which requests are delayed. Whole-run elapsed time is a separate
+metric: LRU 624.17 s, learned 619.51 s, and oracle 619.16 s.
+
+The oracle still uses recorded external waits rather than exact future server
+arrival times. In its runs, observed client inter-request gaps exceed the
+recorded waits by approximately 91 ms on average, with maxima around 153 ms; this measurement
+does not include all server/client transport effects. That matters for a cohort
+with many short waits, so this experiment is not a perfect next-arrival oracle
+or a universal upper bound on eviction performance.
+
+The audit verified **747 completed requests, 2,795 healthy metric snapshots,
+zero request errors, and zero preemptions**. Each oracle repeat consumed all
+73 expected duration hints; controls consumed none. Input hashes match job
+10807, and all runs used the same physical GPU as that job. The deployed engine
+remained unchanged, and all 23 saved runner Python files match source commit
+`101da83`. All 74 engine tests and 11 local tests passed,
 as did the applicable engine pre-commit checks. The
 [three-policy smoke audit](results/2026-11-03/job-11945/smoke-oracle-comparison.json)
-also passed for all 12 requests, and the full comparison started. Smoke timings
-are validation data, not evidence about prediction quality. The earlier attempt, job 11904,
-was cancelled during smoke testing to add explicit type guards before restarting.
+also passed for all 12 requests. Smoke timings are validation data, not evidence
+about prediction quality. The earlier attempt, job 11904, was cancelled during
+smoke testing to add explicit type guards before restarting.
+
+Results and evidence:
+
+- [Audited oracle comparison](results/2026-11-03/job-11945/oracle-comparison.json)
+  and [per-run summary](results/2026-11-03/job-11945/comparison.json).
+- [Trace audit](results/2026-11-03/job-11945/repeat-trace-audit.json),
+  [Slurm completion](results/2026-11-03/job-11945/slurm-accounting.txt),
+  [deployed engine check](results/2026-11-03/job-11945/deployed-source-check.json),
+  and [runner source check](results/2026-11-03/job-11945/runner-source-check.json).
+- [Server commands](results/2026-11-03/job-11945/server-commands.json),
+  [environment](results/2026-11-03/job-11945/environment.json), and the historical
+  [launch record](results/2026-11-03/job-11945/launch.json).
+
+The full raw traces are retained locally in
+`runs/ccds-11945/oracle-11945/` and remotely in
+`ccds-ai:~/cachewise-rerun/runs/oracle-11945/`. The final audit also passed when
+rerun locally against the retrieved archives.
 
 `oracle.slurm` compares prefix-aware LRU, the current tool-name CacheWise
 predictor, and a recorded-tool-duration oracle on the same N=10 cohort, model,
@@ -223,13 +283,6 @@ sbatch serving_experiment/oracle.slurm
 .venv/bin/python serving_experiment/analyze_oracle.py runs/oracle-JOBID/comparison
 ```
 
-Interpretation: an oracle improvement over both the learned predictor and LRU
-would support prediction quality as a contributor to the gap. An improvement
-over the learned predictor that still trails LRU would indicate only partial
-recovery. Little oracle benefit would motivate investigating eviction/scheduling
-interactions and this cohort's limited predictive opportunity. No outcome alone
-establishes the paper's higher-load results or a universal upper bound.
-
 ## Differences from the paper
 
 **The current reproduction supports a scheduling benefit, but does not reproduce
@@ -239,8 +292,10 @@ evaluation (Figures 13–20) and its setup. It does not audit the earlier worklo
 characterization figures or claim to identify every undocumented paper setting.
 
 The reference is [CacheWise, arXiv:2606.16824v1, Sections 5–6](https://arxiv.org/html/2606.16824v1).
-All current measurements below come from **job 10807: N=10, three repeats per
-policy, one fixed cohort**, rather than a mixture of earlier jobs. A missing
+Unless explicitly identified as the oracle follow-up, measurements below come
+from **job 10807: N=10, three repeats per policy, one fixed cohort**. The oracle
+row links the separate job 11945 above; its changed terminal handling is shared
+by its own fresh controls and must not be mixed into job 10807's ratios. A missing
 experiment is classified as untested, not as a failed claim. In particular,
 our N=10 results do not test the paper's higher-load headline ranges.
 
@@ -263,7 +318,7 @@ intervals. The paper column summarizes [Sections 6.2–6.6](https://arxiv.org/ht
 | 14(e): P99 request latency | P99 worsens, especially at higher load. | 268.93 / 255.46 versus 224.72 s: CacheWise P99 is lower. Its maximum request is nevertheless higher: 446.52 s versus 334.69 / 318.05 s. | P99 direction differs here. Maximum latency must not be substituted for P99; higher-load behavior untested. |
 | 15: eviction-only goodput benefit | Fixed scheduler: 1.2–1.6× gain. | Prefix-aware LRU / InferCept: 0.998 / 0.938 versus CacheWise 0.994 K tokens/s. CacheWise is 0.4% lower than LRU, 5.9% higher than InferCept. | No predictive-eviction goodput advantage over LRU in this cohort. |
 | 15: eviction-only session benefit | Fixed scheduler: 1.7–2× speedup. | Prefix-aware LRU / InferCept: 324.63 / 357.90 versus CacheWise 337.36 s. CacheWise is **3.9% slower than LRU**, 5.7% faster than InferCept. | LRU ordering reverses the claimed benefit in this cohort, consistently across all repeats. |
-| 13/15: oracle comparison | CacheWise approximately matches CacheWise*. | No ground-truth-duration oracle run. | Untested; oracle bars are omitted. |
+| 13/15: oracle comparison | CacheWise approximately matches CacheWise*. | Follow-up job 11945: learned 336.05 s, tool-duration oracle 335.85 s, matched prefix-aware LRU 325.53 s. | Near parity observed at N=10, but neither beats LRU. Higher-load oracle comparison remains untested; the original job 10807 figures still omit oracle bars. |
 | 16: scheduling-only goodput | N=30: 1.38–1.64×; N=40: 1.6–1.7×. | Adding prefix scheduling gives 1.404× for LRU and 1.199× for InferCept at N=10. | Direction agrees; published loads and the CacheWise FCFS/prefix pair are untested. |
 | 16: scheduling-only session time | N=30: 1.8–2.35×; N=40: 1.85–2.66×. | Adding prefix scheduling gives 1.775× for LRU and 1.458× for InferCept at N=10. | Direction agrees; published magnitudes at N=30/40 untested. |
 | 14(b)/17: evictions / movement | 2–2.6× reduction. | Only 1% block-lifetime sampling; no complete eviction count or actual transferred-byte measurement. | Not measurable from these traces. The unavailable panel is explicitly marked. |
