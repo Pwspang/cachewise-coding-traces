@@ -173,6 +173,13 @@ To extract these additional statistics again from the raw traces, replace
 
 ## Oracle diagnostic experiment
 
+Launched as **CCDS job 11945 on 2026-11-03 at 11:32 Singapore time**, on node06.
+The [launch record](results/2026-11-03/job-11945/launch.json) identifies source
+commit `101da83`, the engine hash, and the planned comparisons; it is not a
+completed performance result. All 74 engine tests and 11 local tests passed,
+as did the applicable engine pre-commit checks. The earlier attempt, job 11904,
+was cancelled during smoke testing to add explicit type guards before restarting.
+
 `oracle.slurm` compares prefix-aware LRU, the current tool-name CacheWise
 predictor, and a recorded-tool-duration oracle on the same N=10 cohort, model,
 GPU allocation, 17,981-block KV budget, and unmodified tool waits. Three rotated

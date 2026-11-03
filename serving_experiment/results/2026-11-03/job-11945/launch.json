@@ -1,0 +1,28 @@
+{
+  "job_id": 11945,
+  "source_commit": "101da83df3b22969091b8d15c1491d398012ed61",
+  "recorded_utc": "2026-11-03T03:34:22.765534+00:00",
+  "record_type": "launch record; not a completed performance result",
+  "remote_root": "ccds-ai:~/cachewise-rerun/runs/oracle-11945/",
+  "engine_patch_sha256": "0289afa28f92c1db66684923d69336d833a4a52f89af84c62cb57f9bcdcf03ad",
+  "policies": [
+    "prefix_only_no_aging",
+    "cachewise_no_aging",
+    "cachewise_oracle_no_aging"
+  ],
+  "sessions": 10,
+  "repeats": 3,
+  "expected_full_requests": 747,
+  "mark_terminal_idle_all_policies": true,
+  "oracle_semantics": "Known recorded external wait minus elapsed server time; excludes future transport and queueing.",
+  "preceding_attempt": {
+    "job_id": 11904,
+    "status": "cancelled during smoke before full comparisons",
+    "reason": "Add explicit type narrowing guards, then restart on one validated engine snapshot."
+  },
+  "checks": {
+    "engine_tests_passed": 74,
+    "local_tests_passed": 11,
+    "engine_pre_commit": "passed"
+  }
+}
