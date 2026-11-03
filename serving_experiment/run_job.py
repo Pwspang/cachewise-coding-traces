@@ -122,6 +122,7 @@ def main():
             "infercept",
             "infercept_prefix_no_aging",
             "cachewise_no_aging",
+            "cachewise_oracle_no_aging",
             "prefix_only_no_aging",
             "prefix_only",
             "eviction_only",
@@ -137,7 +138,10 @@ def main():
     p.add_argument("--diagnostics", action="store_true")
     p.add_argument("--queue-diagnostics", action="store_true")
     p.add_argument("--num-gpu-blocks", type=int)
+    p.add_argument("--mark-terminal-idle", action="store_true")
     a = p.parse_args()
+    if "cachewise_oracle_no_aging" in (a.policies or ()) and not a.mark_terminal_idle:
+        p.error("Oracle comparison requires --mark-terminal-idle for all policies")
     if a.diagnostics and a.queue_diagnostics:
         p.error("Choose either historical diagnostics or queue observation")
     if set(a.policies or ()) & {"human_first", "queued_first"} and not a.diagnostics:
@@ -270,6 +274,7 @@ def main():
             command.extend(["--num-gpu-blocks-override", str(a.num_gpu_blocks)])
         predictive = policy in {
             "cachewise",
+            "cachewise_oracle_no_aging",
             "cachewise_no_aging",
             "eviction_only",
             "human_first",
@@ -277,6 +282,7 @@ def main():
         }
         prefix_aware = policy in {
             "cachewise",
+            "cachewise_oracle_no_aging",
             "cachewise_no_aging",
             "prefix_only_no_aging",
             "infercept_prefix_no_aging",
@@ -300,7 +306,7 @@ def main():
                     "--kv-cache-eviction-policy",
                     "predictive",
                     "--cachewise-predictor",
-                    "tool_name",
+                    "oracle" if policy == "cachewise_oracle_no_aging" else "tool_name",
                     "--cachewise-bootstrap-path",
                     str(bootstrap_path),
                 ]
@@ -400,6 +406,8 @@ def main():
                 ]
                 if a.smoke:
                     replay.extend(["--max-turns", "2", "--max-tokens", "32768"])
+                if a.mark_terminal_idle:
+                    replay.append("--mark-terminal-idle")
                 subprocess.run(replay, check=True)
     (a.output / "COMPLETE").write_text(
         "All requested policy runs completed successfully.\n"

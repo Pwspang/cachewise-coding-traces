@@ -6,7 +6,7 @@ import statistics
 from pathlib import Path
 
 
-def summarize(root):
+def summarize(root, reference_policy="baseline"):
     rows, expected = [], None
     for path in sorted(root.glob("*-r*/manifest.json")):
         manifest = json.loads(path.read_text())
@@ -17,6 +17,7 @@ def summarize(root):
             manifest[k]
             for k in ("selected_workload_sha256", "model", "sampling", "delay_scale")
         ]
+        signature.append(manifest.get("mark_terminal_idle", False))
         if expected is not None and expected != signature:
             raise ValueError("Run configurations or selected workloads differ")
         expected = signature
@@ -48,9 +49,11 @@ def summarize(root):
                 else None,
             }
         )
-    policies = sorted({r["policy"] for r in rows}, key=lambda p: (p != "baseline", p))
-    if "baseline" not in policies or len(policies) < 2:
-        raise ValueError("Need successful baseline and comparison-policy runs")
+    policies = sorted(
+        {r["policy"] for r in rows}, key=lambda p: (p != reference_policy, p)
+    )
+    if reference_policy not in policies or len(policies) < 2:
+        raise ValueError("Need successful reference and comparison-policy runs")
     (root / "comparison.json").write_text(json.dumps(rows, indent=2) + "\n")
     by_policy = {
         policy: [r for r in rows if r["policy"] == policy] for policy in policies
@@ -76,8 +79,8 @@ def summarize(root):
         for policy, group in by_policy.items()
     }
     for policy in policies[1:]:
-        aggregate[f"baseline_over_{policy}_llm_time_ratio"] = (
-            aggregate["baseline"]["mean_segment_llm_time_s"]
+        aggregate[f"{reference_policy}_over_{policy}_llm_time_ratio"] = (
+            aggregate[reference_policy]["mean_segment_llm_time_s"]
             / aggregate[policy]["mean_segment_llm_time_s"]
         )
     aggregate["limitation"] = (
@@ -92,4 +95,6 @@ def summarize(root):
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("root", type=Path)
-    summarize(p.parse_args().root)
+    p.add_argument("--reference-policy", default="baseline")
+    args = p.parse_args()
+    summarize(args.root, args.reference_policy)

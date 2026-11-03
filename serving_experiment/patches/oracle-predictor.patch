@@ -1,0 +1,226 @@
+--- a/vllm/config/cache.py
++++ b/vllm/config/cache.py
+@@ -38,7 +38,7 @@
+ PrefixCachingHashAlgo = Literal["sha256", "sha256_cbor", "xxhash", "xxhash_cbor"]
+ KVOffloadingBackend = Literal["native", "lmcache"]
+ KVCacheEvictionPolicy = Literal["lru", "predictive", "infercept"]
+-CacheWisePredictor = Literal["tool_name", "tfidf_kmeans"]
++CacheWisePredictor = Literal["tool_name", "tfidf_kmeans", "oracle"]
+ 
+ 
+ @config
+@@ -206,7 +206,9 @@
+     - "tool_name" uses per-tool-name empirical duration distributions.
+     - "tfidf_kmeans" additionally clusters tool calls by TF-IDF embeddings
+       of their arguments (requires scikit-learn; falls back to "tool_name"
+-      when unavailable)."""
++      when unavailable).
++    - "oracle" requires replay-supplied cachewise_oracle_duration_s metadata
++      for every tool-running turn. For controlled experiments only."""
+     cachewise_bootstrap_path: str | None = None
+     """Optional path to a JSONL file of historical tool duration samples
+     (objects with "tool", "args", and "duration_s" keys) used to bootstrap
+--- a/vllm/v1/core/cachewise/manager.py
++++ b/vllm/v1/core/cachewise/manager.py
+@@ -67,6 +67,7 @@
+             predictor=self.predictor,
+             default_reuse_s=self.default_reuse_s,
+             session_ttl_s=cache_config.cachewise_session_ttl,
++            use_oracle=cache_config.cachewise_predictor == "oracle",
+         )
+         self.queue: PredictiveFreeBlockQueue | None = None
+         self._last_rebuild_step = 0
+--- a/vllm/v1/core/cachewise/session_tracker.py
++++ b/vllm/v1/core/cachewise/session_tracker.py
+@@ -10,6 +10,7 @@
+ """
+ 
+ import json
++import math
+ import time
+ from collections import OrderedDict
+ from collections.abc import Callable, Sequence
+@@ -27,6 +28,7 @@
+ # extra_args key through which clients can pass ground-truth metadata about
+ # the tool calls they are about to execute (JSON list of {"name", "args"}).
+ NEXT_TOOLS_HINT_KEY = "cachewise_next_tools"
++ORACLE_DURATION_HINT_KEY = "cachewise_oracle_duration_s"
+ 
+ # Pseudo-session for blocks freed by preemption: the preempted request is
+ # requeued immediately, so its blocks have the most imminent reuse.
+@@ -63,6 +65,7 @@
+     last_request_id: str = ""
+     in_flight: bool = False
+     queued_request_ids: set[str] = field(default_factory=set)
++    oracle_duration_s: float | None = None
+ 
+ 
+ class SessionTracker:
+@@ -74,11 +77,13 @@
+         default_reuse_s: float,
+         session_ttl_s: float,
+         time_fn: Callable[[], float] = time.time,
++        use_oracle: bool = False,
+     ) -> None:
+         self.predictor = predictor
+         self.default_reuse_s = default_reuse_s
+         self.session_ttl_s = session_ttl_s
+         self.time_fn = time_fn
++        self.use_oracle = use_oracle
+ 
+         # LRU-ordered (oldest first) so the cap evicts least-recently-finished
+         # idle sessions; an active (in_flight) session is never evicted.
+@@ -102,6 +107,8 @@
+         self._last_priorities: dict[int, float] = {}
+         self.num_samples_recorded = 0
+         self.num_sessions_created = 0
++        self.num_oracle_hints = 0
++        self.num_oracle_predictions = 0
+ 
+     def on_request_queued(self, request: "Request") -> bool:
+         """Protect a returning prefix as soon as its next request is queued."""
+@@ -207,6 +214,31 @@
+         # reach them.
+         hint_tools = self._parse_hint(request)
+         session.pending_tools = hint_tools
++        session.oracle_duration_s = None
++        if self.use_oracle:
++            if hint_tools is None:
++                raise ValueError("Oracle replay requires explicit next-tools hints")
++            if hint_tools:
++                # _parse_hint returning tools guarantees both objects exist.
++                assert request.sampling_params is not None
++                assert request.sampling_params.extra_args is not None
++                raw = request.sampling_params.extra_args.get(ORACLE_DURATION_HINT_KEY)
++                if (
++                    isinstance(raw, bool)
++                    or not isinstance(raw, (int, float))
++                    or not math.isfinite(raw)
++                    or raw < 0
++                ):
++                    raise ValueError(
++                        "Oracle tool duration must be finite and non-negative"
++                    )
++                session.oracle_duration_s = float(raw)
++                self.num_oracle_hints += 1
++                logger.info(
++                    "CacheWise oracle duration: request_id=%s duration_s=%.9f",
++                    request_id,
++                    session.oracle_duration_s,
++                )
+         if hint_tools is None:
+             self.recently_finished[request_id] = (
+                 session.session_id,
+@@ -298,9 +330,19 @@
+                 priorities[session_id] = float("inf")
+             else:
+                 elapsed_s = max(0.0, now - session.last_finish_ts)
+-                priorities[session_id] = self.predictor.predict_remaining(
+-                    session.pending_tools, elapsed_s
+-                )
++                if self.use_oracle:
++                    if session.oracle_duration_s is None:
++                        raise ValueError(
++                            "Missing oracle duration for tool-running session"
++                        )
++                    priorities[session_id] = max(
++                        0.0, session.oracle_duration_s - elapsed_s
++                    )
++                    self.num_oracle_predictions += 1
++                else:
++                    priorities[session_id] = self.predictor.predict_remaining(
++                        session.pending_tools, elapsed_s
++                    )
+         if self._preempted_block_to_req:
+             priorities[PREEMPTED_SESSION_ID] = 0.0
+         self._last_priorities = priorities
+@@ -342,6 +384,8 @@
+             "num_samples_recorded": self.num_samples_recorded,
+             "num_queued_requests": len(self.queued_by_request_id),
+             "num_tracked_blocks": len(self.block_owners),
++            "num_oracle_hints": self.num_oracle_hints,
++            "num_oracle_predictions": self.num_oracle_predictions,
+         }
+ 
+     def _find_session(self, block_hashes: Sequence[bytes]) -> Session | None:
+--- /dev/null
++++ b/tests/v1/core/cachewise/test_oracle.py
+@@ -0,0 +1,78 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++"""Oracle predictions must override estimates without changing lifecycle rules."""
++
++from types import SimpleNamespace
++
++import pytest
++
++from tests.v1.core.cachewise.test_session_tracker import hashes, make_request
++from tests.v1.core.cachewise.utils import FakeClock
++from vllm.config import CacheConfig
++from vllm.v1.core.cachewise.manager import CacheWiseManager
++from vllm.v1.core.cachewise.session_tracker import ORACLE_DURATION_HINT_KEY
++
++
++def make_oracle():
++    manager = CacheWiseManager(
++        SimpleNamespace(cache_config=CacheConfig(cachewise_predictor="oracle"))
++    )
++    clock = FakeClock()
++    manager.time_fn = manager.tracker.time_fn = clock
++    assert manager.tracker.use_oracle
++    return manager, clock
++
++
++def tool_request(name, duration):
++    request = make_request(name, hashes(name), hint=[{"name": name}])
++    request.sampling_params.extra_args[ORACLE_DURATION_HINT_KEY] = duration
++    return request
++
++
++def test_oracle_overrides_wrong_prediction_and_counts_down():
++    manager, clock = make_oracle()
++    manager.predictor.record([("soon", "")], 1000)
++    manager.predictor.record([("late", "")], 1)
++    manager.on_request_finished(tool_request("soon", 2.0), [1])
++    manager.on_request_finished(tool_request("late", 20.0), [2])
++    tracker = manager.tracker
++    soon, late = tracker.by_tail_hash[b"soon"], tracker.by_tail_hash[b"late"]
++    assert tracker.priorities(clock()) == {soon: 2.0, late: 20.0}
++    clock.now += 5
++    assert tracker.priorities(clock()) == {soon: 0.0, late: 15.0}
++    assert tracker.stats()["num_oracle_hints"] == 2
++    assert tracker.stats()["num_oracle_predictions"] == 4
++    # A queued return retains the common immediate-reuse protection.
++    manager.on_request_queued(make_request("return", hashes("late", "extra")))
++    assert tracker.priorities(clock())[late] == 0
++    manager.on_request_removed("return")
++    assert tracker.priorities(clock())[late] == 15
++
++
++def test_terminal_turn_clears_oracle_state():
++    manager, clock = make_oracle()
++    manager.on_request_finished(tool_request("first", 10), [1])
++    returning = make_request("last", hashes("first", "last"), hint=[])
++    returning.arrival_time = clock()
++    manager.on_request_scheduled(returning)
++    manager.on_request_finished(returning, [1, 2])
++    session = next(iter(manager.tracker.sessions.values()))
++    assert session.oracle_duration_s is None
++    assert manager.tracker.priorities(clock())[session.session_id] == float("inf")
++
++
++@pytest.mark.parametrize("duration", [None, -1, float("inf"), float("nan"), True, "2"])
++def test_oracle_rejects_missing_or_invalid_duration(duration):
++    manager, _ = make_oracle()
++    with pytest.raises(ValueError, match="finite and non-negative"):
++        manager.on_request_finished(tool_request("tool", duration), [1])
++
++
++def test_estimated_policy_ignores_oracle_metadata():
++    manager = CacheWiseManager(SimpleNamespace(cache_config=CacheConfig()))
++    manager.predictor.record([("tool", "")], 1000)
++    request = tool_request("tool", 0)
++    manager.on_request_finished(request, [1])
++    session = next(iter(manager.tracker.sessions.values()))
++    assert manager.tracker.priorities(session.last_finish_ts)[session.session_id] > 900
++    assert manager.tracker.stats()["num_oracle_hints"] == 0

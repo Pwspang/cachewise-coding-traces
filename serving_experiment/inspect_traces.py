@@ -6,11 +6,6 @@ import json
 import re
 from pathlib import Path
 
-import matplotlib
-
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-
 
 def records(path):
     return [json.loads(line) for line in path.read_text().splitlines()]
@@ -73,6 +68,11 @@ def audit_repeats(root):
 
 
 def inspect(root, policies=("baseline", "cachewise")):
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
     audit_repeats(root)
     comparison_path = root / "comparison.json"
     if not comparison_path.exists():

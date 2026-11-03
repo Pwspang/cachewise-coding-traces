@@ -20,6 +20,17 @@ def digest(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()
 
 
+def replay_hints(turn, *, terminal, mark_terminal_idle, oracle, delay_scale):
+    """Oracle hints change only reuse estimates; terminal state is shared."""
+    tools = [] if terminal and mark_terminal_idle else turn["next_tools"]
+    hints = {"cachewise_next_tools": json.dumps(tools)}
+    if oracle and tools:
+        if terminal:
+            raise ValueError("Oracle requires terminal-idle normalization")
+        hints["cachewise_oracle_duration_s"] = turn["delay_after_s"] * delay_scale
+    return hints
+
+
 def select_sessions(workload, count, max_turns=0, max_tokens=0):
     selected = []
     for session in workload["sessions"]:
@@ -111,6 +122,8 @@ async def run(args):
         "max_turns": args.max_turns,
         "max_tokens_filter": args.max_tokens,
         "delay_scale": args.delay_scale,
+        "mark_terminal_idle": getattr(args, "mark_terminal_idle", False),
+        "oracle": args.policy == "cachewise_oracle_no_aging",
         "sampling": {"temperature": 0, "ignore_eos": True, "allowed_token_ids": [42]},
         "methodology": workload["methodology"],
         "metrics": "Client wall latency/TTFT and server Prometheus snapshots; Chrome trace uses client clock, not CUDA kernel profiling.",
@@ -190,9 +203,13 @@ async def run(args):
                     "return_token_ids": True,
                     "stream": True,
                     "stream_options": {"include_usage": True},
-                    "vllm_xargs": {
-                        "cachewise_next_tools": json.dumps(turn["next_tools"])
-                    },
+                    "vllm_xargs": replay_hints(
+                        turn,
+                        terminal=index + 1 == len(session["turns"]),
+                        mark_terminal_idle=getattr(args, "mark_terminal_idle", False),
+                        oracle=args.policy == "cachewise_oracle_no_aging",
+                        delay_scale=args.delay_scale,
+                    ),
                 }
                 write(payload_file, {"request_key": request_key, "body": payload})
                 started = time.perf_counter()
@@ -342,6 +359,7 @@ if __name__ == "__main__":
             "baseline",
             "cachewise",
             "cachewise_no_aging",
+            "cachewise_oracle_no_aging",
             "infercept",
             "infercept_prefix_no_aging",
             "prefix_only",
@@ -356,8 +374,11 @@ if __name__ == "__main__":
     p.add_argument("--max-turns", type=int, default=0)
     p.add_argument("--max-tokens", type=int, default=0)
     p.add_argument("--delay-scale", type=float, default=1.0)
+    p.add_argument("--mark-terminal-idle", action="store_true")
     p.add_argument("--request-timeout", type=float, default=1800)
     args = p.parse_args()
+    if args.policy == "cachewise_oracle_no_aging" and not args.mark_terminal_idle:
+        p.error("Oracle comparison requires --mark-terminal-idle for all policies")
     if (
         args.sessions < 1
         or args.delay_scale < 0

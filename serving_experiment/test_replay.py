@@ -6,7 +6,7 @@ import pytest
 from aiohttp import web
 from prepare import human_boundary_messages, prepare
 from profile_recompute import fit_quadratic
-from replay import run, select_sessions, stream_completion
+from replay import replay_hints, run, select_sessions, stream_completion
 from summarize import summarize
 
 
@@ -147,6 +147,31 @@ def test_session_selection_does_not_truncate_prompts():
         ]
     }
     assert select_sessions(workload, 1, max_tokens=8192)[0]["id"] == "short"
+
+
+def test_oracle_hints_keep_controls_blind_and_terminal_state_identical():
+    turn = {"next_tools": [{"name": "Bash"}], "delay_after_s": 2.5}
+    for terminal in (False, True):
+        control = replay_hints(
+            turn,
+            terminal=terminal,
+            mark_terminal_idle=True,
+            oracle=False,
+            delay_scale=2,
+        )
+        oracle = replay_hints(
+            turn, terminal=terminal, mark_terminal_idle=True, oracle=True, delay_scale=2
+        )
+        assert control["cachewise_next_tools"] == oracle["cachewise_next_tools"]
+        assert "cachewise_oracle_duration_s" not in control
+        if terminal:
+            assert oracle == {"cachewise_next_tools": "[]"}
+        else:
+            assert oracle["cachewise_oracle_duration_s"] == 5
+    with pytest.raises(ValueError, match="terminal-idle"):
+        replay_hints(
+            turn, terminal=True, mark_terminal_idle=False, oracle=True, delay_scale=1
+        )
 
 
 def test_stream_recorder_checks_token_counts_and_collects_usage():

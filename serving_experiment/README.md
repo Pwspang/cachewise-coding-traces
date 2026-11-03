@@ -171,6 +171,55 @@ after retrieving a completed run, regenerate the analysis and plots with:
 To extract these additional statistics again from the raw traces, replace
 `--data ...` with `--root runs/ccds-10807/fair-10807/comparison`.
 
+## Oracle diagnostic experiment
+
+`oracle.slurm` compares prefix-aware LRU, the current tool-name CacheWise
+predictor, and a recorded-tool-duration oracle on the same N=10 cohort, model,
+GPU allocation, 17,981-block KV budget, and unmodified tool waits. Three rotated
+repeats cover every policy in every order position. A fresh server is used for
+each run, and all three policies disable the scheduling aging override.
+
+The oracle patch adds an explicit `--cachewise-predictor oracle` mode. For a
+tool-running turn, the replay supplies its known external wait in
+`cachewise_oracle_duration_s`; the engine uses `max(0, duration - elapsed)` as
+the remaining-time estimate. Missing or invalid metadata fails the oracle run
+instead of silently using learned predictions. Other predictor modes ignore
+oracle metadata, and the replay never supplies it to the controls. Online
+observations, queued-request protection, rebuild frequency, and the eviction
+mechanism otherwise remain unchanged.
+
+This is a **tool-duration oracle**, not an omniscient future-arrival or Belady
+policy. It cannot predict transport, client bookkeeping, or future queueing.
+The audit records the client inter-request gap beyond the specified tool wait
+to make that limitation visible.
+
+There is one shared lifecycle correction relative to job 10807: all final
+turns are explicitly marked idle in all three cases. Five of the ten selected
+segments previously ended with nonempty tool hints even though no next request
+would be sent. Their stored final delay is zero, which must not be interpreted
+as imminent reuse by an oracle. Consequently, use the fresh matched controls
+for attribution; do not compare the oracle directly against job 10807's numbers
+and attribute every change to prediction quality.
+
+The job runs engine tests, then a three-policy smoke comparison and its trace
+audit before starting the nine full runs. `analyze_oracle.py` verifies common
+inputs, request hashes/lengths, policy settings, actual oracle hint consumption,
+GPU identity, terminal handling, queue choices, and recomputed-token counters.
+Request/response archives, client timelines, server metrics, and engine source
+snapshots are retained under `runs/oracle-JOBID/` on CCDS.
+
+```bash
+sbatch serving_experiment/oracle.slurm
+.venv/bin/python serving_experiment/analyze_oracle.py runs/oracle-JOBID/comparison
+```
+
+Interpretation: an oracle improvement over both the learned predictor and LRU
+would support prediction quality as a contributor to the gap. An improvement
+over the learned predictor that still trails LRU would indicate only partial
+recovery. Little oracle benefit would motivate investigating eviction/scheduling
+interactions and this cohort's limited predictive opportunity. No outcome alone
+establishes the paper's higher-load results or a universal upper bound.
+
 ## Differences from the paper
 
 **The current reproduction supports a scheduling benefit, but does not reproduce
