@@ -4,6 +4,7 @@ import argparse
 import csv
 import gzip
 import hashlib
+import io
 import json
 import math
 import re
@@ -37,11 +38,14 @@ def policy_settings(policy):
     return scheduling, eviction, predictor, 30 if policy == "cachewise" else 0
 
 
-def analyze(root, smoke=False, consolidated=False):
+def analyze(root, smoke=False, consolidated=False, repeat_index=None, parallel=False):
+    assert not parallel or (consolidated and not smoke and repeat_index is None)
     policies = CONSOLIDATED_POLICIES if consolidated else POLICIES
     assert (root / "COMPLETE").exists(), "Experiment incomplete"
     repeats, sessions = (1, 2) if smoke else (3, 10)
-    expected = {f"{p}-r{r}" for p in policies for r in range(repeats)}
+    indices = range(repeats) if repeat_index is None else [repeat_index]
+    assert repeat_index is None or (not smoke and repeat_index >= 0)
+    expected = {f"{p}-r{r}" for p in policies for r in indices}
     assert {p.parent.name for p in root.glob("*-r*/manifest.json")} == expected
     inputs = json.loads((root / "prepared-inputs.json").read_text())
     for name, sha in inputs.items():
@@ -61,6 +65,42 @@ def analyze(root, smoke=False, consolidated=False):
     summarize(root, reference_policy=policies[0])
     rows = json.loads((root / "comparison.json").read_text())
     uuids, common_commands, trace_hashes = set(), [], {}
+    gpu_by_repeat = {}
+    if parallel:
+        hardware = []
+        for repeat in range(3):
+            source = root / f"source-r{repeat}"
+            env = json.loads((source / "environment.json").read_text())
+            devices = list(
+                csv.DictReader(io.StringIO(env["gpu"]), skipinitialspace=True)
+            )
+            assert len(devices) == 1
+            hardware.append(
+                [
+                    env["vllm_revision"],
+                    env["model"],
+                    env["python"],
+                    devices[0]["name"],
+                    devices[0]["driver_version"],
+                    devices[0]["memory.total [MiB]"],
+                ]
+            )
+            for name in (
+                "workload.json",
+                "bootstrap.jsonl",
+                "vllm-source.patch",
+                "packages.txt",
+                "model_snapshot.txt",
+                "runner_source/replay.py",
+                "runner_source/server_queue_diagnostics.py",
+                "runner_source/queue_observer.py",
+            ):
+                assert (source / name).read_bytes() == (
+                    root / "source-r0" / name
+                ).read_bytes(), name
+        assert all(h == hardware[0] for h in hardware), (
+            "GPU/runtime configuration differs across repeat blocks"
+        )
     for row in rows:
         name, policy = row["run"], row["policy"]
         path = root / name
@@ -95,6 +135,9 @@ def analyze(root, smoke=False, consolidated=False):
                 i = command.index(flag)
                 del command[i : i + 2]
         common_commands.append(command)
+        if parallel:
+            assert Path(command[1]).name == "server_queue_diagnostics.py"
+            command[1] = "server_queue_diagnostics.py"
         hinted_durations, seen = [], set()
         with gzip.open(path / "payloads.jsonl.gz", "rt") as handle:
             for line in handle:
@@ -131,7 +174,11 @@ def analyze(root, smoke=False, consolidated=False):
         with (root / f"{name}-gpu.csv").open() as handle:
             gpu = list(csv.DictReader(handle, skipinitialspace=True))
         assert gpu
-        uuids.update(r["uuid"].strip() for r in gpu)
+        run_uuids = {r["uuid"].strip() for r in gpu}
+        assert len(run_uuids) == 1, "Each run must use exactly one physical GPU"
+        uuids.update(run_uuids)
+        repeat = name.rsplit("-r", 1)[1]
+        gpu_by_repeat.setdefault(repeat, set()).update(run_uuids)
         queue_files = list(root.glob(f"{name}-queue-*.jsonl"))
         if scheduling == "prefix_aware":
             assert queue_files
@@ -177,7 +224,8 @@ def analyze(root, smoke=False, consolidated=False):
         trace_hashes[name] = hashlib.sha256(
             (path / "requests.jsonl").read_bytes()
         ).hexdigest()
-    assert len(uuids) == 1
+    assert all(len(values) == 1 for values in gpu_by_repeat.values())
+    assert parallel or len(uuids) == 1
     assert all(c == common_commands[0] for c in common_commands)
     aggregate = {}
     for policy in policies:
@@ -217,8 +265,28 @@ def analyze(root, smoke=False, consolidated=False):
         "scope": "Recorded tool-duration oracle, not an omniscient future-arrival/Belady policy. All policies mark terminal turns idle. One cohort; repeat ranges are not confidence intervals.",
         "smoke": smoke,
         "study": "consolidated" if consolidated else "oracle",
+        "comparison_design": "All six policies share one GPU within each repeat; repeat blocks run on separate GPUs."
+        if parallel
+        else "All runs share one physical GPU.",
+        "physical_gpu_by_repeat": {k: sorted(v) for k, v in gpu_by_repeat.items()},
         "policies": aggregate,
         "time_ratios": ratios,
+        "paired_time_ratios": {
+            f"{a}_over_{b}": [
+                next(
+                    r["mean_session_llm_time_s"]
+                    for r in rows
+                    if r["run"] == f"{a}-r{repeat}"
+                )
+                / next(
+                    r["mean_session_llm_time_s"]
+                    for r in rows
+                    if r["run"] == f"{b}-r{repeat}"
+                )
+                for repeat in indices
+            ]
+            for a, b in contrasts
+        },
         "runs": rows,
         "audit": audit,
         "input_hashes": inputs,
@@ -238,5 +306,7 @@ if __name__ == "__main__":
     parser.add_argument("root", type=Path)
     parser.add_argument("--smoke", action="store_true")
     parser.add_argument("--consolidated", action="store_true")
+    parser.add_argument("--repeat-index", type=int)
+    parser.add_argument("--parallel", action="store_true")
     args = parser.parse_args()
-    analyze(args.root, args.smoke, args.consolidated)
+    analyze(args.root, args.smoke, args.consolidated, args.repeat_index, args.parallel)

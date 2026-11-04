@@ -111,6 +111,7 @@ def main():
     p.add_argument("--smoke", action="store_true")
     p.add_argument("--sessions", type=int, default=5)
     p.add_argument("--repeats", type=int, default=1)
+    p.add_argument("--repeat-start", type=int, default=0)
     p.add_argument("--port", type=int, default=18080)
     p.add_argument("--workload", type=Path)
     p.add_argument(
@@ -140,6 +141,8 @@ def main():
     p.add_argument("--num-gpu-blocks", type=int)
     p.add_argument("--mark-terminal-idle", action="store_true")
     a = p.parse_args()
+    if a.repeats < 1 or a.repeat_start < 0:
+        p.error("Repeats must be positive and repeat-start non-negative")
     if "cachewise_oracle_no_aging" in (a.policies or ()) and not a.mark_terminal_idle:
         p.error("Oracle comparison requires --mark-terminal-idle for all policies")
     if a.diagnostics and a.queue_diagnostics:
@@ -353,7 +356,7 @@ def main():
                     ],
                     check=True,
                 )
-    for repeat in range(a.repeats):
+    for repeat in range(a.repeat_start, a.repeat_start + a.repeats):
         # Rotate order on repeats to expose warm filesystem / thermal effects.
         policies = a.policies or ["baseline", "cachewise"]
         offset = repeat % len(policies)

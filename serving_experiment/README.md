@@ -178,6 +178,24 @@ Singapore time. The [submission record](results/2026-11-04/job-13943/launch.json
 captures source commit `0c3782f`, input/engine hashes, the six cases, and the
 validation checks. This is a launch record; performance results are pending.
 
+The suite is being parallelized by **repeat block**, retaining repeat 0 from
+job 13943 and assigning repeats 1 and 2 to separate single-GPU allocations.
+Every GPU runs all six policies sequentially in the originally planned order
+for its repeat. This avoids confounding a policy with a particular GPU. The
+final analysis reports ratios within each repeat and verifies matching GPU
+model/memory/driver, runtime packages, engine, inputs, and replay/observer source
+across blocks. Different GPU UUIDs are permitted only across repeat blocks.
+
+The parallel jobs use `parallel_repeat.slurm` and a separate frozen runner
+directory under `ccds-ai:~/cachewise-rerun/parallel-13943/`. The original runner
+and engine are left in place. `collect_parallel.py` waits for all six repeat-0
+results and the next command boundary, then cancels the original job to prevent
+duplicate repeats. It preserves the completed files, audits each block, and
+assembles a final `comparison/consolidated-comparison.json` under the parallel
+root. The original job's cancellation is therefore intentional; it does not
+mean its preserved repeat-0 data failed. A collector `COMPLETE` marker denotes
+successful combined validation; `FAILED` contains any collection error.
+
 `consolidated.slurm` runs six settings with three repeats each on one RTX Pro
 6000, using Qwen2.5-Coder-14B-Instruct, the existing N=10 held-out cohort,
 17,981 KV blocks, unchanged external waits, and terminal-idle normalization in
