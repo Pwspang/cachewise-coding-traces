@@ -171,6 +171,46 @@ after retrieving a completed run, regenerate the analysis and plots with:
 To extract these additional statistics again from the raw traces, replace
 `--data ...` with `--root runs/ccds-10807/fair-10807/comparison`.
 
+## Consolidated paper experiment
+
+`consolidated.slurm` runs six settings with three repeats each on one RTX Pro
+6000, using Qwen2.5-Coder-14B-Instruct, the existing N=10 held-out cohort,
+17,981 KV blocks, unchanged external waits, and terminal-idle normalization in
+every case. This provides a common experiment for the main comparison, the
+complete scheduling/eviction ablation, oracle diagnosis, and aging trade-off.
+
+| Runner policy | Scheduling | Eviction / predictor | Aging override |
+| --- | --- | --- | --- |
+| `baseline` | FCFS | LRU | Not applicable |
+| `eviction_only` | FCFS | Predictive / tool name | Not applicable |
+| `prefix_only_no_aging` | Prefix-aware | LRU | Disabled |
+| `cachewise_no_aging` | Prefix-aware | Predictive / tool name | Disabled |
+| `cachewise_oracle_no_aging` | Prefix-aware | Predictive / recorded tool duration | Disabled |
+| `cachewise` | Prefix-aware | Predictive / tool name | 30 seconds |
+
+Each full run contains 83 requests, for **18 full runs and 1,494 request
+executions**. All cases start fresh servers in one allocation. Policy order
+rotates by one position per repeat; with three repeats and six policies this
+is partial order balancing, not a full Latin square. The script reserves eight
+hours, allowing margin over the estimated 4–6 hours; FCFS predictive eviction
+has not previously been measured in this matched setup.
+
+The engine is unchanged from the validated oracle experiment. Engine tests run
+first, followed by a six-policy smoke replay and audit. Full runs start only if
+both checks pass. The extended audit checks the intended scheduler, predictor,
+and aging settings per case, common inputs and GPU, successful requests, oracle
+hint consumption, and cache counters. It records aging-selected queue pops for
+the 30-second case instead of incorrectly requiring zero aging choices there.
+
+```bash
+sbatch serving_experiment/consolidated.slurm
+.venv/bin/python serving_experiment/analyze_oracle.py \
+  runs/consolidated-JOBID/comparison --consolidated
+```
+
+The final report is `consolidated-comparison.json`; raw traces and frozen source
+are retained under `ccds-ai:~/cachewise-rerun/runs/consolidated-JOBID/`.
+
 ## Oracle diagnostic experiment
 
 **CCDS job 11945 completed successfully on 2026-11-03 at 13:16:43 Singapore

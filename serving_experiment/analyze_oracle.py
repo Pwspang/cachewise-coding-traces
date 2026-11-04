@@ -1,4 +1,4 @@
-"""Audit the matched LRU / learned / tool-duration-oracle experiment."""
+"""Audit the oracle diagnostic or consolidated scheduling/eviction experiment."""
 
 import argparse
 import csv
@@ -19,12 +19,29 @@ POLICIES = (
     "cachewise_no_aging",
     "cachewise_oracle_no_aging",
 )
+CONSOLIDATED_POLICIES = (
+    "baseline",
+    "eviction_only",
+    "prefix_only_no_aging",
+    "cachewise_no_aging",
+    "cachewise_oracle_no_aging",
+    "cachewise",
+)
 
 
-def analyze(root, smoke=False):
+def policy_settings(policy):
+    """Expected scheduler, eviction, predictor, and aging limit for each case."""
+    scheduling = "fcfs" if policy in {"baseline", "eviction_only"} else "prefix_aware"
+    eviction = "lru" if policy in {"baseline", "prefix_only_no_aging"} else "predictive"
+    predictor = "oracle" if policy == "cachewise_oracle_no_aging" else "tool_name"
+    return scheduling, eviction, predictor, 30 if policy == "cachewise" else 0
+
+
+def analyze(root, smoke=False, consolidated=False):
+    policies = CONSOLIDATED_POLICIES if consolidated else POLICIES
     assert (root / "COMPLETE").exists(), "Experiment incomplete"
     repeats, sessions = (1, 2) if smoke else (3, 10)
-    expected = {f"{p}-r{r}" for p in POLICIES for r in range(repeats)}
+    expected = {f"{p}-r{r}" for p in policies for r in range(repeats)}
     assert {p.parent.name for p in root.glob("*-r*/manifest.json")} == expected
     inputs = json.loads((root / "prepared-inputs.json").read_text())
     for name, sha in inputs.items():
@@ -41,13 +58,14 @@ def analyze(root, smoke=False):
     if not smoke:
         assert len(turns) == 83
     audit = audit_repeats(root)
-    summarize(root, reference_policy=POLICIES[0])
+    summarize(root, reference_policy=policies[0])
     rows = json.loads((root / "comparison.json").read_text())
     uuids, common_commands, trace_hashes = set(), [], {}
     for row in rows:
         name, policy = row["run"], row["policy"]
         path = root / name
-        oracle = policy == POLICIES[2]
+        oracle = policy == "cachewise_oracle_no_aging"
+        scheduling, eviction, predictor, aging = policy_settings(policy)
         manifest = json.loads((path / "manifest.json").read_text())
         assert manifest["selected_workload_sha256"] == digest(selected)
         assert manifest["source_workload_sha256"] == inputs["workload.json"]
@@ -58,18 +76,17 @@ def analyze(root, smoke=False):
         def option(flag, command=command):
             return command[command.index(flag) + 1]
 
-        assert option("--scheduling-policy") == "prefix_aware"
-        assert option("--prefix-aware-max-wait-s") == "0"
+        assert option("--scheduling-policy") == scheduling
+        if scheduling == "prefix_aware":
+            assert option("--prefix-aware-max-wait-s") == str(aging)
         assert option("--num-gpu-blocks-override") == "17981"
-        assert option("--kv-cache-eviction-policy") == (
-            "lru" if policy == POLICIES[0] else "predictive"
-        )
-        if policy != POLICIES[0]:
-            assert option("--cachewise-predictor") == (
-                "oracle" if oracle else "tool_name"
-            )
+        assert option("--kv-cache-eviction-policy") == eviction
+        if eviction == "predictive":
+            assert option("--cachewise-predictor") == predictor
             assert Path(option("--cachewise-bootstrap-path")).name == "bootstrap.jsonl"
         for flag in (
+            "--scheduling-policy",
+            "--prefix-aware-max-wait-s",
             "--kv-cache-eviction-policy",
             "--cachewise-predictor",
             "--cachewise-bootstrap-path",
@@ -116,10 +133,17 @@ def analyze(root, smoke=False):
         assert gpu
         uuids.update(r["uuid"].strip() for r in gpu)
         queue_files = list(root.glob(f"{name}-queue-*.jsonl"))
-        assert queue_files
-        pops = [r for p in queue_files for r in records(p)]
-        assert all(r["max_wait_s"] == 0 and not r["aging_choice"] for r in pops)
-        assert len({r["request_id"] for r in pops}) == len(turns)
+        if scheduling == "prefix_aware":
+            assert queue_files
+            pops = [r for p in queue_files for r in records(p)]
+            assert all(r["max_wait_s"] == aging for r in pops)
+            if aging == 0:
+                assert not any(r["aging_choice"] for r in pops)
+            assert len({r["request_id"] for r in pops}) == len(turns)
+            row["queue_pop_count"] = len(pops)
+            row["aging_pop_count"] = sum(r["aging_choice"] for r in pops)
+        else:
+            assert not queue_files, "FCFS case unexpectedly used a prefix-aware queue"
         snapshots = records(path / "metrics.jsonl")
         assert all(r.get("status") == 200 for r in snapshots)
         final = snapshots[-1]["text"]
@@ -156,7 +180,7 @@ def analyze(root, smoke=False):
     assert len(uuids) == 1
     assert all(c == common_commands[0] for c in common_commands)
     aggregate = {}
-    for policy in POLICIES:
+    for policy in policies:
         group = [r for r in rows if r["policy"] == policy]
         aggregate[policy] = {
             key: statistics.mean(r[key] for r in group)
@@ -171,18 +195,28 @@ def analyze(root, smoke=False):
             min(r["mean_session_llm_time_s"] for r in group),
             max(r["mean_session_llm_time_s"] for r in group),
         ]
+    contrasts = [
+        (POLICIES[0], POLICIES[1]),
+        (POLICIES[0], POLICIES[2]),
+        (POLICIES[1], POLICIES[2]),
+    ]
+    if consolidated:
+        contrasts += [
+            ("baseline", "eviction_only"),
+            ("baseline", "prefix_only_no_aging"),
+            ("baseline", "cachewise_no_aging"),
+            ("eviction_only", "cachewise_no_aging"),
+            ("cachewise", "cachewise_no_aging"),
+        ]
     ratios = {
         f"{a}_over_{b}": aggregate[a]["mean_session_llm_time_s"]
         / aggregate[b]["mean_session_llm_time_s"]
-        for a, b in (
-            (POLICIES[0], POLICIES[1]),
-            (POLICIES[0], POLICIES[2]),
-            (POLICIES[1], POLICIES[2]),
-        )
+        for a, b in contrasts
     }
     report = {
         "scope": "Recorded tool-duration oracle, not an omniscient future-arrival/Belady policy. All policies mark terminal turns idle. One cohort; repeat ranges are not confidence intervals.",
         "smoke": smoke,
+        "study": "consolidated" if consolidated else "oracle",
         "policies": aggregate,
         "time_ratios": ratios,
         "runs": rows,
@@ -191,7 +225,10 @@ def analyze(root, smoke=False):
         "physical_gpu_uuids": sorted(uuids),
         "request_trace_hashes": trace_hashes,
     }
-    (root / "oracle-comparison.json").write_text(json.dumps(report, indent=2) + "\n")
+    filename = (
+        "consolidated-comparison.json" if consolidated else "oracle-comparison.json"
+    )
+    (root / filename).write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"policies": aggregate, "time_ratios": ratios}, indent=2))
     return report
 
@@ -200,5 +237,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("root", type=Path)
     parser.add_argument("--smoke", action="store_true")
+    parser.add_argument("--consolidated", action="store_true")
     args = parser.parse_args()
-    analyze(args.root, args.smoke)
+    analyze(args.root, args.smoke, args.consolidated)
