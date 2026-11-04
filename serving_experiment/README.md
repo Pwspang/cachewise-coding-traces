@@ -178,8 +178,13 @@ Singapore time. The [submission record](results/2026-11-04/job-13943/launch.json
 captures source commit `0c3782f`, input/engine hashes, the six cases, and the
 validation checks. This is a launch record; performance results are pending.
 
-The suite is being parallelized by **repeat block**, retaining repeat 0 from
-job 13943 and assigning repeats 1 and 2 to separate single-GPU allocations.
+The suite is parallelized by **repeat block**, retaining repeat 0 from
+job 13943 on node07. Repeat 1 runs as **job 13959 on node08** and repeat 2 as
+**job 13960 on node09**, each with its own single-GPU allocation. The
+[parallel plan](results/2026-11-04/job-13943/parallel-plan.json) records the
+three source directories. The parallel runner is source commit `c28a40b`;
+repeat 0 keeps its original `0c3782f` runner. Replay, observation, and engine
+code are unchanged; the runner adds explicit repeat-index selection.
 Every GPU runs all six policies sequentially in the originally planned order
 for its repeat. This avoids confounding a policy with a particular GPU. The
 final analysis reports ratios within each repeat and verifies matching GPU
@@ -191,10 +196,14 @@ directory under `ccds-ai:~/cachewise-rerun/parallel-13943/`. The original runner
 and engine are left in place. `collect_parallel.py` waits for all six repeat-0
 results and the next command boundary, then cancels the original job to prevent
 duplicate repeats. It preserves the completed files, audits each block, and
-assembles a final `comparison/consolidated-comparison.json` under the parallel
+assembles `collected/comparison/consolidated-comparison.json` under the parallel
 root. The original job's cancellation is therefore intentional; it does not
-mean its preserved repeat-0 data failed. A collector `COMPLETE` marker denotes
-successful combined validation; `FAILED` contains any collection error.
+mean its preserved repeat-0 data failed. A `collected/COMPLETE` marker denotes
+successful combined validation; `collected/FAILED` contains any collection error.
+Collector progress is in `parallel-13943/collector.log`. Both additional GPU
+jobs request four hours; expected remaining wall time after parallel launch is
+roughly 1.5–2 hours, subject to startup and scheduling. Three GPUs may be active
+concurrently, but each model instance still uses only one GPU.
 
 `consolidated.slurm` runs six settings with three repeats each on one RTX Pro
 6000, using Qwen2.5-Coder-14B-Instruct, the existing N=10 held-out cohort,
@@ -212,10 +221,11 @@ complete scheduling/eviction ablation, oracle diagnosis, and aging trade-off.
 | `cachewise` | Prefix-aware | Predictive / tool name | 30 seconds |
 
 Each full run contains 83 requests, for **18 full runs and 1,494 request
-executions**. All cases start fresh servers in one allocation. Policy order
+executions**. All cases start fresh servers, with one allocation per repeat
+under the parallel plan. Policy order
 rotates by one position per repeat; with three repeats and six policies this
-is partial order balancing, not a full Latin square. The script reserves eight
-hours, allowing margin over the estimated 4–6 hours; FCFS predictive eviction
+is partial order balancing, not a full Latin square. The original serial script
+reserves eight hours, allowing margin over its estimated 4–6 hours; FCFS predictive eviction
 has not previously been measured in this matched setup.
 
 The engine is unchanged from the validated oracle experiment. Engine tests run

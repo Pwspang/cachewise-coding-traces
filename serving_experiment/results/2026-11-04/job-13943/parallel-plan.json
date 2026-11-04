@@ -1,0 +1,11 @@
+{
+  "repeat_0_original_job": 13943,
+  "repeat_1_job": 13959,
+  "repeat_2_job": 13960,
+  "repeat_sources": [
+    "/export/home4/wspang/cachewise-rerun/runs/consolidated-13943/comparison",
+    "/export/home4/wspang/cachewise-rerun/parallel-13943/runs/repeat-1-13959/comparison",
+    "/export/home4/wspang/cachewise-rerun/parallel-13943/runs/repeat-2-13960/comparison"
+  ],
+  "design": "Three GPU blocks; all six policies within each repeat share one GPU."
+}
