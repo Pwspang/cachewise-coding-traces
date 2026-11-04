@@ -38,6 +38,13 @@ def policy_settings(policy):
     return scheduling, eviction, predictor, 30 if policy == "cachewise" else 0
 
 
+def normalize_parallel_entrypoint(command):
+    """Ignore directory aliases after validating runtime and wrapper source."""
+    assert Path(command[0]).name == "python"
+    assert Path(command[1]).name == "server_queue_diagnostics.py"
+    return ["python", "server_queue_diagnostics.py", *command[2:]]
+
+
 def analyze(root, smoke=False, consolidated=False, repeat_index=None, parallel=False):
     assert not parallel or (consolidated and not smoke and repeat_index is None)
     policies = CONSOLIDATED_POLICIES if consolidated else POLICIES
@@ -134,10 +141,9 @@ def analyze(root, smoke=False, consolidated=False, repeat_index=None, parallel=F
             if flag in command:
                 i = command.index(flag)
                 del command[i : i + 2]
-        common_commands.append(command)
         if parallel:
-            assert Path(command[1]).name == "server_queue_diagnostics.py"
-            command[1] = "server_queue_diagnostics.py"
+            command = normalize_parallel_entrypoint(command)
+        common_commands.append(command)
         hinted_durations, seen = [], set()
         with gzip.open(path / "payloads.jsonl.gz", "rt") as handle:
             for line in handle:

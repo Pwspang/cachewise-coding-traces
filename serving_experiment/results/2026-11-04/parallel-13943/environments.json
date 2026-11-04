@@ -1,0 +1,32 @@
+{
+  "0": {
+    "vllm_revision": "a4b3affa7f746db57c2f19de839f72094c8f3ce1",
+    "host": "node07",
+    "gpu": "uuid, name, driver_version, memory.total [MiB]\nGPU-bf8918ac-9895-2d77-4c95-c4cc2f546724, NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition, 615.71.09, 97887 MiB\n",
+    "slurm_job_id": "13943",
+    "cuda_visible_devices": "0",
+    "python": "3.12.3 (main, Nov  6 2024, 18:32:19) [GCC 13.2.0]",
+    "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+    "smoke": false
+  },
+  "1": {
+    "vllm_revision": "a4b3affa7f746db57c2f19de839f72094c8f3ce1",
+    "host": "node08",
+    "gpu": "uuid, name, driver_version, memory.total [MiB]\nGPU-b1386899-3dde-35b6-2f35-050792e216b1, NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition, 615.71.09, 97887 MiB\n",
+    "slurm_job_id": "13959",
+    "cuda_visible_devices": "0",
+    "python": "3.12.3 (main, Nov  6 2024, 18:32:19) [GCC 13.2.0]",
+    "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+    "smoke": false
+  },
+  "2": {
+    "vllm_revision": "a4b3affa7f746db57c2f19de839f72094c8f3ce1",
+    "host": "node09",
+    "gpu": "uuid, name, driver_version, memory.total [MiB]\nGPU-3e28a242-1619-f181-3af6-7fdcf0674bfd, NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition, 615.71.09, 97887 MiB\n",
+    "slurm_job_id": "13960",
+    "cuda_visible_devices": "0",
+    "python": "3.12.3 (main, Nov  6 2024, 18:32:19) [GCC 13.2.0]",
+    "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+    "smoke": false
+  }
+}

@@ -34,6 +34,28 @@ def state(job):
     return result.splitlines()[0].split("|")[0].split()[0] if result else "UNKNOWN"
 
 
+def block_ready(root, repeat, job, missing_since, now):
+    # Query Slurm first: completion can occur during the accounting call.
+    # Then read fresh files, allowing a short shared-filesystem visibility lag.
+    job_state = state(job)
+    if job_state in {"FAILED", "CANCELLED", "TIMEOUT", "OUT_OF_MEMORY", "NODE_FAIL"}:
+        raise RuntimeError(f"Repeat {repeat} job {job} ended as {job_state}")
+    if job_state != "COMPLETED":
+        return False
+    if (
+        repeat_finished(root, repeat)
+        and (root / "consolidated-comparison.json").exists()
+    ):
+        missing_since.pop(job, None)
+        return True
+    first_missing = missing_since.setdefault(job, now)
+    if now - first_missing >= 120:
+        raise RuntimeError(
+            f"Repeat {repeat} job {job} completed but audit files remain missing"
+        )
+    return False
+
+
 def link(destination, source):
     if destination.is_symlink():
         assert destination.resolve() == source.resolve()
@@ -82,6 +104,7 @@ def collect(args):
     deadline = time.monotonic() + 6 * 3600
     staged_zero = False
     last_progress = None
+    missing_since = {}
     terminal = {
         "COMPLETED",
         "FAILED",
@@ -117,16 +140,9 @@ def collect(args):
             (1, args.repeat_one_job, args.repeat_one),
             (2, args.repeat_two_job, args.repeat_two),
         ):
-            complete = repeat_finished(root, repeat)
-            audited = (root / "consolidated-comparison.json").exists()
-            job_state = state(job)
-            if job_state in terminal and not (
-                complete and audited and job_state == "COMPLETED"
-            ):
-                raise RuntimeError(
-                    f"Repeat {repeat} job {job} ended as {job_state} without successful audit"
-                )
-            ready.append(complete and audited and job_state == "COMPLETED")
+            ready.append(
+                block_ready(root, repeat, job, missing_since, time.monotonic())
+            )
         progress = (staged_zero, *ready)
         if progress != last_progress:
             print(f"Completed/audited repeat blocks: {progress}", flush=True)
@@ -135,6 +151,9 @@ def collect(args):
             merged = args.output / "comparison"
             stage(merged, {0: args.original, 1: args.repeat_one, 2: args.repeat_two})
             analyze(merged, consolidated=True, parallel=True)
+            failure = args.output / "FAILED"
+            if failure.exists():
+                failure.rename(args.output / f"FAILED-resolved-{time.time_ns()}")
             (args.output / "COMPLETE").write_text(
                 "All 18 runs passed the parallel audit.\n"
             )

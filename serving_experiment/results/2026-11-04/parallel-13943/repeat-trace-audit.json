@@ -1,0 +1,221 @@
+{
+  "identical_request_hashes_and_lengths_all_runs": true,
+  "runs": {
+    "baseline-r0": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 447,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "baseline-r1": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 451,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "baseline-r2": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 454,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "cachewise-r0": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 447,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "cachewise-r1": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 452,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "cachewise-r2": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 456,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "cachewise_no_aging-r0": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 316,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "cachewise_no_aging-r1": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 319,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "cachewise_no_aging-r2": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 330,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "cachewise_oracle_no_aging-r0": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 317,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "cachewise_oracle_no_aging-r1": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 318,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "cachewise_oracle_no_aging-r2": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 331,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "eviction_only-r0": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 395,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "eviction_only-r1": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 404,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "eviction_only-r2": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 405,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "prefix_only_no_aging-r0": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 319,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "prefix_only_no_aging-r1": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 322,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    },
+    "prefix_only_no_aging-r2": {
+      "requests": 83,
+      "output_tokens": 15235,
+      "prompt_tokens": 4894853,
+      "metric_snapshots": 328,
+      "failed_metric_snapshots": 0,
+      "preemptions": 0.0,
+      "archive_records": {
+        "payloads.jsonl.gz": 83,
+        "responses.jsonl.gz": 15318
+      }
+    }
+  }
+}

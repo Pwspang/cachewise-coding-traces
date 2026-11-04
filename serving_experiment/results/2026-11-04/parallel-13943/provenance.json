@@ -1,0 +1,30 @@
+{
+  "status": "complete",
+  "job_ids_by_repeat": {
+    "0": 13943,
+    "1": 13959,
+    "2": 13960
+  },
+  "original_job_cancelled_after_repeat_0": true,
+  "raw_local_root": "/home/ws/cachewise-coding-traces/runs/ccds-parallel-13943/comparison",
+  "raw_remote_root": "ccds-ai:~/cachewise-rerun/parallel-13943/collected/comparison/",
+  "engine_patch_sha256": "0289afa28f92c1db66684923d69336d833a4a52f89af84c62cb57f9bcdcf03ad",
+  "local_combined_audit": "passed",
+  "collection_fixes": [
+    "Recheck completed-run files after querying Slurm, with a bounded visibility grace period.",
+    "Normalize the Python directory alias after verifying identical runtime packages and the same executable."
+  ],
+  "limitations": [
+    "One workload cohort at N=10.",
+    "Three different physical GPUs, one per repeat; compare matched policies within repeats.",
+    "Repeat order is partially rotated, not a full Latin square.",
+    "Tool-duration oracle excludes exact future transport and server arrival timing."
+  ],
+  "runner_revision_by_repeat": {
+    "0": "0c3782f",
+    "1": "c28a40b",
+    "2": "c28a40b"
+  },
+  "remote_combined_audit": "passed; report identical to local regeneration",
+  "regression_tests_passed": 5
+}

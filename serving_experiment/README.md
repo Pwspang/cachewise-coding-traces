@@ -173,10 +173,74 @@ To extract these additional statistics again from the raw traces, replace
 
 ## Consolidated paper experiment
 
+**Completed: all 18 full runs, with 1,494 successful requests.** The final GPU
+job finished on 2026-11-04 at **16:09:03 Singapore time**, approximately 90
+minutes after the two additional repeat jobs started. Repeat 0 was preserved
+before intentionally cancelling job 13943; jobs 13959 and 13960 completed with
+exit `0:0`. This is the common six-setting experiment for the report.
+
+| Scheduling / eviction | Mean session LLM time | Observed repeat range | Prompt-token hit rate |
+| --- | ---: | ---: | ---: |
+| FCFS / LRU | 595.04 s | 589.87–599.00 s | 64.689% |
+| FCFS / learned predictive | 529.97 s | 523.43–534.05 s | 69.759% |
+| Prefix-aware / LRU | **337.87 s** | 332.97–342.87 s | 79.009% |
+| Prefix-aware / learned predictive, no aging | 349.67 s | 343.52–357.31 s | 79.048% |
+| Prefix-aware / oracle predictive, no aging | 349.58 s | 344.42–357.05 s | 79.016% |
+| Prefix-aware / learned predictive, 30-second aging | 599.14 s | 592.46–604.94 s | 64.984% |
+
+The completed factorial comparison shows that the eviction benefit depends on
+the scheduler. Adding learned predictive eviction to FCFS lowers mean session
+time **10.94%**; adding it to prefix-aware scheduling instead raises mean time
+**3.49%**. Both directions hold in all three within-GPU comparisons. Scheduling
+alone gives a 1.761× speedup over FCFS/LRU, while no-aging CacheWise gives
+1.702×. This establishes a performance interaction; it does not yet identify
+the underlying CPU, GPU, or individual eviction cost that causes it.
+
+Oracle and learned eviction are again nearly tied: the oracle is **0.028%**
+faster in aggregate, but is slower in repeat 0 and faster in repeats 1 and 2.
+There is no consistent material oracle advantage. This supports the earlier
+diagnosis that supplying known recorded tool durations alone does not recover
+the gap to prefix-aware LRU in this workload.
+
+Disabling the 30-second aging override lowers mean session time **41.64%**,
+with the improvement present in every repeat. The trade-off persists: the
+maximum request latency across repeats rises from **336.92 s to 466.45 s**.
+The aging-enabled case selected 32 aged requests per run on average. These
+maximum values are not P99 estimates. Whole-workload completion time is also
+separate from mean session time: prefix-aware LRU averages 646.28 s, learned
+CacheWise 642.91 s, and the oracle 643.38 s.
+
+The combined local audit passed **6,811 metric snapshots**, all request/input
+hash and token-count checks, oracle-hint checks, and matched configuration
+checks, with zero request errors and zero preemptions. Each repeat used one
+physical GPU for all six cases; GPU model, memory, driver, runtime packages,
+model snapshot, engine source, and replay/observer code matched across repeats.
+The report includes within-repeat time ratios, which preserve the matched
+comparison across the three GPU blocks. Ranges are observed repeat ranges,
+not confidence intervals; only one N=10 cohort was evaluated.
+
+Results and evidence:
+
+- [Complete consolidated comparison](results/2026-11-04/parallel-13943/consolidated-comparison.json),
+  including within-repeat ratios and per-run metrics.
+- [Trace audit](results/2026-11-04/parallel-13943/repeat-trace-audit.json),
+  [job accounting](results/2026-11-04/parallel-13943/slurm-accounting.txt),
+  [GPU/runtime environments](results/2026-11-04/parallel-13943/environments.json),
+  and [provenance](results/2026-11-04/parallel-13943/provenance.json).
+- [Server commands](results/2026-11-04/parallel-13943/server-commands.json)
+  and [shared Python executable check](results/2026-11-04/parallel-13943/python-environment-check.json).
+
+The raw 18-run view and required source records are retained locally at
+`runs/ccds-parallel-13943/comparison/`. Collection needed two postprocessing
+fixes: checking fresh audit-file state after Slurm reports completion, and
+recognizing the parallel root's symlink to the same Python environment. Both
+have regression tests; no inference policy or GPU experiment was changed or
+rerun to resolve those collection errors.
+
 Submitted as **CCDS job 13943**, started on node07 on 2026-11-04 at 13:48:52
 Singapore time. The [submission record](results/2026-11-04/job-13943/launch.json)
 captures source commit `0c3782f`, input/engine hashes, the six cases, and the
-validation checks. This is a launch record; performance results are pending.
+validation checks. It is the historical launch record; final results are above.
 
 The suite is parallelized by **repeat block**, retaining repeat 0 from
 job 13943 on node07. Repeat 1 runs as **job 13959 on node08** and repeat 2 as

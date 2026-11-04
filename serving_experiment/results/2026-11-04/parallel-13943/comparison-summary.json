@@ -1,0 +1,62 @@
+{
+  "baseline": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 595.0409511005894,
+    "range_segment_llm_time_s": [
+      589.8674085780746,
+      598.9966067024274
+    ],
+    "mean_prompt_cache_hit_fraction": 0.6468933796377542
+  },
+  "cachewise": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 599.1375445166292,
+    "range_segment_llm_time_s": [
+      592.461438895855,
+      604.9352452413877
+    ],
+    "mean_prompt_cache_hit_fraction": 0.6498396036271842
+  },
+  "cachewise_no_aging": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 349.67174494395346,
+    "range_segment_llm_time_s": [
+      343.52437255275436,
+      357.3068504091585
+    ],
+    "mean_prompt_cache_hit_fraction": 0.7904782159273561
+  },
+  "cachewise_oracle_no_aging": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 349.57541707063405,
+    "range_segment_llm_time_s": [
+      344.4198780510575,
+      357.04953813951
+    ],
+    "mean_prompt_cache_hit_fraction": 0.7901600586030537
+  },
+  "eviction_only": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 529.9679269707218,
+    "range_segment_llm_time_s": [
+      523.4272940554656,
+      534.0479641298996
+    ],
+    "mean_prompt_cache_hit_fraction": 0.6975926209292359
+  },
+  "prefix_only_no_aging": {
+    "runs": 3,
+    "mean_segment_llm_time_s": 337.87357529935736,
+    "range_segment_llm_time_s": [
+      332.9730327093275,
+      342.8725381286582
+    ],
+    "mean_prompt_cache_hit_fraction": 0.7900935942305111
+  },
+  "baseline_over_cachewise_llm_time_ratio": 0.9931625159305534,
+  "baseline_over_cachewise_no_aging_llm_time_ratio": 1.701712991411315,
+  "baseline_over_cachewise_oracle_no_aging_llm_time_ratio": 1.7021819099492268,
+  "baseline_over_eviction_only_llm_time_ratio": 1.122786721267875,
+  "baseline_over_prefix_only_no_aging_llm_time_ratio": 1.7611349173233826,
+  "limitation": "Paired repeats on one selected workload; ranges are observed run ranges, not confidence intervals."
+}
