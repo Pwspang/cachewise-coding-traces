@@ -173,6 +173,11 @@ To extract these additional statistics again from the raw traces, replace
 
 ## Consolidated paper experiment
 
+Submitted as **CCDS job 13943**, started on node07 on 2026-11-04 at 13:48:52
+Singapore time. The [submission record](results/2026-11-04/job-13943/launch.json)
+captures source commit `0c3782f`, input/engine hashes, the six cases, and the
+validation checks. This is a launch record; performance results are pending.
+
 `consolidated.slurm` runs six settings with three repeats each on one RTX Pro
 6000, using Qwen2.5-Coder-14B-Instruct, the existing N=10 held-out cohort,
 17,981 KV blocks, unchanged external waits, and terminal-idle normalization in

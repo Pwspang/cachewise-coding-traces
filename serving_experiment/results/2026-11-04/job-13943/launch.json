@@ -1,0 +1,43 @@
+{
+  "job_id": 13943,
+  "record_type": "submission record; not a completed performance result",
+  "recorded_utc": "2026-11-04T05:49:36.040460+00:00",
+  "source_commit": "0c3782f5a85cd31e24f6b7cc7971d90467a5c324",
+  "remote_root": "ccds-ai:~/cachewise-rerun/runs/consolidated-13943/",
+  "policies": [
+    "baseline",
+    "eviction_only",
+    "prefix_only_no_aging",
+    "cachewise_no_aging",
+    "cachewise_oracle_no_aging",
+    "cachewise"
+  ],
+  "sessions": 10,
+  "repeats": 3,
+  "full_runs": 18,
+  "expected_full_requests": 1494,
+  "smoke_runs": 6,
+  "expected_smoke_requests": 24,
+  "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+  "gpu_count": 1,
+  "gpu_type": "nvidia_rtx_pro_6000_blackwell",
+  "kv_blocks": 17981,
+  "walltime_limit_hours": 8,
+  "estimated_runtime_hours": [
+    4,
+    6
+  ],
+  "mark_terminal_idle_all_policies": true,
+  "delay_scale": 1,
+  "order": "Rotate by one position each repeat; partial balance across six settings.",
+  "engine_patch_sha256": "0289afa28f92c1db66684923d69336d833a4a52f89af84c62cb57f9bcdcf03ad",
+  "workload_sha256": "362771933edf1d36bdc4e373c193b7fd5eadd537be058e0d86aa204e1854cd51",
+  "bootstrap_sha256": "00bc7912d76a7c2d5a9fa45cccd5153d63f597639f590496556ec4d4df0f96eb",
+  "checks_before_submission": {
+    "runner_tests_passed": 11,
+    "archived_oracle_audit_regression": "all nine runs passed; aggregates and ratios unchanged",
+    "lint_and_shell_syntax": "passed",
+    "remote_engine_and_input_hashes": "matched"
+  },
+  "batch_script_sha256": "9f70bd7883a92b68f4c3b2c7088f78cba2109876fa39091cc113e81b4b312d7f"
+}
